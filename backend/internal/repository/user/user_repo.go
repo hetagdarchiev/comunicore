@@ -28,7 +28,7 @@ func (r *UserRepo) Get(ctx context.Context, userId int) (*model.User, error) {
 		`SELECT id, name, email FROM users WHERE id = $1`,
 		userId)
 
-	var id int64
+	var id int
 	var name, email string
 	if err := row.Scan(&id, &name, &email); err != nil {
 		return nil, err // TODO: not found error
@@ -57,7 +57,7 @@ func (r *UserRepo) Create(ctx context.Context, name, email string) (*model.User,
 		`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email`,
 		name, email)
 
-	var id int64
+	var id int
 	if err := row.Scan(&id, &name, &email); err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (r *UserRepo) Update(ctx context.Context, userId int, name, email string) (
 		`UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING id, name, email`,
 		name, email, userId)
 
-	var id int64
+	var id int
 	if err := row.Scan(&id, &name, &email); err != nil {
 		return nil, err
 	}

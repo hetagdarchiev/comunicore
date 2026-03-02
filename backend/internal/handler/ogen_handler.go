@@ -9,24 +9,37 @@ import (
 	"net/http"
 
 	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/threads"
+	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
 
-	threadsHandler "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/threads"
+	authRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/auth"
 	postsRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/posts"
 	threadsRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/threads"
 	userRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/user"
+
+	authService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/auth"
+	jwtService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
 	threadsService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/threads"
+	userService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/user"
 )
 
 // OgenHandler implements forumApi.Handler.
 type OgenHandler struct {
-	threadsHandler *threads.ThreadsHandler
+	authHandler    *AuthHandler
+	userHandler    *UserHandler
+	threadsHandler *ThreadsHandler
 	forumApi.UnimplementedHandler
 }
 
-func NewOgenHandler(threadsHandler *threads.ThreadsHandler) *OgenHandler {
+func NewOgenHandler(
+	authHandler *AuthHandler,
+	userHandler *UserHandler,
+	threadsHandler *ThreadsHandler,
+) *OgenHandler {
+
 	return &OgenHandler{
 		threadsHandler: threadsHandler,
+		userHandler:    userHandler,
+		authHandler:    authHandler,
 	}
 }
 
@@ -46,26 +59,47 @@ func (h *securityHandler) HandleJwtAuth(
 	return ctx, nil
 }
 
-func RegisterOgenRoutes(mux *http.ServeMux, dsn string, userR *userRepo.UserRepo) {
-	postR, err := postsRepo.NewPostsRepo(dsn)
+func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
+	jwtS := jwtService.NewJwtService(config.Server.JwtSecret)
+
+	authR, err := authRepo.NewAuthRepo(config.Database.DSN(), jwtS)
+	if err != nil {
+		fmt.Printf("Failed to create auth repo: %v\n", err)
+		return
+	}
+	userR, err := userRepo.NewUserRepo(config.Database.DSN())
+	if err != nil {
+		fmt.Printf("Failed to create storage: %v\n", err)
+		return
+	}
+	postR, err := postsRepo.NewPostsRepo(config.Database.DSN())
 	if err != nil {
 		panic(err)
 	}
-	threadR, err := threadsRepo.NewThreadsRepo(dsn)
+	threadR, err := threadsRepo.NewThreadsRepo(config.Database.DSN())
 	if err != nil {
 		panic(err)
 	}
 
+	authS := authService.NewAuthService(authR)
+	userS := userService.NewUserService(userR, authR)
 	threadsS := threadsService.NewThreadsService(threadR, postR, userR)
-	threadsH := threadsHandler.NewThreadsHandler(threadsS)
-	ogenHandler := NewOgenHandler(threadsH)
+
+	authH := NewAuthHandler(authS)
+	userH := NewUserHandler(userS, jwtS)
+	threadsH := NewThreadsHandler(threadsS)
+
+	ogenHandler := NewOgenHandler(authH, userH, threadsH)
 	secHandler := &securityHandler{}
+
 	srv, err := forumApi.NewServer(ogenHandler, secHandler)
 	if err != nil {
 		panic(err)
 	}
-	mux.Handle("/api/threads/", srv)
+	mux.Handle("/api/", WithGlobalContext(srv))
 }
+
+// Thread handlers
 
 func (h *OgenHandler) ThreadAddPost(ctx context.Context, req *forumApi.ThreadCreatePostRequest, params forumApi.ThreadAddPostParams) (forumApi.ThreadAddPostRes, error) {
 	return h.threadsHandler.ThreadAddPost(ctx, req, params)
@@ -81,4 +115,34 @@ func (h *OgenHandler) ThreadGet(ctx context.Context, params forumApi.ThreadGetPa
 
 func (h *OgenHandler) ThreadsList(ctx context.Context, params forumApi.ThreadsListParams) (forumApi.ThreadsListRes, error) {
 	return h.threadsHandler.ThreadsList(ctx, params)
+}
+
+// User handlers
+
+func (h *OgenHandler) UserGet(ctx context.Context, params forumApi.UserGetParams) (forumApi.UserGetRes, error) {
+	return h.userHandler.UserGet(ctx, params)
+}
+
+func (h *OgenHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
+	return h.userHandler.UserMe(ctx)
+}
+
+func (h *OgenHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRequest) (forumApi.UserCreateRes, error) {
+	return h.userHandler.UserCreate(ctx, req)
+}
+
+func (h *OgenHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponseOk, error) {
+	return nil, fmt.Errorf("not implemented")
+}
+
+// Auth handlers
+
+func (h *OgenHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequest) (*forumApi.JwtToken, error) {
+	return h.authHandler.AuthLogin(ctx, req)
+}
+func (h *OgenHandler) AuthLogout(ctx context.Context) error {
+	return h.authHandler.AuthLogout(ctx)
+}
+func (h *OgenHandler) AuthRefresh(ctx context.Context) (forumApi.AuthRefreshRes, error) {
+	return h.authHandler.AuthRefresh(ctx)
 }

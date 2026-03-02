@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
@@ -16,17 +15,8 @@ import (
 	"time"
 
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler"
-	authHandler "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/auth"
-	userHandler "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/user"
+
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
-
-	jwtService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
-
-	authRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/auth"
-	userRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/user"
-
-	authService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/auth"
-	userService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/user"
 )
 
 func main() {
@@ -34,33 +24,13 @@ func main() {
 
 	appConfig := config.MustReadAppConfig(cfg)
 
-	jwtS := jwtService.NewJwtService(appConfig.Server.JwtSecret)
-
-	authR, err := authRepo.NewAuthRepo(appConfig.Database.DSN(), jwtS)
-	if err != nil {
-		fmt.Printf("Failed to create auth repo: %v\n", err)
-		return
-	}
-	userR, err := userRepo.NewUserRepo(appConfig.Database.DSN())
-	if err != nil {
-		fmt.Printf("Failed to create storage: %v\n", err)
-		return
-	}
-
-	userS := userService.NewUserService(userR, authR)
-	authS := authService.NewAuthService(authR)
-
-	authH := authHandler.NewAuthHandler(authS)
-	userH := userHandler.NewUserHandler(userS, jwtS)
-
 	addr := net.JoinHostPort(appConfig.Server.Host, strconv.Itoa(appConfig.Server.Port))
 	if addr == "" {
 		addr = ":8080"
 	}
 
 	mux := http.NewServeMux()
-	handler.RegisterRoutes(mux, userH, authH)
-	handler.RegisterOgenRoutes(mux, appConfig.Database.DSN(), userR)
+	handler.RegisterOgenRoutes(mux, appConfig)
 
 	srv := &http.Server{
 		Addr:    addr,
