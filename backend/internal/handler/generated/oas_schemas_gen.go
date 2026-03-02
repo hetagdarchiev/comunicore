@@ -633,3 +633,40 @@ func (*UserMeInternalServerError) userMeRes() {}
 type UserMeUnauthorized AuthRefreshUnauthorizedApplicationJSON
 
 func (*UserMeUnauthorized) userMeRes() {}
+
+// Ref: #/components/schemas/UserUpdateRequest
+type UserUpdateRequest struct {
+	Name     string `json:"name"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// GetName returns the value of Name.
+func (s *UserUpdateRequest) GetName() string {
+	return s.Name
+}
+
+// GetEmail returns the value of Email.
+func (s *UserUpdateRequest) GetEmail() string {
+	return s.Email
+}
+
+// GetPassword returns the value of Password.
+func (s *UserUpdateRequest) GetPassword() string {
+	return s.Password
+}
+
+// SetName sets the value of Name.
+func (s *UserUpdateRequest) SetName(val string) {
+	s.Name = val
+}
+
+// SetEmail sets the value of Email.
+func (s *UserUpdateRequest) SetEmail(val string) {
+	s.Email = val
+}
+
+// SetPassword sets the value of Password.
+func (s *UserUpdateRequest) SetPassword(val string) {
+	s.Password = val
+}

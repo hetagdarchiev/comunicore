@@ -81,18 +81,45 @@ type ThreadsInvoker interface {
 	ThreadGet(ctx context.Context, params ThreadGetParams) (ThreadGetRes, error)
 	// ThreadsList invokes threadsList operation.
 	//
-	// Get list of threads with pagination. You can use either page-based pagination (page + limit)
-	// or cursor-based pagination (after or before). The response includes an estimated total count
-	// of threads for better performance.
-	// Only one pagination method should be used at a time.
-	// If both are provided, page-based pagination will be used.
-	// `page` - will return that page
-	// `before` - return older threads with lower id than provided (provided id will not be included in
-	// response),
-	// `after` - return newer threads with higher id than provided (provided id will not be included in
-	// response).
-	// If no pagination parameters are provided, the first page will be returned.
-	// If no limit is provided, the default limit is used.
+	// Получить список веток с пагинацией. Можно
+	// использовать либо постраничную пагинацию (page + limit),
+	// либо курсорную пагинацию (after или before). Нужно
+	// использовать только один параметр.
+	// after, before или page с номером страницы. Если ни один не
+	// указан - выводятся самые свежие сообщения.
+	// limit - количество сообщений на страницу, по умолчанию 20.
+	// С разделением на страницы есть неприятная
+	// особенность. При удалении или добавлении новых
+	// сообщений,
+	// страницы могут "прыгать". Т.е. у нас есть список
+	// (сообщений) и в него могут добавляться и удаляться
+	// элементы
+	// в любом месте списка. Если мы находится на странице 3 и
+	// хотим 7-ю, то в ней могут быть совсем другие элементы,
+	// чем на момент запроса страницы 3. Поэтому для более
+	// стабильной пагинации можно использовать курсорную
+	// пагинацию.
+	// Навигация по номеру страницы выберает все сообщения
+	// на момент запроса и отдает нужную страницу.
+	// Добавление
+	// или удаление сообщений сбивает это разделение.
+	// Курсорная пагинация позволяет двигаться вперед и
+	// назад по списку, учитывая изменеия в нем.
+	// Но для нее нужно указывать минимальный или
+	// максимальный id сообщения на странице, чтобы понять
+	// откуда двигаться
+	// дальше. И она не позволяет прыгать на конкретную
+	// страницу, а только двигаться вперед и назад.
+	// При этом before и after не включаются в результат, т.е. если
+	// указать before=10, то в результат не попадет
+	// сообщение с id 10, а только с id меньше 10. И аналогично для
+	// after. В них указываются id сообщения, но
+	// before - для получения более старых сообщений, а after - для
+	// получения более новых сообщений по времени.
+	// Более старым сообщениям (before) соответствует меньший id
+	// (более старые сообщения),
+	// а более новым (after) - больший id. И при этом не важно,
+	// удалены эти сообщения или нет.
 	//
 	// GET /api/threads
 	ThreadsList(ctx context.Context, params ThreadsListParams) (ThreadsListRes, error)
@@ -131,7 +158,7 @@ type UserInvoker interface {
 	// Update user information.
 	//
 	// POST /api/user/{userId}
-	UserUpdate(ctx context.Context, request *UserCreateRequest, params UserUpdateParams) (*UserCreateResponseOk, error)
+	UserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponseOk, error)
 }
 
 // Client implements OAS client.
@@ -832,18 +859,45 @@ func (c *Client) sendThreadGet(ctx context.Context, params ThreadGetParams) (res
 
 // ThreadsList invokes threadsList operation.
 //
-// Get list of threads with pagination. You can use either page-based pagination (page + limit)
-// or cursor-based pagination (after or before). The response includes an estimated total count
-// of threads for better performance.
-// Only one pagination method should be used at a time.
-// If both are provided, page-based pagination will be used.
-// `page` - will return that page
-// `before` - return older threads with lower id than provided (provided id will not be included in
-// response),
-// `after` - return newer threads with higher id than provided (provided id will not be included in
-// response).
-// If no pagination parameters are provided, the first page will be returned.
-// If no limit is provided, the default limit is used.
+// Получить список веток с пагинацией. Можно
+// использовать либо постраничную пагинацию (page + limit),
+// либо курсорную пагинацию (after или before). Нужно
+// использовать только один параметр.
+// after, before или page с номером страницы. Если ни один не
+// указан - выводятся самые свежие сообщения.
+// limit - количество сообщений на страницу, по умолчанию 20.
+// С разделением на страницы есть неприятная
+// особенность. При удалении или добавлении новых
+// сообщений,
+// страницы могут "прыгать". Т.е. у нас есть список
+// (сообщений) и в него могут добавляться и удаляться
+// элементы
+// в любом месте списка. Если мы находится на странице 3 и
+// хотим 7-ю, то в ней могут быть совсем другие элементы,
+// чем на момент запроса страницы 3. Поэтому для более
+// стабильной пагинации можно использовать курсорную
+// пагинацию.
+// Навигация по номеру страницы выберает все сообщения
+// на момент запроса и отдает нужную страницу.
+// Добавление
+// или удаление сообщений сбивает это разделение.
+// Курсорная пагинация позволяет двигаться вперед и
+// назад по списку, учитывая изменеия в нем.
+// Но для нее нужно указывать минимальный или
+// максимальный id сообщения на странице, чтобы понять
+// откуда двигаться
+// дальше. И она не позволяет прыгать на конкретную
+// страницу, а только двигаться вперед и назад.
+// При этом before и after не включаются в результат, т.е. если
+// указать before=10, то в результат не попадет
+// сообщение с id 10, а только с id меньше 10. И аналогично для
+// after. В них указываются id сообщения, но
+// before - для получения более старых сообщений, а after - для
+// получения более новых сообщений по времени.
+// Более старым сообщениям (before) соответствует меньший id
+// (более старые сообщения),
+// а более новым (after) - больший id. И при этом не важно,
+// удалены эти сообщения или нет.
 //
 // GET /api/threads
 func (c *Client) ThreadsList(ctx context.Context, params ThreadsListParams) (ThreadsListRes, error) {
@@ -1459,12 +1513,12 @@ func (c *Client) sendUserMe(ctx context.Context) (res UserMeRes, err error) {
 // Update user information.
 //
 // POST /api/user/{userId}
-func (c *Client) UserUpdate(ctx context.Context, request *UserCreateRequest, params UserUpdateParams) (*UserCreateResponseOk, error) {
+func (c *Client) UserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponseOk, error) {
 	res, err := c.sendUserUpdate(ctx, request, params)
 	return res, err
 }
 
-func (c *Client) sendUserUpdate(ctx context.Context, request *UserCreateRequest, params UserUpdateParams) (res *UserCreateResponseOk, err error) {
+func (c *Client) sendUserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (res *UserCreateResponseOk, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("userUpdate"),
 		semconv.HTTPRequestMethodKey.String("POST"),

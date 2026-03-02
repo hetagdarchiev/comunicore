@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
 
-package threads
+package handler
 
 import (
 	"context"

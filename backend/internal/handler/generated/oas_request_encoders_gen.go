@@ -67,7 +67,7 @@ func encodeUserCreateRequest(
 }
 
 func encodeUserUpdateRequest(
-	req *UserCreateRequest,
+	req *UserUpdateRequest,
 	r *http.Request,
 ) error {
 	const contentType = "application/json"
