@@ -1818,14 +1818,14 @@ func (s *UserCreateRequest) UnmarshalJSON(data []byte) error {
 }
 
 // Encode implements json.Marshaler.
-func (s *UserCreateResponseOk) Encode(e *jx.Encoder) {
+func (s *UserCreateResponse) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
 	e.ObjEnd()
 }
 
 // encodeFields encodes fields.
-func (s *UserCreateResponseOk) encodeFields(e *jx.Encoder) {
+func (s *UserCreateResponse) encodeFields(e *jx.Encoder) {
 	{
 		e.FieldStart("id")
 		e.Int(s.ID)
@@ -1840,16 +1840,16 @@ func (s *UserCreateResponseOk) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfUserCreateResponseOk = [3]string{
+var jsonFieldsNameOfUserCreateResponse = [3]string{
 	0: "id",
 	1: "name",
 	2: "email",
 }
 
-// Decode decodes UserCreateResponseOk from json.
-func (s *UserCreateResponseOk) Decode(d *jx.Decoder) error {
+// Decode decodes UserCreateResponse from json.
+func (s *UserCreateResponse) Decode(d *jx.Decoder) error {
 	if s == nil {
-		return errors.New("invalid: unable to decode UserCreateResponseOk to nil")
+		return errors.New("invalid: unable to decode UserCreateResponse to nil")
 	}
 	var requiredBitSet [1]uint8
 
@@ -1896,7 +1896,7 @@ func (s *UserCreateResponseOk) Decode(d *jx.Decoder) error {
 		}
 		return nil
 	}); err != nil {
-		return errors.Wrap(err, "decode UserCreateResponseOk")
+		return errors.Wrap(err, "decode UserCreateResponse")
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
@@ -1913,8 +1913,8 @@ func (s *UserCreateResponseOk) Decode(d *jx.Decoder) error {
 				bitIdx := bits.TrailingZeros8(result)
 				fieldIdx := i*8 + bitIdx
 				var name string
-				if fieldIdx < len(jsonFieldsNameOfUserCreateResponseOk) {
-					name = jsonFieldsNameOfUserCreateResponseOk[fieldIdx]
+				if fieldIdx < len(jsonFieldsNameOfUserCreateResponse) {
+					name = jsonFieldsNameOfUserCreateResponse[fieldIdx]
 				} else {
 					name = strconv.Itoa(fieldIdx)
 				}
@@ -1935,90 +1935,14 @@ func (s *UserCreateResponseOk) Decode(d *jx.Decoder) error {
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s *UserCreateResponseOk) MarshalJSON() ([]byte, error) {
+func (s *UserCreateResponse) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *UserCreateResponseOk) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes UserGetBadRequest as json.
-func (s UserGetBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes UserGetBadRequest from json.
-func (s *UserGetBadRequest) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode UserGetBadRequest to nil")
-	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = UserGetBadRequest(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s UserGetBadRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *UserGetBadRequest) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes UserGetInternalServerError as json.
-func (s UserGetInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes UserGetInternalServerError from json.
-func (s *UserGetInternalServerError) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode UserGetInternalServerError to nil")
-	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = UserGetInternalServerError(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s UserGetInternalServerError) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *UserGetInternalServerError) UnmarshalJSON(data []byte) error {
+func (s *UserCreateResponse) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

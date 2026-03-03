@@ -123,7 +123,7 @@ func (s *UserCreateRequest) Validate() error {
 	return nil
 }
 
-func (s *UserCreateResponseOk) Validate() error {
+func (s *UserCreateResponse) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
 	}

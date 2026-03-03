@@ -138,7 +138,7 @@ type UserHandler interface {
 	// Update user information.
 	//
 	// POST /api/user/{userId}
-	UserUpdate(ctx context.Context, req *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponseOk, error)
+	UserUpdate(ctx context.Context, req *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponse, error)
 }
 
 // Server implements http server based on OpenAPI v3 specification and

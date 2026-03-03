@@ -131,7 +131,7 @@ func (h *OgenHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRe
 	return h.userHandler.UserCreate(ctx, req)
 }
 
-func (h *OgenHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponseOk, error) {
+func (h *OgenHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponse, error) {
 	return nil, fmt.Errorf("not implemented")
 }
 

@@ -158,7 +158,7 @@ type UserInvoker interface {
 	// Update user information.
 	//
 	// POST /api/user/{userId}
-	UserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponseOk, error)
+	UserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponse, error)
 }
 
 // Client implements OAS client.
@@ -1513,12 +1513,12 @@ func (c *Client) sendUserMe(ctx context.Context) (res UserMeRes, err error) {
 // Update user information.
 //
 // POST /api/user/{userId}
-func (c *Client) UserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponseOk, error) {
+func (c *Client) UserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (*UserCreateResponse, error) {
 	res, err := c.sendUserUpdate(ctx, request, params)
 	return res, err
 }
 
-func (c *Client) sendUserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (res *UserCreateResponseOk, err error) {
+func (c *Client) sendUserUpdate(ctx context.Context, request *UserUpdateRequest, params UserUpdateParams) (res *UserCreateResponse, err error) {
 	otelAttrs := []attribute.KeyValue{
 		otelogen.OperationID("userUpdate"),
 		semconv.HTTPRequestMethodKey.String("POST"),

@@ -264,7 +264,7 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter, s
 
 func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter, span trace.Span) error {
 	switch response := response.(type) {
-	case *UserCreateResponseOk:
+	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(201)
 		span.SetStatus(codes.Ok, http.StatusText(201))
@@ -317,7 +317,7 @@ func encodeUserDeleteResponse(response *UserDeleteNoContent, w http.ResponseWrit
 
 func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter, span trace.Span) error {
 	switch response := response.(type) {
-	case *UserCreateResponseOk:
+	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
 		span.SetStatus(codes.Ok, http.StatusText(200))
@@ -331,28 +331,14 @@ func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter, span trac
 		return nil
 
 	case *UserGetBadRequest:
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
 		span.SetStatus(codes.Error, http.StatusText(400))
-
-		e := new(jx.Encoder)
-		response.Encode(e)
-		if _, err := e.WriteTo(w); err != nil {
-			return errors.Wrap(err, "write")
-		}
 
 		return nil
 
 	case *UserGetInternalServerError:
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 		span.SetStatus(codes.Error, http.StatusText(500))
-
-		e := new(jx.Encoder)
-		response.Encode(e)
-		if _, err := e.WriteTo(w); err != nil {
-			return errors.Wrap(err, "write")
-		}
 
 		return nil
 
@@ -363,7 +349,7 @@ func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter, span trac
 
 func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter, span trace.Span) error {
 	switch response := response.(type) {
-	case *UserCreateResponseOk:
+	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
 		span.SetStatus(codes.Ok, http.StatusText(200))
@@ -407,7 +393,7 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter, span trace.
 	}
 }
 
-func encodeUserUpdateResponse(response *UserCreateResponseOk, w http.ResponseWriter, span trace.Span) error {
+func encodeUserUpdateResponse(response *UserCreateResponse, w http.ResponseWriter, span trace.Span) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
 	span.SetStatus(codes.Ok, http.StatusText(200))

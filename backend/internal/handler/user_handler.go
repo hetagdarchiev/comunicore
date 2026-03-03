@@ -21,14 +21,18 @@ func NewUserHandler(userService *userService.UserService, jwtService *jwt.JwtAut
 }
 
 func (u *UserHandler) UserGet(ctx context.Context, params forumApi.UserGetParams) (forumApi.UserGetRes, error) {
-	return u.userGetById(ctx, params.UserId)
+	res, err := u.userGetById(ctx, params.UserId)
+	if err != nil {
+		return &forumApi.UserGetInternalServerError{}, err
+	}
+	return res, err
 }
-func (u *UserHandler) userGetById(ctx context.Context, userId int) (*forumApi.UserCreateResponseOk, error) {
+func (u *UserHandler) userGetById(ctx context.Context, userId int) (*forumApi.UserCreateResponse, error) {
 	user, err := u.userService.Get(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
-	return &forumApi.UserCreateResponseOk{
+	return &forumApi.UserCreateResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
@@ -42,18 +46,18 @@ func (u *UserHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRe
 	if err != nil {
 		return nil, err
 	}
-	return &forumApi.UserCreateResponseOk{
+	return &forumApi.UserCreateResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
 	}, nil
 }
-func (u *UserHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponseOk, error) {
+func (u *UserHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponse, error) {
 	user, err := u.userService.Update(ctx, params.UserId, req.Name, req.Email)
 	if err != nil {
 		return nil, err
 	}
-	return &forumApi.UserCreateResponseOk{
+	return &forumApi.UserCreateResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
