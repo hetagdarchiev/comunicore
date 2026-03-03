@@ -8,15 +8,29 @@ build:
 run +CONFIG: build
   ./target/forum --config {{CONFIG}}
 
-generate: install-tools
+generate-all: generate-ogen generate-sqlc
+
+generate-ogen: install-ogen
   GOBIN={{GO_BIN_DIR}} go generate ./...
 
-install-tools: install-ogen
+generate-sqlc: install-sqlc
+  @cd internal/repository/sqlc && \
+  {{GO_BIN_DIR}}/sqlc generate -f ./sqlc.yaml
 
+install-tools: install-ogen install-sqlc
+# v1.20.1
 install-ogen:
   @[ ! -d {{GO_BIN_DIR}} ] || mkdir -p {{GO_BIN_DIR}}
   @if [[ ! -f {{GO_BIN_DIR}}/ogen ]]; \
   then \
     echo "Installing Ogen to {{GO_BIN_DIR}}"; \
     GOBIN={{GO_BIN_DIR}} go install github.com/ogen-go/ogen/cmd/ogen@latest; \
+  fi
+# v1.30.0
+install-sqlc:
+  @[ ! -d {{GO_BIN_DIR}} ] || mkdir -p {{GO_BIN_DIR}}
+  @if [[ ! -f {{GO_BIN_DIR}}/sqlc ]]; \
+  then \
+    echo "Installing sqlc to {{GO_BIN_DIR}}"; \
+    GOBIN={{GO_BIN_DIR}} go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest; \
   fi

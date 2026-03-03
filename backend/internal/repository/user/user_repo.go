@@ -7,12 +7,12 @@ import (
 	"context"
 
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
+	userDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/model"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type UserRepo struct {
-	dbpool *pgxpool.Pool
+	queries *userDb.Queries
 }
 
 func NewUserRepo(dsn string) (*UserRepo, error) {
@@ -20,70 +20,36 @@ func NewUserRepo(dsn string) (*UserRepo, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &UserRepo{dbpool: pool}, nil
+	return &UserRepo{queries: userDb.New(pool)}, nil
 }
 
-func (r *UserRepo) Get(ctx context.Context, userId int) (*model.User, error) {
-	row := r.dbpool.QueryRow(ctx,
-		`SELECT id, name, email FROM users WHERE id = $1`,
-		userId)
-
-	var id int
-	var name, email string
-	if err := row.Scan(&id, &name, &email); err != nil {
-		return nil, err // TODO: not found error
-	}
-	return &model.User{
-		ID:    id,
-		Name:  name,
-		Email: email,
-	}, nil
+func (r *UserRepo) Get(ctx context.Context, userId int) (model.User, error) {
+	row, err := r.queries.UserGet(ctx, int32(userId))
+	return model.User{
+		ID:    int(row.ID),
+		Name:  row.Name,
+		Email: row.Email,
+	}, err
 }
 func (r *UserRepo) GetNameById(ctx context.Context, userId int) (string, error) {
 	// TODO: optimize with cache
-	row := r.dbpool.QueryRow(ctx,
-		`SELECT name FROM users WHERE id = $1`,
-		userId)
-
-	var name string
-	if err := row.Scan(&name); err != nil {
-		return "", err
-	}
-	return name, nil
+	return r.queries.UserGetNameById(ctx, int32(userId))
 }
 
-func (r *UserRepo) Create(ctx context.Context, name, email string) (*model.User, error) {
-	row := r.dbpool.QueryRow(ctx,
-		`INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email`,
-		name, email)
-
-	var id int
-	if err := row.Scan(&id, &name, &email); err != nil {
-		return nil, err
-	}
-	return &model.User{
-		ID:    id,
-		Name:  name,
-		Email: email,
-	}, nil
+func (r *UserRepo) Create(ctx context.Context, name, email string) (model.User, error) {
+	row, err := r.queries.UserCreate(ctx, userDb.UserCreateParams{Name: name, Email: email})
+	return model.User{
+		ID:    int(row.ID),
+		Name:  row.Name,
+		Email: row.Email,
+	}, err
 }
 
-func (r *UserRepo) Update(ctx context.Context, userId int, name, email string) (*model.User, error) {
-	row := r.dbpool.QueryRow(ctx,
-		`UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING id, name, email`,
-		name, email, userId)
-
-	var id int
-	if err := row.Scan(&id, &name, &email); err != nil {
-		return nil, err
-	}
-	return &model.User{
-		ID:    id,
-		Name:  name,
-		Email: email,
-	}, nil
-}
-func (r *UserRepo) Delete(ctx context.Context, userId int) error {
-	_, err := r.dbpool.Exec(ctx, `DELETE FROM users WHERE id = $1`, userId)
-	return err
+func (r *UserRepo) Update(ctx context.Context, userId int, name, email string) (model.User, error) {
+	row, err := r.queries.UserUpdate(ctx, userDb.UserUpdateParams{ID: int32(userId), Name: name, Email: email})
+	return model.User{
+		ID:    int(row.ID),
+		Name:  row.Name,
+		Email: row.Email,
+	}, err
 }

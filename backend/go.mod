@@ -10,9 +10,9 @@ require (
 	github.com/jackc/pgx/v5 v5.8.0
 	github.com/ogen-go/ogen v1.20.1
 	github.com/pelletier/go-toml/v2 v2.2.4
-	go.opentelemetry.io/otel v1.40.0
-	go.opentelemetry.io/otel/metric v1.40.0
-	go.opentelemetry.io/otel/trace v1.40.0
+	go.opentelemetry.io/otel v1.41.0
+	go.opentelemetry.io/otel/metric v1.41.0
+	go.opentelemetry.io/otel/trace v1.41.0
 	golang.org/x/crypto v0.48.0
 )
 

@@ -5,15 +5,14 @@ package posts
 
 import (
 	"context"
-	"database/sql"
 
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
+	postsDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/model"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type PostsRepo struct {
-	dbpool *pgxpool.Pool
+	queries *postsDb.Queries
 }
 
 func NewPostsRepo(dsn string) (*PostsRepo, error) {
@@ -21,57 +20,38 @@ func NewPostsRepo(dsn string) (*PostsRepo, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &PostsRepo{dbpool: pool}, nil
+	return &PostsRepo{queries: postsDb.New(pool)}, nil
 }
 
 // create post in thread
 func (r *PostsRepo) Create(ctx context.Context, post model.PostCreate) (model.Post, error) {
-	row := r.dbpool.QueryRow(ctx,
-		`INSERT INTO posts (thread_id, user_id, content) VALUES ($1, $2, $3)
-		RETURNING id, thread_id, user_id, content, created_at`,
-		post.ThreadID, post.UserID, post.Content)
-
-	var id int
-	var threadID int
-	var userID int
-	var content string
-	var createdAt sql.NullTime
-	if err := row.Scan(&id, &threadID, &userID, &content, &createdAt); err != nil {
-		return model.Post{}, err
-	}
+	row, err := r.queries.PostCreate(ctx, postsDb.PostCreateParams{
+		ThreadID: int32(post.ThreadID),
+		UserID:   int32(post.UserID),
+		Content:  post.Content,
+	})
 	return model.Post{
-		ID:        id,
-		ThreadID:  threadID,
-		UserID:    userID,
-		Content:   content,
-		CreatedAt: createdAt.Time,
-	}, nil
+		ID:        int(row.ID),
+		ThreadID:  int(row.ThreadID),
+		UserID:    int(row.UserID),
+		Content:   row.Content,
+		CreatedAt: row.CreatedAt.Time,
+	}, err
 }
 
 // list posts by thread id
 func (r *PostsRepo) List(ctx context.Context, threadId int) ([]model.Post, error) {
-	rows, err := r.dbpool.Query(ctx,
-		`SELECT id, thread_id, user_id, content, created_at FROM posts WHERE thread_id = $1`, threadId)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
+	rows, err := r.queries.PostListByThreadId(ctx, int32(threadId))
 
 	var posts []model.Post
-	for rows.Next() {
-		var id int
-		var threadID int
-		var userID int
-		var content string
-		if err := rows.Scan(&id, &threadID, &userID, &content); err != nil {
-			return nil, err
-		}
+	for _, data := range rows {
 		posts = append(posts, model.Post{
-			ID:       id,
-			ThreadID: threadID,
-			UserID:   userID,
-			Content:  content,
+			ID:        int(data.ID),
+			ThreadID:  int(data.ThreadID),
+			UserID:    int(data.UserID),
+			Content:   data.Content,
+			CreatedAt: data.CreatedAt.Time,
 		})
 	}
-	return posts, nil
+	return posts, err
 }

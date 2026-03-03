@@ -10,13 +10,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
+	authDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
-	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type AuthRepo struct {
-	dbpool *pgxpool.Pool
-	jwt    *jwt.JwtAuthorizator
+	jwt     *jwt.JwtAuthorizator
+	queries *authDb.Queries
 }
 
 func NewAuthRepo(dsn string, jwtAuthorizator *jwt.JwtAuthorizator) (*AuthRepo, error) {
@@ -26,29 +27,29 @@ func NewAuthRepo(dsn string, jwtAuthorizator *jwt.JwtAuthorizator) (*AuthRepo, e
 	}
 
 	return &AuthRepo{
-		dbpool: pool,
-		jwt:    jwtAuthorizator}, nil
+		jwt:     jwtAuthorizator,
+		queries: authDb.New(pool),
+	}, nil
 }
 
 func (r *AuthRepo) AuthCreate(ctx context.Context, user_id int64, login, password string) error {
 	passwordHash := hashPassword(password)
 	fmt.Printf("password hash %s\n", passwordHash)
 
-	_, err := r.dbpool.Exec(ctx,
-		`INSERT INTO auth_passwords (user_id, login, password_hash) VALUES ($1, $2, $3)`,
-		user_id, login, passwordHash)
-
-	return err
+	return r.queries.AuthCreate(ctx, authDb.AuthCreateParams{
+		UserID:       int32(user_id),
+		Login:        login,
+		PasswordHash: passwordHash,
+	})
 }
 func (r *AuthRepo) AuthUpdatePassword(ctx context.Context, user_id int64, password string) error {
 	passwordHash := hashPassword(password)
 	fmt.Printf("password hash %s\n", passwordHash)
-
-	_, err := r.dbpool.Exec(ctx,
-		`UPDATE auth_passwords SET password_hash = $2 WHERE user_id = $1`, // TODO: upsert
-		user_id, passwordHash)
-
-	return err
+	// TODO: make upsert query
+	return r.queries.AuthUpdatePassword(ctx, authDb.AuthUpdatePasswordParams{
+		UserID:       int32(user_id),
+		PasswordHash: passwordHash,
+	})
 }
 func (r *AuthRepo) Login(ctx context.Context, login, password string) (access, refresh string, err error) {
 	userId, err := r.checkLoginPassword(ctx, login, password)
@@ -64,12 +65,12 @@ func (r *AuthRepo) Login(ctx context.Context, login, password string) (access, r
 	fmt.Printf("access token: %s\n", accessToken)
 	fmt.Printf("refresh token: %s\n", refreshToken)
 
-	_, err = r.dbpool.Exec(ctx, `INSERT INTO sessions (jwt_id, user_id) VALUES ($1, $2)`, refreshUuid, userId)
-	if err != nil {
-		return "", "", err
-	}
+	err = r.queries.AuthCreateSession(ctx, authDb.AuthCreateSessionParams{
+		JwtID:  pgtype.UUID{Bytes: refreshUuid, Valid: true},
+		UserID: int32(userId),
+	})
 
-	return accessToken, refreshToken, nil
+	return accessToken, refreshToken, err
 }
 
 func (r *AuthRepo) Logout(ctx context.Context, refreshToken string) error {
@@ -77,9 +78,7 @@ func (r *AuthRepo) Logout(ctx context.Context, refreshToken string) error {
 	if err != nil {
 		return err
 	}
-	_, err = r.dbpool.Exec(ctx, `DELETE FROM sessions WHERE uuid = $1`, uu)
-
-	return err
+	return r.queries.AuthDeleteSession(ctx, pgtype.UUID{Bytes: uu, Valid: true})
 }
 
 func (r *AuthRepo) Refresh(ctx context.Context, refreshToken string) (access, newRefresh string, err error) {
@@ -99,20 +98,21 @@ func (r *AuthRepo) Refresh(ctx context.Context, refreshToken string) (access, ne
 		return "", "", err
 	}
 
-	cmdTag, err := r.dbpool.Exec(ctx,
-		`UPDATE sessions SET jwt_id = $1 WHERE user_id = $2 AND jwt_id = $3`,
-		refreshJwtId, userId, oldJwtId)
+	rowsAffected, err := r.queries.AuthUpdateSession(ctx, authDb.AuthUpdateSessionParams{
+		JwtID:   pgtype.UUID{Bytes: refreshJwtId, Valid: true},
+		UserID:  int32(userId),
+		JwtID_2: pgtype.UUID{Bytes: oldJwtId, Valid: true},
+	})
 	if err != nil {
 		return "", "", err
 	}
-	if cmdTag.RowsAffected() == 1 {
+	if rowsAffected == 1 {
 		return newAccess, newRefresh, nil
 	}
 	// session already refreshed, probubly by hacker, removing all sessions for user
 	log.Printf("session not found or already refreshed, removing all sessions for user %d with old jwt id %s\n",
 		userId, oldJwtId.String())
-
-	_, err = r.dbpool.Exec(ctx, `DELETE FROM sessions WHERE user_id = $1`, userId)
+	err = r.queries.AuthDeleteAllUserSessions(ctx, int32(userId))
 
 	return "", "", fmt.Errorf("session not found or already refreshed")
 }
@@ -130,21 +130,12 @@ func (r *AuthRepo) createTokens(userId int64) (access, refresh string, refreshUu
 }
 
 func (r *AuthRepo) checkLoginPassword(ctx context.Context, login, password string) (int, error) {
-	row := r.dbpool.QueryRow(ctx,
-		`SELECT user_id, password_hash FROM auth_passwords WHERE login = $1`,
-		login)
+	row, err := r.queries.AuthGetUserAndPasswordHash(ctx, login)
+	fmt.Printf("stored hash %s\n", row.PasswordHash)
 
-	var currentHash string
-	var userId int64
-	err := row.Scan(&userId, &currentHash)
+	err = authenticateUser(row.PasswordHash, password)
 	if err != nil {
 		return 0, err
 	}
-	fmt.Printf("stored hash %s\n", currentHash)
-
-	err = authenticateUser(currentHash, password)
-	if err != nil {
-		return 0, err
-	}
-	return int(userId), nil
+	return int(row.UserID), nil
 }

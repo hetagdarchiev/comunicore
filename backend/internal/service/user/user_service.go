@@ -10,10 +10,9 @@ import (
 )
 
 type UserRepo interface {
-	Get(ctx context.Context, userId int) (*model.User, error)
-	Create(ctx context.Context, name, email string) (*model.User, error)
-	Update(ctx context.Context, userId int, name, email string) (*model.User, error)
-	Delete(ctx context.Context, userId int) error
+	Get(ctx context.Context, userId int) (model.User, error)
+	Create(ctx context.Context, name, email string) (model.User, error)
+	Update(ctx context.Context, userId int, name, email string) (model.User, error)
 }
 
 type AuthRepo interface {
@@ -30,39 +29,31 @@ func NewUserService(userRepo UserRepo, authRepo AuthRepo) *UserService {
 	return &UserService{userRepo: userRepo, authRepo: authRepo}
 }
 
-func (r *UserService) Get(ctx context.Context, userId int) (*model.User, error) {
+func (r *UserService) Get(ctx context.Context, userId int) (model.User, error) {
 	user, err := r.userRepo.Get(ctx, userId)
 	if err != nil {
-		return nil, err
+		return model.User{}, err
 	}
 
 	return user, nil
 }
-func (r *UserService) Create(ctx context.Context, name, email, password string) (*model.User, error) {
+func (r *UserService) Create(ctx context.Context, name, email, password string) (model.User, error) {
 	user, err := r.userRepo.Create(ctx, name, email)
 	if err != nil {
-		return nil, err
+		return model.User{}, err
 	}
 	err = r.authRepo.AuthCreate(ctx, int64(user.ID), email, password)
 	if err != nil {
-		return nil, err
+		return model.User{}, err
 	}
 
 	return user, nil
 }
-func (r *UserService) Update(ctx context.Context, userId int, name, email string) (*model.User, error) {
+func (r *UserService) Update(ctx context.Context, userId int, name, email string) (model.User, error) {
 	user, err := r.userRepo.Update(ctx, userId, name, email)
 	if err != nil {
-		return nil, err
+		return model.User{}, err
 	}
 
 	return user, nil
-}
-func (r *UserService) Delete(ctx context.Context, userId int) error {
-	err := r.userRepo.Delete(ctx, userId)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
