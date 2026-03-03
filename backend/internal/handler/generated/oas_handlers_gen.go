@@ -2170,7 +2170,7 @@ func (s *Server) handleUserUpdateRequest(args [1]string, argsEscaped bool, w htt
 		}
 	}()
 
-	var response *UserCreateResponseOk
+	var response *UserCreateResponse
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -2191,7 +2191,7 @@ func (s *Server) handleUserUpdateRequest(args [1]string, argsEscaped bool, w htt
 		type (
 			Request  = *UserUpdateRequest
 			Params   = UserUpdateParams
-			Response = *UserCreateResponseOk
+			Response = *UserCreateResponse
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

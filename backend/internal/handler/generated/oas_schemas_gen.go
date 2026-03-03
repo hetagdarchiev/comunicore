@@ -95,6 +95,7 @@ func (s *JwtAuth) SetRoles(val []string) {
 	s.Roles = val
 }
 
+// Ref: #/components/schemas/JwtToken
 type JwtToken struct {
 	RefreshToken string `json:"refreshToken"`
 	AccessToken  string `json:"accessToken"`
@@ -574,55 +575,57 @@ func (s *UserCreateRequest) SetPassword(val string) {
 	s.Password = val
 }
 
-// Ref: #/components/schemas/UserCreateResponseOk
-type UserCreateResponseOk struct {
+// Ref: #/components/schemas/UserCreateResponse
+type UserCreateResponse struct {
 	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
 // GetID returns the value of ID.
-func (s *UserCreateResponseOk) GetID() int {
+func (s *UserCreateResponse) GetID() int {
 	return s.ID
 }
 
 // GetName returns the value of Name.
-func (s *UserCreateResponseOk) GetName() string {
+func (s *UserCreateResponse) GetName() string {
 	return s.Name
 }
 
 // GetEmail returns the value of Email.
-func (s *UserCreateResponseOk) GetEmail() string {
+func (s *UserCreateResponse) GetEmail() string {
 	return s.Email
 }
 
 // SetID sets the value of ID.
-func (s *UserCreateResponseOk) SetID(val int) {
+func (s *UserCreateResponse) SetID(val int) {
 	s.ID = val
 }
 
 // SetName sets the value of Name.
-func (s *UserCreateResponseOk) SetName(val string) {
+func (s *UserCreateResponse) SetName(val string) {
 	s.Name = val
 }
 
 // SetEmail sets the value of Email.
-func (s *UserCreateResponseOk) SetEmail(val string) {
+func (s *UserCreateResponse) SetEmail(val string) {
 	s.Email = val
 }
 
-func (*UserCreateResponseOk) userCreateRes() {}
-func (*UserCreateResponseOk) userGetRes()    {}
-func (*UserCreateResponseOk) userMeRes()     {}
+func (*UserCreateResponse) userCreateRes() {}
+func (*UserCreateResponse) userGetRes()    {}
+func (*UserCreateResponse) userMeRes()     {}
 
 // UserDeleteNoContent is response for UserDelete operation.
 type UserDeleteNoContent struct{}
 
-type UserGetBadRequest AuthRefreshUnauthorizedApplicationJSON
+// UserGetBadRequest is response for UserGet operation.
+type UserGetBadRequest struct{}
 
 func (*UserGetBadRequest) userGetRes() {}
 
-type UserGetInternalServerError AuthRefreshUnauthorizedApplicationJSON
+// UserGetInternalServerError is response for UserGet operation.
+type UserGetInternalServerError struct{}
 
 func (*UserGetInternalServerError) userGetRes() {}
 

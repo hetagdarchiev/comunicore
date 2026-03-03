@@ -155,6 +155,6 @@ func (UnimplementedHandler) UserMe(ctx context.Context) (r UserMeRes, _ error) {
 // Update user information.
 //
 // POST /api/user/{userId}
-func (UnimplementedHandler) UserUpdate(ctx context.Context, req *UserUpdateRequest, params UserUpdateParams) (r *UserCreateResponseOk, _ error) {
+func (UnimplementedHandler) UserUpdate(ctx context.Context, req *UserUpdateRequest, params UserUpdateParams) (r *UserCreateResponse, _ error) {
 	return r, ht.ErrNotImplemented
 }
