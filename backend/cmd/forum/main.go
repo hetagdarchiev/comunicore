@@ -20,18 +20,16 @@ import (
 )
 
 func main() {
-	cfg := config.CmdParse()
+	cmdConfig := config.CmdParse()
+	appConfig := config.MustReadAppConfig(cmdConfig)
 
-	appConfig := config.MustReadAppConfig(cfg)
+	mux := http.NewServeMux()
+	handler.RegisterOgenRoutes(mux, appConfig)
 
 	addr := net.JoinHostPort(appConfig.Server.Host, strconv.Itoa(appConfig.Server.Port))
 	if addr == "" {
 		addr = ":8080"
 	}
-
-	mux := http.NewServeMux()
-	handler.RegisterOgenRoutes(mux, appConfig)
-
 	srv := &http.Server{
 		Addr:    addr,
 		Handler: mux,
