@@ -14,8 +14,12 @@ type GlobalContext struct {
 	Request        *http.Request
 	ResponseWriter http.ResponseWriter
 
-	RefreshToken string
-	UserID       int
+	RefreshToken      string
+	AccessToken       string
+	UserID            int
+	RefreshTokenIsSet bool
+	AccessTokenIsSet  bool
+	UserIDIsSet       bool
 }
 
 // WithGlobalContext is a middleware that stores GlobalContext in the request context.

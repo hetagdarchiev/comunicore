@@ -311,8 +311,8 @@ components:
         - refreshToken
         - accessToken
       example:
-        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6ImpvaG5fZG9lIiwiZW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODQ4ODAwMH0.4s8n3v7z8X9y2a1b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7"
-        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwibmFtZSI6ImpvaG5fZG9lIiwiZW1haWwiOiJqb2huLmRvZUBleGFtcGxlLmNvbSIsImlhdCI6MTY5ODQ4ODAwMH0.4s8n3v7z8X9y2a1b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7"
+        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlzcyI6ImZvcnVtIiwiZXhwIjoxNzcyNjU5MDgxLCJqdGkiOiJBWnk2bTRoamUvSytkRkVmS25QTEtnIn0.UmYW5WZIZ4CaqmsycXXzhjmOqY2G-IM3DncogTA7uno"
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlzcyI6ImZvcnVtIiwiZXhwIjoxNzcyNjU5MDgxLCJqdGkiOiJBWnk2bTRoamUvSytkRkVmS25QTEtnIn0.UmYW5WZIZ4CaqmsycXXzhjmOqY2G-IM3DncogTA7uno"
     UserCreateRequest:
       type: object
       properties:

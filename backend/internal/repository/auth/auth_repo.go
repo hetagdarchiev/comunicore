@@ -83,6 +83,7 @@ func (r *AuthRepo) Logout(ctx context.Context, refreshToken string) error {
 
 func (r *AuthRepo) Refresh(ctx context.Context, refreshToken string) (access, newRefresh string, err error) {
 	claims, err := r.jwt.ValidateToken(refreshToken)
+	log.Printf("AuthRepo.Refresh refresh token: %+v\n", refreshToken)
 	if err != nil {
 		return "", "", err
 	}

@@ -34,3 +34,7 @@ install-sqlc:
     echo "Installing sqlc to {{GO_BIN_DIR}}"; \
     GOBIN={{GO_BIN_DIR}} go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest; \
   fi
+
+e2e_tests:
+    @echo "Starting API e2e tests..."
+    @go test -count=1 ./internal/tests/... -v
