@@ -6,6 +6,7 @@ package handler
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -37,6 +38,10 @@ func (u *AuthHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequ
 }
 func (u *AuthHandler) AuthRefresh(ctx context.Context) (forumApi.AuthRefreshRes, error) {
 	globalCtx := GlobalContextFromContext(ctx)
+	if globalCtx == nil || globalCtx.RefreshTokenIsSet == false || globalCtx.RefreshToken == "" {
+		log.Printf("global context %p, %+v\n", globalCtx, globalCtx)
+		return nil, fmt.Errorf("handler AuthRefresh invalid refresh token")
+	}
 	newAccess, newRefresh, err := u.authService.Refresh(ctx, globalCtx.RefreshToken)
 	if err != nil {
 		return nil, err
@@ -60,7 +65,9 @@ func (u *AuthHandler) AuthLogout(ctx context.Context) error {
 		return err
 	}
 
-	setRefreshCookie(globalCtx.ResponseWriter, "", time.Unix(0, 0))
+	deleteRefreshCookie(globalCtx.ResponseWriter, "")
+	globalCtx.ResponseWriter.Header().Set("Clear-Site-Data", "cookies")
+
 	return nil
 }
 func setRefreshCookie(w http.ResponseWriter, refreshToken string, expires time.Time) {
@@ -68,6 +75,16 @@ func setRefreshCookie(w http.ResponseWriter, refreshToken string, expires time.T
 		Name:     "refreshToken",
 		Value:    refreshToken,
 		Expires:  expires,
+		HttpOnly: true,
+		Path:     "/api/auth", // FIXME: get from config
+	}
+	http.SetCookie(w, cookie)
+}
+func deleteRefreshCookie(w http.ResponseWriter, refreshToken string) {
+	cookie := &http.Cookie{
+		Name:     "refreshToken",
+		Value:    refreshToken,
+		MaxAge:   -1,
 		HttpOnly: true,
 		Path:     "/api/auth", // FIXME: get from config
 	}

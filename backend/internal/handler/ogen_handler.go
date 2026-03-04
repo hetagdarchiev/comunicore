@@ -6,10 +6,12 @@ package handler
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 
 	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
+	"github.com/ogen-go/ogen/ogenerrors"
 
 	authRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/auth"
 	postsRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/posts"
@@ -44,18 +46,57 @@ func NewOgenHandler(
 }
 
 type securityHandler struct {
+	jwtService *jwtService.JwtAuthorizator
+}
+
+func NewSecurityHandler(jwtService *jwtService.JwtAuthorizator) *securityHandler {
+	return &securityHandler{
+		jwtService: jwtService,
+	}
 }
 
 func (h *securityHandler) HandleCookieAuth(
 	ctx context.Context, operationName forumApi.OperationName, t forumApi.CookieAuth) (context.Context, error) {
 
 	fmt.Printf("Cookie Auth with operation name %s and APIKey %s\n", operationName, t.APIKey)
+	global := GlobalContextFromContext(ctx)
+	if global == nil {
+		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+	}
+	claims, err := h.jwtService.ValidateToken(t.APIKey)
+	if err != nil {
+		log.Printf("JWT refresh token validation error: %v\n", err)
+		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+	}
+	global.RefreshToken = t.APIKey
+	global.RefreshTokenIsSet = true
+	if !global.UserIDIsSet {
+		global.UserID = int(claims.UserID)
+		global.UserIDIsSet = true
+	}
+
 	return ctx, nil
 }
 func (h *securityHandler) HandleJwtAuth(
 	ctx context.Context, operationName forumApi.OperationName, t forumApi.JwtAuth) (context.Context, error) {
 
 	fmt.Printf("JWT Auth with operation name %s and token %s\n", operationName, t.Token)
+
+	global := GlobalContextFromContext(ctx)
+	if global == nil {
+		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+	}
+	claims, err := h.jwtService.ValidateToken(t.Token)
+	if err != nil {
+		log.Printf("JWT access token validation error: %v\n", err)
+		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+	}
+	global.AccessToken = t.Token
+	global.AccessTokenIsSet = true
+	if !global.UserIDIsSet {
+		global.UserID = int(claims.UserID)
+		global.UserIDIsSet = true
+	}
 	return ctx, nil
 }
 
@@ -90,7 +131,7 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	threadsH := NewThreadsHandler(threadsS)
 
 	ogenHandler := NewOgenHandler(authH, userH, threadsH)
-	secHandler := &securityHandler{}
+	secHandler := NewSecurityHandler(jwtS)
 
 	srv, err := forumApi.NewServer(ogenHandler, secHandler)
 	if err != nil {
@@ -144,5 +185,10 @@ func (h *OgenHandler) AuthLogout(ctx context.Context) error {
 	return h.authHandler.AuthLogout(ctx)
 }
 func (h *OgenHandler) AuthRefresh(ctx context.Context) (forumApi.AuthRefreshRes, error) {
-	return h.authHandler.AuthRefresh(ctx)
+	res, err := h.authHandler.AuthRefresh(ctx)
+	if err != nil {
+		log.Printf("AuthRefresh error: %v\n", err)
+		return nil, err
+	}
+	return res, err
 }

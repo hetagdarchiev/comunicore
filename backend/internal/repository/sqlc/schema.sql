@@ -1,3 +1,4 @@
+-- only schema DDL queries. File used by sqlc AND e2e test setup
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
