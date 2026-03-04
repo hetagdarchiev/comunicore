@@ -5,13 +5,14 @@ on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches-ignore:
+      - 'wip**'
 
 jobs:
   frontend:
     name: Frontend (Next.js)
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,7 +47,7 @@ jobs:
   backend:
     name: Backend (Go)
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -61,10 +62,12 @@ jobs:
         working-directory: ./backend
         run: go mod download
 
-      - name: Tidy go.mod
+      - name: Setup just
         working-directory: ./backend
-        run: go mod tidy
+        uses: extractions/setup-just@v3
 
       - name: Build
         working-directory: ./backend
-        run: go build -v ./...
+        run: |
+          pwd
+          just build
