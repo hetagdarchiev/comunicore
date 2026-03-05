@@ -3,7 +3,8 @@ name: CI Checks
 
 on:
   push:
-    branches: [ main, develop ]
+    branches-ignore:
+      - 'wip**'
   pull_request:
     branches: [ main ]
 
@@ -11,7 +12,7 @@ jobs:
   frontend:
     name: Frontend (Next.js)
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,7 +47,7 @@ jobs:
   backend:
     name: Backend (Go)
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,17 +55,22 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.24'
+          go-version: '1.26'
           cache-dependency-path: ./backend/go.sum
 
       - name: Download dependencies
         working-directory: ./backend
         run: go mod download
 
-      - name: Tidy go.mod
-        working-directory: ./backend
-        run: go mod tidy
+      - name: Setup just
+        uses: extractions/setup-just@v3
 
       - name: Build
         working-directory: ./backend
-        run: go build -v ./...
+        run: |
+          just build
+
+      - name: Run e2e tests
+        working-directory: ./backend
+        run: |
+          just e2e_tests
