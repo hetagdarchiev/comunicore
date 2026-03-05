@@ -9,15 +9,19 @@
 
 ## 🛠 Технологический стек
 ### Frontend
-- **Framework:** Next.js 14 (App Router)
+- **Framework:** Next.js (App Router).
 - **Language:** TypeScript
+- **State & Data:** TanStack Query (v5) + Axios для взаимодействия с API.
+- **Forms:** React-hook-form в связке с Zod для валидации схем.
 - **Styling:** Tailwind CSS
 - **State Management:** TanStack Query (React Query)
+- **Linting:** ESLint, Prettier, Husky (Git Hooks)
 
 ### Backend
 - **Language:** Go (Golang)
-- **Database:** PostgreSQL (основная),
-- **API:** REST (стандарт)
+- **Database:** PostgreSQL ,
+- **API:** REST API (JSON). Генерация хендлеров, моделей и сериализации через ogen (OpenAPI v3)
+- **HTTP:** Использование только стандартной библиотеки net/http в рантайме
 
 ---
 
