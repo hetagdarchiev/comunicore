@@ -2,24 +2,23 @@
 ---
 
 ## 🎯 Основные функции
-- **Система сообществ:** Создание и управление тематическими форумами .
+- **Система сообществ:** Создание и управление тематическими форумами.
 - **Контент:** Посты (текст/фото) с системой вложенных комментариев.
 - **Взаимодействие:** Система рейтинга и кармы пользователя.
 - **Аналитика:** Анализ активности пользователей и связей внутри сообществ.
 
 ## 🛠 Технологический стек
 ### Frontend
-- **Framework:** Next.js (App Router).
+- **Framework:** Next.js (App Router) v15+ .
 - **Language:** TypeScript
-- **State & Data:** TanStack Query (v5) + Axios для взаимодействия с API.
+- **State & Data:** TanStack Query (React Query) + Axios для взаимодействия с API.
 - **Forms:** React-hook-form в связке с Zod для валидации схем.
-- **Styling:** Tailwind CSS
-- **State Management:** TanStack Query (React Query)
+- **Styling:** Tailwind CSS v4
 - **Linting:** ESLint, Prettier, Husky (Git Hooks)
 
 ### Backend
 - **Language:** Go (Golang)
-- **Database:** PostgreSQL ,
+- **Database:** PostgreSQL 
 - **API:** REST API (JSON). Генерация хендлеров, моделей и сериализации через ogen (OpenAPI v3)
 - **HTTP:** Использование только стандартной библиотеки net/http в рантайме
 
@@ -28,7 +27,7 @@
 ## 📊 Архитектура БД
 - `Users` — профили, аутентификация и карма.
 - `Communities` — управление правами модераторов и настройками.
-- `Posts & Comments` — иерархическая структура хранения (Recursive CTE).
+- `Posts & Comments` — Хранение иерархических данных с использованием Recursive CTE для выборки.
 ---
 ##  Как связаться?
 - Если ты хочешь присоединиться и прокачать свой стек — пиши в Telegram:
