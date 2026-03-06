@@ -38,7 +38,7 @@ func CmdParse() *CmdConfig {
 
 	serverHost := flag.String("server-host", "", "http server host")
 	serverPort := flag.Int("server-port", 0, "http server port")
-	serverJwtSecret := flag.String("server-jwt-secret", "", "http server jwt secret")
+	serverJwtSecret := flag.String("server-jwtsecret", "", "http server jwt secret")
 
 	flag.Parse()
 
@@ -104,7 +104,7 @@ type ServerConfig struct {
 func (srv *ServerConfig) check(cmd *CmdConfig) error {
 	srv.Host = mergeCmdEnvCurrentDefaultString(cmd.ServerHost, "FORUM_SERVER_HOST", srv.Host, "::1")
 	srv.Port = mergeCmdEnvCurrentDefaultInt(cmd.ServerPort, "FORUM_SERVER_PORT", srv.Port, 8080)
-	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWT_SECRET", srv.JwtSecret, "")
+	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWTSECRET", srv.JwtSecret, "")
 
 	if srv.Port <= 0 {
 		return fmt.Errorf("server port is zero or negative")

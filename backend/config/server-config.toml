@@ -9,17 +9,17 @@
 host = "::1"
 # default 8080, cmd --server-port, env FORUM_SERVER_PORT
 port = 8080
-# no default, must by nonempty, cmd --server-jwt-secret, env FORUM_SERVER_JWT_SECRET
-jwt_secret = ""
+# no default, must by nonempty, cmd --server-jwtsecret, env FORUM_SERVER_JWTSECRET
+jwtsecret = ""
 
 [database]
 # default "localhost", cmd --database-host, env FORUM_DATABASE_HOST
 host = "localhost"
 # default 5432, cmd --database-port, env FORUM_DATABASE_PORT
 port = 5432
+# no default, must by nonempty, cmd --database-name, env FORUM_DATABASE_NAME
+name = "forum"
 # no default, must be nonempty, cmd --database-user, env FORUM_DATABASE_USER
 user = "forum"
 # no default, must by nonempty, cmd --database-password, env FORUM_DATABASE_PASSWORD
 password = ""
-# no default, must by nonempty, cmd --database-name, env FORUM_DATABASE_NAME
-name = "forum"
