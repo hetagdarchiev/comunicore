@@ -1,0 +1,16 @@
+[Unit]
+Description=Comunicore Forum Backend
+After=network.target
+
+[Service]
+User=comunicore
+Group=comunicore
+WorkingDirectory=/home/comunicore/app
+ExecStart=/home/comunicore/app/forum --config ./config.toml
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
