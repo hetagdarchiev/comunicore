@@ -173,7 +173,7 @@ func (h *OgenHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRe
 }
 
 func (h *OgenHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponse, error) {
-	return nil, fmt.Errorf("not implemented")
+	return h.userHandler.UserUpdate(ctx, req, params)
 }
 
 // Auth handlers
