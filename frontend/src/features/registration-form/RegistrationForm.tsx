@@ -1,5 +1,6 @@
 'use client';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
 
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
@@ -7,7 +8,6 @@ import userIcon from '@/shared/assets/icons/form/user.svg';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
-import { useRouter } from 'next/navigation';
 
 interface IRegistrationForm {
   login: string;
