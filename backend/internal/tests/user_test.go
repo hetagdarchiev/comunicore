@@ -39,8 +39,71 @@ func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 
 		user.ID = int(obj.Value("id").Number().Raw())
 	})
+	t.Run("Test UserCreate Again Failure", func(t *testing.T) {
+		exp := expectCreate(t, baseURL)
 
+		obj := exp.POST(baseURL + userCreatePath).
+			WithJSON(map[string]any{
+				"name":     user.Name,
+				"email":    user.Email,
+				"password": user.Password,
+			}).
+			Expect().
+			Status(http.StatusBadRequest).JSON().Object()
+		// {"code":"ErrorNotUnique","data":["name","email"]}
+		obj.Keys().ContainsOnly("code", "data")
+		obj.Value("code").IsEqual("ErrorNotUnique")
+		obj.Value("data").Array().ContainsOnly("name", "email")
+	})
 	return user
+}
+
+func testUserCreateBad(t *testing.T, baseURL string) {
+	tests := []struct {
+		name           string
+		payload        map[string]any
+		expectedStatus int
+		expectedError  string
+	}{
+		{
+			name: "no name",
+			payload: map[string]any{
+				"email":    "test@example.com",
+				"password": "testpassword",
+			},
+			expectedError: "name (field required)",
+		},
+		{
+			name: "no email",
+			payload: map[string]any{
+				"name":     "testUser",
+				"password": "testpassword",
+			},
+			expectedError: "email (field required)",
+		},
+		{
+			name: "empty password",
+			payload: map[string]any{
+				"name":     "testUser",
+				"email":    "test@example.com",
+				"password": "",
+			},
+			expectedError: "password (string: len 0 less than minimum",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run("Test UserCreate bad ("+tt.name+")", func(t *testing.T) {
+			exp := expectCreate(t, baseURL)
+
+			obj := exp.POST(baseURL + userCreatePath).
+				WithJSON(tt.payload).
+				Expect().
+				Status(http.StatusBadRequest).JSON().Object()
+			obj.Keys().ContainsOnly("error_message")
+			obj.Value("error_message").String().Contains(tt.expectedError)
+		})
+	}
 }
 
 func testUserUpdateOk(t *testing.T, baseURL string, accessToken string, userID int) ForumUser {

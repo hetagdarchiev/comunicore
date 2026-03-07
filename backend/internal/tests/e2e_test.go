@@ -62,6 +62,7 @@ func TestMain(m *testing.M) { // for global setup and teardown
 func TestUserAndAuth(t *testing.T) {
 	// TODO: test negative cases
 	// userCreate
+	testUserCreateBad(t, globalConfig.URL)
 	user := testUserCreateOk(t, globalConfig.URL)
 	t.Logf("Created user: %+v", user)
 	// userLogin

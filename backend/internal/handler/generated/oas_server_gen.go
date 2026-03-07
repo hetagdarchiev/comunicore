@@ -8,15 +8,6 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	AuthHandler
-	ThreadsHandler
-	UserHandler
-}
-
-// AuthHandler handles operations described by OpenAPI v3 specification.
-//
-// x-ogen-operation-group: Auth
-type AuthHandler interface {
 	// AuthLogin implements authLogin operation.
 	//
 	// Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
@@ -35,12 +26,6 @@ type AuthHandler interface {
 	//
 	// POST /api/auth/refresh
 	AuthRefresh(ctx context.Context) (AuthRefreshRes, error)
-}
-
-// ThreadsHandler handles operations described by OpenAPI v3 specification.
-//
-// x-ogen-operation-group: Threads
-type ThreadsHandler interface {
 	// ThreadAddPost implements threadAddPost operation.
 	//
 	// Add a new post to thread.
@@ -103,12 +88,6 @@ type ThreadsHandler interface {
 	//
 	// GET /api/threads
 	ThreadsList(ctx context.Context, params ThreadsListParams) (ThreadsListRes, error)
-}
-
-// UserHandler handles operations described by OpenAPI v3 specification.
-//
-// x-ogen-operation-group: User
-type UserHandler interface {
 	// UserCreate implements userCreate operation.
 	//
 	// Create a new user.
