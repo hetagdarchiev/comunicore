@@ -37,4 +37,7 @@ install-sqlc:
 
 e2e_tests:
     @echo "Starting API e2e tests..."
+    @go test -count=1 ./internal/tests/...
+e2e_tests_verbose:
+    @echo "Starting API e2e tests..."
     @go test -count=1 ./internal/tests/... -v

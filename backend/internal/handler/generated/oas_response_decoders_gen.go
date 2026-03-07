@@ -696,7 +696,7 @@ func decodeUserCreateResponse(resp *http.Response) (res UserCreateRes, _ error) 
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response UserCreateBadRequest
+			var response ErrorNotUnique
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -712,6 +712,15 @@ func decodeUserCreateResponse(resp *http.Response) (res UserCreateRes, _ error) 
 					Err:         err,
 				}
 				return res, err
+			}
+			// Validate response.
+			if err := func() error {
+				if err := response.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return res, errors.Wrap(err, "validate")
 			}
 			return &response, nil
 		default:
@@ -731,7 +740,7 @@ func decodeUserCreateResponse(resp *http.Response) (res UserCreateRes, _ error) 
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response UserCreateInternalServerError
+			var response AuthRefreshInternalServerErrorApplicationJSON
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err

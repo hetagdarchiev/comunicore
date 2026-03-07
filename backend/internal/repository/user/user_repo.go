@@ -5,7 +5,11 @@ package user
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/jackc/pgx/v5/pgconn"
+
+	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/apperror"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
 	userDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/model"
@@ -38,6 +42,15 @@ func (r *UserRepo) GetNameById(ctx context.Context, userId int) (string, error) 
 
 func (r *UserRepo) Create(ctx context.Context, name, email string) (model.User, error) {
 	row, err := r.queries.UserCreate(ctx, userDb.UserCreateParams{Name: name, Email: email})
+	if err != nil {
+		if pgErr, ok := err.(*pgconn.PgError); ok {
+			if pgErr.Code == "23505" { // unique_violation
+				return model.User{}, apperror.NewErrNotUnique("name", "email")
+			}
+			fmt.Printf("PostgreSQL unknown error code: %s, message: %s\n error struct %+v\n",
+				pgErr.Code, pgErr.Message, *pgErr)
+		}
+	}
 	return model.User{
 		ID:    int(row.ID),
 		Name:  row.Name,

@@ -4,6 +4,8 @@ package api
 
 import (
 	"time"
+
+	"github.com/go-faster/errors"
 )
 
 // Ref: #/components/schemas/AuthLoginRequest
@@ -35,15 +37,17 @@ func (s *AuthLoginRequest) SetPassword(val string) {
 // AuthLogoutNoContent is response for AuthLogout operation.
 type AuthLogoutNoContent struct{}
 
-type AuthRefreshInternalServerError AuthRefreshUnauthorizedApplicationJSON
+type AuthRefreshInternalServerError AuthRefreshInternalServerErrorApplicationJSON
 
 func (*AuthRefreshInternalServerError) authRefreshRes() {}
 
-type AuthRefreshUnauthorized AuthRefreshUnauthorizedApplicationJSON
+type AuthRefreshInternalServerErrorApplicationJSON string
+
+func (*AuthRefreshInternalServerErrorApplicationJSON) userCreateRes() {}
+
+type AuthRefreshUnauthorized AuthRefreshInternalServerErrorApplicationJSON
 
 func (*AuthRefreshUnauthorized) authRefreshRes() {}
-
-type AuthRefreshUnauthorizedApplicationJSON string
 
 type CookieAuth struct {
 	APIKey string
@@ -68,6 +72,69 @@ func (s *CookieAuth) SetAPIKey(val string) {
 // SetRoles sets the value of Roles.
 func (s *CookieAuth) SetRoles(val []string) {
 	s.Roles = val
+}
+
+// Error in some of listed parameters, one or more is not unique.
+// Ref: #/components/schemas/ErrorNotUnique
+type ErrorNotUnique struct {
+	Code ErrorNotUniqueCode `json:"code"`
+	Data []string           `json:"data"`
+}
+
+// GetCode returns the value of Code.
+func (s *ErrorNotUnique) GetCode() ErrorNotUniqueCode {
+	return s.Code
+}
+
+// GetData returns the value of Data.
+func (s *ErrorNotUnique) GetData() []string {
+	return s.Data
+}
+
+// SetCode sets the value of Code.
+func (s *ErrorNotUnique) SetCode(val ErrorNotUniqueCode) {
+	s.Code = val
+}
+
+// SetData sets the value of Data.
+func (s *ErrorNotUnique) SetData(val []string) {
+	s.Data = val
+}
+
+func (*ErrorNotUnique) userCreateRes() {}
+
+type ErrorNotUniqueCode string
+
+const (
+	ErrorNotUniqueCodeErrorNotUnique ErrorNotUniqueCode = "ErrorNotUnique"
+)
+
+// AllValues returns all ErrorNotUniqueCode values.
+func (ErrorNotUniqueCode) AllValues() []ErrorNotUniqueCode {
+	return []ErrorNotUniqueCode{
+		ErrorNotUniqueCodeErrorNotUnique,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s ErrorNotUniqueCode) MarshalText() ([]byte, error) {
+	switch s {
+	case ErrorNotUniqueCodeErrorNotUnique:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *ErrorNotUniqueCode) UnmarshalText(data []byte) error {
+	switch ErrorNotUniqueCode(data) {
+	case ErrorNotUniqueCodeErrorNotUnique:
+		*s = ErrorNotUniqueCodeErrorNotUnique
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
 }
 
 type JwtAuth struct {
@@ -169,15 +236,15 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
-type ThreadAddPostBadRequest AuthRefreshUnauthorizedApplicationJSON
+type ThreadAddPostBadRequest AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadAddPostBadRequest) threadAddPostRes() {}
 
-type ThreadAddPostInternalServerError AuthRefreshUnauthorizedApplicationJSON
+type ThreadAddPostInternalServerError AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadAddPostInternalServerError) threadAddPostRes() {}
 
-type ThreadCreateInternalServerError AuthRefreshUnauthorizedApplicationJSON
+type ThreadCreateInternalServerError AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadCreateInternalServerError) threadCreateRes() {}
 
@@ -222,15 +289,15 @@ func (s *ThreadCreateRequest) SetContent(val string) {
 	s.Content = val
 }
 
-type ThreadCreateUnauthorized AuthRefreshUnauthorizedApplicationJSON
+type ThreadCreateUnauthorized AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadCreateUnauthorized) threadCreateRes() {}
 
-type ThreadGetBadRequest AuthRefreshUnauthorizedApplicationJSON
+type ThreadGetBadRequest AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadGetBadRequest) threadGetRes() {}
 
-type ThreadGetInternalServerError AuthRefreshUnauthorizedApplicationJSON
+type ThreadGetInternalServerError AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadGetInternalServerError) threadGetRes() {}
 
@@ -522,21 +589,13 @@ func (s *ThreadWithPostsListResponse) SetPosts(val []ThreadPostItem) {
 
 func (*ThreadWithPostsListResponse) threadGetRes() {}
 
-type ThreadsListInternalServerError AuthRefreshUnauthorizedApplicationJSON
+type ThreadsListInternalServerError AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadsListInternalServerError) threadsListRes() {}
 
-type ThreadsListUnauthorized AuthRefreshUnauthorizedApplicationJSON
+type ThreadsListUnauthorized AuthRefreshInternalServerErrorApplicationJSON
 
 func (*ThreadsListUnauthorized) threadsListRes() {}
-
-type UserCreateBadRequest AuthRefreshUnauthorizedApplicationJSON
-
-func (*UserCreateBadRequest) userCreateRes() {}
-
-type UserCreateInternalServerError AuthRefreshUnauthorizedApplicationJSON
-
-func (*UserCreateInternalServerError) userCreateRes() {}
 
 // Ref: #/components/schemas/UserCreateRequest
 type UserCreateRequest struct {
@@ -629,11 +688,11 @@ type UserGetInternalServerError struct{}
 
 func (*UserGetInternalServerError) userGetRes() {}
 
-type UserMeInternalServerError AuthRefreshUnauthorizedApplicationJSON
+type UserMeInternalServerError AuthRefreshInternalServerErrorApplicationJSON
 
 func (*UserMeInternalServerError) userMeRes() {}
 
-type UserMeUnauthorized AuthRefreshUnauthorizedApplicationJSON
+type UserMeUnauthorized AuthRefreshInternalServerErrorApplicationJSON
 
 func (*UserMeUnauthorized) userMeRes() {}
 

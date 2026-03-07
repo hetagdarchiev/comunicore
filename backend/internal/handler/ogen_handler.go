@@ -3,6 +3,8 @@
 
 package handler
 
+//go:generate go run github.com/ogen-go/ogen/cmd/ogen@latest --target ./generated/ --clean ../../../config/forum-api.yaml
+
 import (
 	"context"
 	"fmt"
@@ -99,7 +101,6 @@ func (h *securityHandler) HandleJwtAuth(
 	}
 	return ctx, nil
 }
-
 func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	jwtS := jwtService.NewJwtService(config.Server.JwtSecret)
 
