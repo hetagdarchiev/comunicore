@@ -7,14 +7,11 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-	"go.opentelemetry.io/otel/codes"
-	"go.opentelemetry.io/otel/trace"
 )
 
-func encodeAuthLoginResponse(response *JwtToken, w http.ResponseWriter, span trace.Span) error {
+func encodeAuthLoginResponse(response *JwtToken, w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
-	span.SetStatus(codes.Ok, http.StatusText(200))
 
 	e := new(jx.Encoder)
 	response.Encode(e)
@@ -25,19 +22,17 @@ func encodeAuthLoginResponse(response *JwtToken, w http.ResponseWriter, span tra
 	return nil
 }
 
-func encodeAuthLogoutResponse(response *AuthLogoutNoContent, w http.ResponseWriter, span trace.Span) error {
+func encodeAuthLogoutResponse(response *AuthLogoutNoContent, w http.ResponseWriter) error {
 	w.WriteHeader(204)
-	span.SetStatus(codes.Ok, http.StatusText(204))
 
 	return nil
 }
 
-func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter, span trace.Span) error {
+func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *JwtToken:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
-		span.SetStatus(codes.Ok, http.StatusText(200))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -50,7 +45,6 @@ func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter, s
 	case *AuthRefreshUnauthorized:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
-		span.SetStatus(codes.Error, http.StatusText(401))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -63,7 +57,6 @@ func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter, s
 	case *AuthRefreshInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -78,12 +71,11 @@ func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter, s
 	}
 }
 
-func encodeThreadAddPostResponse(response ThreadAddPostRes, w http.ResponseWriter, span trace.Span) error {
+func encodeThreadAddPostResponse(response ThreadAddPostRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *ThreadPostItem:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(201)
-		span.SetStatus(codes.Ok, http.StatusText(201))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -96,7 +88,6 @@ func encodeThreadAddPostResponse(response ThreadAddPostRes, w http.ResponseWrite
 	case *ThreadAddPostBadRequest:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
-		span.SetStatus(codes.Error, http.StatusText(400))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -109,7 +100,6 @@ func encodeThreadAddPostResponse(response ThreadAddPostRes, w http.ResponseWrite
 	case *ThreadAddPostInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -124,12 +114,11 @@ func encodeThreadAddPostResponse(response ThreadAddPostRes, w http.ResponseWrite
 	}
 }
 
-func encodeThreadCreateResponse(response ThreadCreateRes, w http.ResponseWriter, span trace.Span) error {
+func encodeThreadCreateResponse(response ThreadCreateRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *ThreadListItem:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(201)
-		span.SetStatus(codes.Ok, http.StatusText(201))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -142,7 +131,6 @@ func encodeThreadCreateResponse(response ThreadCreateRes, w http.ResponseWriter,
 	case *ThreadCreateUnauthorized:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
-		span.SetStatus(codes.Error, http.StatusText(401))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -155,7 +143,6 @@ func encodeThreadCreateResponse(response ThreadCreateRes, w http.ResponseWriter,
 	case *ThreadCreateInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -170,12 +157,11 @@ func encodeThreadCreateResponse(response ThreadCreateRes, w http.ResponseWriter,
 	}
 }
 
-func encodeThreadGetResponse(response ThreadGetRes, w http.ResponseWriter, span trace.Span) error {
+func encodeThreadGetResponse(response ThreadGetRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *ThreadWithPostsListResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
-		span.SetStatus(codes.Ok, http.StatusText(200))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -188,7 +174,6 @@ func encodeThreadGetResponse(response ThreadGetRes, w http.ResponseWriter, span 
 	case *ThreadGetBadRequest:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
-		span.SetStatus(codes.Error, http.StatusText(400))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -201,7 +186,6 @@ func encodeThreadGetResponse(response ThreadGetRes, w http.ResponseWriter, span 
 	case *ThreadGetInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -216,12 +200,11 @@ func encodeThreadGetResponse(response ThreadGetRes, w http.ResponseWriter, span 
 	}
 }
 
-func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter, span trace.Span) error {
+func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *ThreadListResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
-		span.SetStatus(codes.Ok, http.StatusText(200))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -234,7 +217,6 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter, s
 	case *ThreadsListUnauthorized:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
-		span.SetStatus(codes.Error, http.StatusText(401))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -247,7 +229,6 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter, s
 	case *ThreadsListInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -262,12 +243,11 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter, s
 	}
 }
 
-func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter, span trace.Span) error {
+func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(201)
-		span.SetStatus(codes.Ok, http.StatusText(201))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -277,10 +257,9 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter, spa
 
 		return nil
 
-	case *UserCreateBadRequest:
+	case *ErrorNotUnique:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
-		span.SetStatus(codes.Error, http.StatusText(400))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -290,10 +269,9 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter, spa
 
 		return nil
 
-	case *UserCreateInternalServerError:
+	case *AuthRefreshInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -308,19 +286,17 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter, spa
 	}
 }
 
-func encodeUserDeleteResponse(response *UserDeleteNoContent, w http.ResponseWriter, span trace.Span) error {
+func encodeUserDeleteResponse(response *UserDeleteNoContent, w http.ResponseWriter) error {
 	w.WriteHeader(204)
-	span.SetStatus(codes.Ok, http.StatusText(204))
 
 	return nil
 }
 
-func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter, span trace.Span) error {
+func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
-		span.SetStatus(codes.Ok, http.StatusText(200))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -332,13 +308,11 @@ func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter, span trac
 
 	case *UserGetBadRequest:
 		w.WriteHeader(400)
-		span.SetStatus(codes.Error, http.StatusText(400))
 
 		return nil
 
 	case *UserGetInternalServerError:
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		return nil
 
@@ -347,12 +321,11 @@ func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter, span trac
 	}
 }
 
-func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter, span trace.Span) error {
+func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
-		span.SetStatus(codes.Ok, http.StatusText(200))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -365,7 +338,6 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter, span trace.
 	case *UserMeUnauthorized:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
-		span.SetStatus(codes.Error, http.StatusText(401))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -378,7 +350,6 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter, span trace.
 	case *UserMeInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
-		span.SetStatus(codes.Error, http.StatusText(500))
 
 		e := new(jx.Encoder)
 		response.Encode(e)
@@ -393,10 +364,9 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter, span trace.
 	}
 }
 
-func encodeUserUpdateResponse(response *UserCreateResponse, w http.ResponseWriter, span trace.Span) error {
+func encodeUserUpdateResponse(response *UserCreateResponse, w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(200)
-	span.SetStatus(codes.Ok, http.StatusText(200))
 
 	e := new(jx.Encoder)
 	response.Encode(e)

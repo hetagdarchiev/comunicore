@@ -127,7 +127,7 @@ func (s *AuthLoginRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes AuthRefreshInternalServerError as json.
 func (s AuthRefreshInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -137,7 +137,7 @@ func (s *AuthRefreshInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode AuthRefreshInternalServerError to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -163,9 +163,49 @@ func (s *AuthRefreshInternalServerError) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes AuthRefreshInternalServerErrorApplicationJSON as json.
+func (s AuthRefreshInternalServerErrorApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := string(s)
+
+	e.Str(unwrapped)
+}
+
+// Decode decodes AuthRefreshInternalServerErrorApplicationJSON from json.
+func (s *AuthRefreshInternalServerErrorApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AuthRefreshInternalServerErrorApplicationJSON to nil")
+	}
+	var unwrapped string
+	if err := func() error {
+		v, err := d.Str()
+		unwrapped = string(v)
+		if err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = AuthRefreshInternalServerErrorApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s AuthRefreshInternalServerErrorApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AuthRefreshInternalServerErrorApplicationJSON) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode encodes AuthRefreshUnauthorized as json.
 func (s AuthRefreshUnauthorized) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -175,7 +215,7 @@ func (s *AuthRefreshUnauthorized) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode AuthRefreshUnauthorized to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -201,42 +241,164 @@ func (s *AuthRefreshUnauthorized) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes AuthRefreshUnauthorizedApplicationJSON as json.
-func (s AuthRefreshUnauthorizedApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := string(s)
-
-	e.Str(unwrapped)
+// Encode implements json.Marshaler.
+func (s *ErrorNotUnique) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
 }
 
-// Decode decodes AuthRefreshUnauthorizedApplicationJSON from json.
-func (s *AuthRefreshUnauthorizedApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AuthRefreshUnauthorizedApplicationJSON to nil")
+// encodeFields encodes fields.
+func (s *ErrorNotUnique) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("code")
+		s.Code.Encode(e)
 	}
-	var unwrapped string
-	if err := func() error {
-		v, err := d.Str()
-		unwrapped = string(v)
-		if err != nil {
-			return err
+	{
+		if s.Data != nil {
+			e.FieldStart("data")
+			e.ArrStart()
+			for _, elem := range s.Data {
+				e.Str(elem)
+			}
+			e.ArrEnd()
+		}
+	}
+}
+
+var jsonFieldsNameOfErrorNotUnique = [2]string{
+	0: "code",
+	1: "data",
+}
+
+// Decode decodes ErrorNotUnique from json.
+func (s *ErrorNotUnique) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ErrorNotUnique to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "code":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				if err := s.Code.Decode(d); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"code\"")
+			}
+		case "data":
+			if err := func() error {
+				s.Data = make([]string, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem string
+					v, err := d.Str()
+					elem = string(v)
+					if err != nil {
+						return err
+					}
+					s.Data = append(s.Data, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"data\"")
+			}
+		default:
+			return d.Skip()
 		}
 		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
+	}); err != nil {
+		return errors.Wrap(err, "decode ErrorNotUnique")
 	}
-	*s = AuthRefreshUnauthorizedApplicationJSON(unwrapped)
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000001,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfErrorNotUnique) {
+					name = jsonFieldsNameOfErrorNotUnique[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
 	return nil
 }
 
 // MarshalJSON implements stdjson.Marshaler.
-func (s AuthRefreshUnauthorizedApplicationJSON) MarshalJSON() ([]byte, error) {
+func (s *ErrorNotUnique) MarshalJSON() ([]byte, error) {
 	e := jx.Encoder{}
 	s.Encode(&e)
 	return e.Bytes(), nil
 }
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AuthRefreshUnauthorizedApplicationJSON) UnmarshalJSON(data []byte) error {
+func (s *ErrorNotUnique) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes ErrorNotUniqueCode as json.
+func (s ErrorNotUniqueCode) Encode(e *jx.Encoder) {
+	e.Str(string(s))
+}
+
+// Decode decodes ErrorNotUniqueCode from json.
+func (s *ErrorNotUniqueCode) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode ErrorNotUniqueCode to nil")
+	}
+	v, err := d.StrBytes()
+	if err != nil {
+		return err
+	}
+	// Try to use constant string.
+	switch ErrorNotUniqueCode(v) {
+	case ErrorNotUniqueCodeErrorNotUnique:
+		*s = ErrorNotUniqueCodeErrorNotUnique
+	default:
+		*s = ErrorNotUniqueCode(v)
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s ErrorNotUniqueCode) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *ErrorNotUniqueCode) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -356,7 +518,7 @@ func (s *JwtToken) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadAddPostBadRequest as json.
 func (s ThreadAddPostBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -366,7 +528,7 @@ func (s *ThreadAddPostBadRequest) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadAddPostBadRequest to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -394,7 +556,7 @@ func (s *ThreadAddPostBadRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadAddPostInternalServerError as json.
 func (s ThreadAddPostInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -404,7 +566,7 @@ func (s *ThreadAddPostInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadAddPostInternalServerError to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -432,7 +594,7 @@ func (s *ThreadAddPostInternalServerError) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadCreateInternalServerError as json.
 func (s ThreadCreateInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -442,7 +604,7 @@ func (s *ThreadCreateInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadCreateInternalServerError to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -679,7 +841,7 @@ func (s *ThreadCreateRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadCreateUnauthorized as json.
 func (s ThreadCreateUnauthorized) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -689,7 +851,7 @@ func (s *ThreadCreateUnauthorized) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadCreateUnauthorized to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -717,7 +879,7 @@ func (s *ThreadCreateUnauthorized) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadGetBadRequest as json.
 func (s ThreadGetBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -727,7 +889,7 @@ func (s *ThreadGetBadRequest) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadGetBadRequest to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -755,7 +917,7 @@ func (s *ThreadGetBadRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadGetInternalServerError as json.
 func (s ThreadGetInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -765,7 +927,7 @@ func (s *ThreadGetInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadGetInternalServerError to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -1537,7 +1699,7 @@ func (s *ThreadWithPostsListResponse) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadsListInternalServerError as json.
 func (s ThreadsListInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1547,7 +1709,7 @@ func (s *ThreadsListInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadsListInternalServerError to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -1575,7 +1737,7 @@ func (s *ThreadsListInternalServerError) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadsListUnauthorized as json.
 func (s ThreadsListUnauthorized) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1585,7 +1747,7 @@ func (s *ThreadsListUnauthorized) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadsListUnauthorized to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -1607,82 +1769,6 @@ func (s ThreadsListUnauthorized) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *ThreadsListUnauthorized) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes UserCreateBadRequest as json.
-func (s UserCreateBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes UserCreateBadRequest from json.
-func (s *UserCreateBadRequest) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode UserCreateBadRequest to nil")
-	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = UserCreateBadRequest(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s UserCreateBadRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *UserCreateBadRequest) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes UserCreateInternalServerError as json.
-func (s UserCreateInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
-
-	unwrapped.Encode(e)
-}
-
-// Decode decodes UserCreateInternalServerError from json.
-func (s *UserCreateInternalServerError) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode UserCreateInternalServerError to nil")
-	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
-	if err := func() error {
-		if err := unwrapped.Decode(d); err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = UserCreateInternalServerError(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s UserCreateInternalServerError) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *UserCreateInternalServerError) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -1949,7 +2035,7 @@ func (s *UserCreateResponse) UnmarshalJSON(data []byte) error {
 
 // Encode encodes UserMeInternalServerError as json.
 func (s UserMeInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1959,7 +2045,7 @@ func (s *UserMeInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode UserMeInternalServerError to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -1987,7 +2073,7 @@ func (s *UserMeInternalServerError) UnmarshalJSON(data []byte) error {
 
 // Encode encodes UserMeUnauthorized as json.
 func (s UserMeUnauthorized) Encode(e *jx.Encoder) {
-	unwrapped := AuthRefreshUnauthorizedApplicationJSON(s)
+	unwrapped := AuthRefreshInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1997,7 +2083,7 @@ func (s *UserMeUnauthorized) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode UserMeUnauthorized to nil")
 	}
-	var unwrapped AuthRefreshUnauthorizedApplicationJSON
+	var unwrapped AuthRefreshInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
