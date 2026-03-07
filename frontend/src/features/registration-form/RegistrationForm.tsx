@@ -1,6 +1,8 @@
 'use client';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import * as z from 'zod';
 
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
@@ -8,13 +10,28 @@ import userIcon from '@/shared/assets/icons/form/user.svg';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-interface IRegistrationForm {
-  login: string;
-  email: string;
-  password: string;
-  policy: boolean;
-}
+// 1. Описываем схему валидации
+const registerSchema = z.object({
+  login: z.string().min(1, 'Введите логин'),
+  email: z.string().min(1, 'Введите email').email('Неверный формат почты'),
+  password: z
+    .string()
+    .min(4, 'Пароль должен содержать не менее 4 символов')
+    .regex(/[a-zA-Z]/, 'Пароль должен содержать хотя бы одну латинскую букву')
+    .regex(/\d/, 'Пароль должен содержать хотя бы одну цифру')
+    .regex(
+      /^[a-zA-Z0-9!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]+$/,
+      'Используйте только латиницу и спецсимволы',
+    ),
+  policy: z.boolean().refine((val) => val, {
+    message: 'Условия должны быть приняты',
+  }),
+});
+
+// 2. Извлекаем тип из схемы автоматически
+type TRegistrationForm = z.infer<typeof registerSchema>;
 
 export function RegistrationForm() {
   const router = useRouter();
@@ -23,18 +40,20 @@ export function RegistrationForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
-  } = useForm<IRegistrationForm>({
-    reValidateMode: 'onBlur',
+    formState: { errors, isSubmitting },
+  } = useForm<TRegistrationForm>({
+    resolver: zodResolver(registerSchema), // Подключаем Zod
+    mode: 'onBlur',
   });
 
-  const onSubmit: SubmitHandler<IRegistrationForm> = (data) => {
+  const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
     try {
-      console.log('Отправка данных...', data);
+      console.log('Данные проверены Zod и готовы к отправке:', data);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       reset();
       router.push('/verification');
     } catch (error) {
-      console.error('Ошибка при регистрации:', error);
+      console.error(error);
     }
   };
 
@@ -45,56 +64,32 @@ export function RegistrationForm() {
     >
       <Input
         icon={userIcon}
-        type='text'
         placeholder='Login'
         error={errors.login}
-        {...register('login', { required: 'Введите логин' })}
+        {...register('login')}
       />
       <Input
         icon={mailIcon}
-        type='email'
         placeholder='Email'
         error={errors.email}
-        {...register('email', {
-          required: 'Введите email',
-          pattern: {
-            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-            message: 'Неверный формат почты (пример: name@mail.com)',
-          },
-        })}
+        {...register('email')}
       />
       <Input
         icon={lockIcon}
         type='password'
         placeholder='Password'
         error={errors.password}
-        {...register('password', {
-          required: 'Введите пароль',
-          minLength: {
-            value: 4,
-            message: 'Пароль должен содержать не менее 4 символов',
-          },
-          validate: {
-            noCyrillic: (value) =>
-              /^[a-zA-Z0-9!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]+$/.test(value) ||
-              'Используйте только латинские буквы и спецсимволы',
-            hasNumber: (value) =>
-              /\d/.test(value) || 'Пароль должен содержать хотя бы одну цифру',
-            hasLetter: (value) =>
-              /[a-zA-Z]/.test(value) ||
-              'Пароль должен содержать хотя бы одну латинскую букву',
-          },
-        })}
+        {...register('password')}
       />
       <Checkbox
         id='use-condition-agreement'
         label='Соглашаюсь с условиями пользования'
         error={errors.policy}
-        {...register('policy', {
-          required: 'Условия должны быть приняты',
-        })}
+        {...register('policy')}
       />
-      <Button type='submit'>Зарегистрироваться</Button>
+      <Button type='submit' disabled={isSubmitting}>
+        {isSubmitting ? 'Загрузка...' : 'Зарегистрироваться'}
+      </Button>
     </form>
   );
 }
