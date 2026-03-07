@@ -2,7 +2,6 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import * as z from 'zod';
 
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
@@ -11,27 +10,10 @@ import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-// 1. Описываем схему валидации
-const registerSchema = z.object({
-  login: z.string().min(1, 'Введите логин'),
-  email: z.string().min(1, 'Введите email').email('Неверный формат почты'),
-  password: z
-    .string()
-    .min(4, 'Пароль должен содержать не менее 4 символов')
-    .regex(/[a-zA-Z]/, 'Пароль должен содержать хотя бы одну латинскую букву')
-    .regex(/\d/, 'Пароль должен содержать хотя бы одну цифру')
-    .regex(
-      /^[a-zA-Z0-9!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]+$/,
-      'Используйте только латиницу и спецсимволы',
-    ),
-  policy: z.boolean().refine((val) => val, {
-    message: 'Условия должны быть приняты',
-  }),
-});
-
-// 2. Извлекаем тип из схемы автоматически
-type TRegistrationForm = z.infer<typeof registerSchema>;
+import {
+  validationSchema,
+  TRegistrationForm,
+} from '../model/validation-schema';
 
 export function RegistrationForm() {
   const router = useRouter();
@@ -42,8 +24,8 @@ export function RegistrationForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<TRegistrationForm>({
-    resolver: zodResolver(registerSchema), // Подключаем Zod
-    mode: 'onBlur',
+    resolver: zodResolver(validationSchema),
+    mode: 'onSubmit',
   });
 
   const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
