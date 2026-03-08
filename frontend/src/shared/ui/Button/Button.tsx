@@ -1,22 +1,44 @@
-import { AnchorHTMLAttributes, PropsWithChildren } from 'react';
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
 import Link from 'next/link';
 
-type Props = PropsWithChildren<
-  AnchorHTMLAttributes<HTMLAnchorElement> & {
-    href: string;
-    className?: string;
-  }
->;
+type ButtonProps = Partial<
+  AnchorHTMLAttributes<HTMLAnchorElement> &
+    ButtonHTMLAttributes<HTMLButtonElement>
+> & {
+  children: ReactNode;
+  href?: string;
+  className?: string;
+};
 
-export function Button(props: Props) {
-  const { children, href, className = '', ...attributes } = props;
+export function Button(props: ButtonProps) {
+  const { children, href, className = '', ...restProps } = props;
+
+  const commonClassName = `
+    inline-flex items-center justify-center w-fit 
+    bg-blue-16 hover:bg-blue-20 rounded-md px-5 py-3 
+    duration-200 text-center text-white font-bold 
+    ${className}
+  `;
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className={commonClassName}
+        {...(restProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
+        {children}
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      href={href}
-      {...attributes}
-      className={`bg-blue-16 hover:bg-blue-20 rounded-md px-5 py-3 duration-200 ${className}`}
+    <button
+      type='button'
+      className={commonClassName}
+      {...(restProps as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {children}
-    </Link>
+    </button>
   );
 }
