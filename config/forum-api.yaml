@@ -10,7 +10,6 @@ servers:
   - url: https://api.server.test/v1
 paths:
   /api/user:
-    x-ogen-operation-group: User
     post:
       operationId: userCreate
       summary: Create a new user
@@ -29,11 +28,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserCreateResponse'
         "400":
-          $ref: '#/components/responses/ErrorStringDescription'
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorNotUnique'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/user/me:
-    x-ogen-operation-group: User
     get:
       operationId: userMe
       summary: Get current user information
@@ -51,7 +53,6 @@ paths:
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/user/{userId}:
-    x-ogen-operation-group: User
     parameters:
       - name: userId
         in: path
@@ -96,7 +97,6 @@ paths:
         '204':
           description: No Content
   /api/auth/login:
-    x-ogen-operation-group: Auth
     post:
       operationId: authLogin
       summary: User login
@@ -117,7 +117,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/JwtToken'
   /api/auth/refresh:
-    x-ogen-operation-group: Auth
     post:
       operationId: authRefresh
       summary: Refresh JWT token
@@ -137,7 +136,6 @@ paths:
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/auth/logout:
-    x-ogen-operation-group: Auth
     post:
       operationId: authLogout
       summary: User logout
@@ -147,7 +145,6 @@ paths:
         '204':
           description: No Content
   /api/threads:
-    x-ogen-operation-group: Threads
     get:
       operationId: threadsList
       summary: Get list of threads with pagination
@@ -231,7 +228,6 @@ paths:
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/threads/{threadId}:
-    x-ogen-operation-group: Threads
     get:
       operationId: threadGet
       summary: Get single thread with all posts by thread id
@@ -254,7 +250,6 @@ paths:
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/threads/{threadId}/posts:
-    x-ogen-operation-group: Threads
     post:
       operationId: threadAddPost
       summary: Add a new post to thread
@@ -294,7 +289,7 @@ components:
       name: refreshToken
   responses:
     ErrorStringDescription:
-      description: Error in request with string description (for log, not for user)
+      description: Error in request with string description (for log, not for user).
       content:
         application/json:
           schema:
@@ -324,6 +319,7 @@ components:
         password:
           type: string
           format: password
+          minLength: 8
       required:
         - name
         - email
@@ -572,5 +568,24 @@ components:
         - content
       example:
         content: "I want to learn Go, but I don't know where to start. Any advice?"
+    # errors
+    ErrorNotUnique:
+      description: Error in some of listed parameters, one or more is not unique.
+      type: object
+      properties:
+        code:
+          type: string
+          enum: ["ErrorNotUnique"]
+          example: "ErrorNotUnique"
+        data:
+          type: array
+          items:
+            type: string
+          example:
+            - "email"
+            - "name"
+      required:
+        - code
+        - params
 security:
   - jwtAuth: []

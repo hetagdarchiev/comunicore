@@ -523,7 +523,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.name = AuthLoginOperation
 								r.summary = "User login"
 								r.operationID = "authLogin"
-								r.operationGroup = "Auth"
+								r.operationGroup = ""
 								r.pathPattern = "/api/auth/login"
 								r.args = args
 								r.count = 0
@@ -548,7 +548,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.name = AuthLogoutOperation
 								r.summary = "User logout"
 								r.operationID = "authLogout"
-								r.operationGroup = "Auth"
+								r.operationGroup = ""
 								r.pathPattern = "/api/auth/logout"
 								r.args = args
 								r.count = 0
@@ -575,7 +575,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							r.name = AuthRefreshOperation
 							r.summary = "Refresh JWT token"
 							r.operationID = "authRefresh"
-							r.operationGroup = "Auth"
+							r.operationGroup = ""
 							r.pathPattern = "/api/auth/refresh"
 							r.args = args
 							r.count = 0
@@ -601,7 +601,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.name = ThreadsListOperation
 						r.summary = "Get list of threads with pagination"
 						r.operationID = "threadsList"
-						r.operationGroup = "Threads"
+						r.operationGroup = ""
 						r.pathPattern = "/api/threads"
 						r.args = args
 						r.count = 0
@@ -610,7 +610,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.name = ThreadCreateOperation
 						r.summary = "Create a new thread"
 						r.operationID = "threadCreate"
-						r.operationGroup = "Threads"
+						r.operationGroup = ""
 						r.pathPattern = "/api/threads"
 						r.args = args
 						r.count = 0
@@ -643,7 +643,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							r.name = ThreadGetOperation
 							r.summary = "Get single thread with all posts by thread id"
 							r.operationID = "threadGet"
-							r.operationGroup = "Threads"
+							r.operationGroup = ""
 							r.pathPattern = "/api/threads/{threadId}"
 							r.args = args
 							r.count = 1
@@ -668,7 +668,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.name = ThreadAddPostOperation
 								r.summary = "Add a new post to thread"
 								r.operationID = "threadAddPost"
-								r.operationGroup = "Threads"
+								r.operationGroup = ""
 								r.pathPattern = "/api/threads/{threadId}/posts"
 								r.args = args
 								r.count = 1
@@ -696,7 +696,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 						r.name = UserCreateOperation
 						r.summary = "Create a new user"
 						r.operationID = "userCreate"
-						r.operationGroup = "User"
+						r.operationGroup = ""
 						r.pathPattern = "/api/user"
 						r.args = args
 						r.count = 0
@@ -733,7 +733,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 								r.name = UserMeOperation
 								r.summary = "Get current user information"
 								r.operationID = "userMe"
-								r.operationGroup = "User"
+								r.operationGroup = ""
 								r.pathPattern = "/api/user/me"
 								r.args = args
 								r.count = 0
@@ -761,7 +761,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							r.name = UserDeleteOperation
 							r.summary = "Delete a user"
 							r.operationID = "userDelete"
-							r.operationGroup = "User"
+							r.operationGroup = ""
 							r.pathPattern = "/api/user/{userId}"
 							r.args = args
 							r.count = 1
@@ -770,7 +770,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							r.name = UserGetOperation
 							r.summary = "Get user information"
 							r.operationID = "userGet"
-							r.operationGroup = "User"
+							r.operationGroup = ""
 							r.pathPattern = "/api/user/{userId}"
 							r.args = args
 							r.count = 1
@@ -779,7 +779,7 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							r.name = UserUpdateOperation
 							r.summary = "Update user information"
 							r.operationID = "userUpdate"
-							r.operationGroup = "User"
+							r.operationGroup = ""
 							r.pathPattern = "/api/user/{userId}"
 							r.args = args
 							r.count = 1

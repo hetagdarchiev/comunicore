@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@/assets/*": ["./src/shared/assets/*"]
     }
   },
   "include": [

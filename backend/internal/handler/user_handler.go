@@ -5,6 +5,9 @@ package handler
 
 import (
 	"context"
+	"errors"
+
+	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/apperror"
 
 	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
@@ -44,6 +47,13 @@ func (u *UserHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
 func (u *UserHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRequest) (forumApi.UserCreateRes, error) {
 	user, err := u.userService.Create(ctx, req.Name, req.Email, req.Password)
 	if err != nil {
+		if _, ok := errors.AsType[*apperror.NotUniqueError](err); ok {
+			res := forumApi.ErrorNotUnique{
+				Code: forumApi.ErrorNotUniqueCode(forumApi.ErrorNotUniqueCodeErrorNotUnique),
+				Data: []string{"name", "email"},
+			}
+			return &res, nil
+		}
 		return nil, err
 	}
 	return &forumApi.UserCreateResponse{
