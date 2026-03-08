@@ -1,10 +1,11 @@
-@import './normalize.css';
-@import './utils.css';
-@import 'tailwindcss';
+@import "./normalize.css";
+@import "./utils.css";
+@import "tailwindcss";
 
 :root {
   --background: #fff;
   --foreground: #171717;
+  --post-bg: #fff;
 }
 
 @theme {
@@ -18,6 +19,8 @@
   --color-orange-f4: #f48023;
   --color-orang-c5: #c55c07;
   --color-ligth-fc: #fcf4ec;
+
+  --color-post-card: var(--post-bg);
 }
 
 @media (prefers-color-scheme: dark) {
