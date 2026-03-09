@@ -1,0 +1,69 @@
+# .github/workflows/ci.yml
+name: Deploy to comunicore.mooo.com
+
+on:
+  push:
+    branches: [ deploy ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # build frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: ./frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Build Production
+        working-directory: ./frontend
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: https://comunicore.mooo.com
+        continue-on-error: false
+
+      # build backend
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+          cache-dependency-path: ./backend/go.sum
+
+      - name: Download dependencies
+        working-directory: ./backend
+        run: go mod download
+
+      - name: Setup just
+        uses: extractions/setup-just@v3
+
+      - name: Build
+        working-directory: ./backend
+        run: |
+          just build
+
+      - name: Package for deployment
+        run: |
+          TMP_DIR="$(mktemp -d ./tmp.XXXXXXXX)"
+          trap 'rm -rf -- "$TMP_DIR"' EXIT
+
+          mv ./frontend/out "$TMP_DIR"
+          mv ./backend/target/comunicore "$TMP_DIR"
+          tar cf ./deploy.tar.xz --xz -C "$TMP_DIR" .
+
+      - name: Deploy archive to server
+        # -o "StrictHostKeyChecking no"
+        run: |
+          echo "$DEPLOY_SSH_KEY" > ./deploy_key
+          chmod 600 ./deploy_key
+          ssh -i ./deploy_key -o StrictHostKeychecking=no comunicore@comunicore.mooo.com cat < ./deploy.tar.xz
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
