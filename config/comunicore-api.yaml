@@ -7,7 +7,7 @@ info:
     email: alex19srv@gmail.com
   version: '1.0'
 servers:
-  - url: https://api.server.test/v1
+  - url: https://comunicore.mooo.com/
 paths:
   /api/user:
     post:
