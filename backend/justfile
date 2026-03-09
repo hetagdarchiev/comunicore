@@ -3,10 +3,10 @@ set shell := ["bash", "-c"]
 GO_BIN_DIR := `pwd` + "/bin"
 
 build:
-  go build -o ./target/forum ./cmd/forum
+  go build -o ./target/comunicore ./cmd/forum
 
 run +CONFIG: build
-  ./target/forum --config {{CONFIG}}
+  ./target/comunicore --config {{CONFIG}}
 
 generate-all: generate-ogen generate-sqlc
 

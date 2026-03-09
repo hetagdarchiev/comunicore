@@ -3,16 +3,12 @@ name: CI Checks
 
 on:
   push:
-    branches-ignore:
-      - 'wip**'
-  pull_request:
-    branches: [ main ]
+    branches: [ deploy ]
 
 jobs:
-  frontend:
-    name: Frontend (Next.js)
+  build:
     runs-on: ubuntu-latest
-
+    # build frontend
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,30 +24,14 @@ jobs:
         working-directory: ./frontend
         run: npm ci
 
-      - name: ESLint
-        working-directory: ./frontend
-        run: npm run lint
-        continue-on-error: true
-
-      - name: Stylelint
-        working-directory: ./frontend
-        run: npx stylelint "**/*.{css,scss}"
-        continue-on-error: true
-
-      - name: Build Next.js
+      - name: Build Production
         working-directory: ./frontend
         run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: http://localhost:8080
+          NEXT_PUBLIC_API_URL: https://comunicore.mooo.com
+        continue-on-error: false
 
-  backend:
-    name: Backend (Go)
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
+      # build backend
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -70,7 +50,20 @@ jobs:
         run: |
           just build
 
-      - name: Run e2e tests
-        working-directory: ./backend
+      - name: Package for deployment
         run: |
-          just e2e_tests
+          TMP_DIR="$(mktemp -d ./tmp.XXXXXXXX)"
+          trap 'rm -rf -- "$TMP_DIR"' EXIT
+
+          mv ./frontend/out "$TMP_DIR"
+          mv ./backend/target/comunicore "$TMP_DIR"
+          tar cf ./deploy.tar.xz --xz -C "$TMP_DIR" .
+
+      - name: Deploy archive to server
+        # -o "StrictHostKeyChecking no"
+        run: |
+          echo "$DEPLOY_SSH_KEY" > ./deploy_key
+          chmod 600 ./deploy_key
+          ssh -i ./deploy_key -o StrictHostKeychecking=no comunicore@comunicore.mooo.com cat < ./deploy.tar.xz
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}

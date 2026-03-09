@@ -1,0 +1,77 @@
+# .github/workflows/ci.yml
+name: CI Checks
+
+on:
+  push:
+    branches-ignore:
+      - 'wip**'
+      - deploy
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  frontend:
+    name: Frontend (Next.js)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: ./frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: ESLint
+        working-directory: ./frontend
+        run: npm run lint
+        continue-on-error: true
+
+      - name: Stylelint
+        working-directory: ./frontend
+        run: npx stylelint "**/*.{css,scss}"
+        continue-on-error: true
+
+      - name: Build Next.js
+        working-directory: ./frontend
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8080
+
+  backend:
+    name: Backend (Go)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.26'
+          cache-dependency-path: ./backend/go.sum
+
+      - name: Download dependencies
+        working-directory: ./backend
+        run: go mod download
+
+      - name: Setup just
+        uses: extractions/setup-just@v3
+
+      - name: Build
+        working-directory: ./backend
+        run: |
+          just build
+
+      - name: Run e2e tests
+        working-directory: ./backend
+        run: |
+          just e2e_tests
