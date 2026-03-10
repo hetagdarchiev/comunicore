@@ -4,6 +4,7 @@ GO_BIN_DIR := `pwd` + "/bin"
 
 build:
   go build -o ./target/comunicore ./cmd/forum
+  go build -o ./target/migrate ./cmd/migrate
 
 run +CONFIG: build
   ./target/comunicore --config {{CONFIG}}
