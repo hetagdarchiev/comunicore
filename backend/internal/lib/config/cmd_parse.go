@@ -24,6 +24,7 @@ type CmdConfig struct {
 	// http server
 	ServerHost      *string
 	ServerPort      *int
+	ServerBaseURL   *string // "http://foo.com", "http://foo.com:8080"
 	ServerJwtSecret *string
 }
 
@@ -38,6 +39,7 @@ func CmdParse() *CmdConfig {
 
 	serverHost := flag.String("server-host", "", "http server host")
 	serverPort := flag.Int("server-port", 0, "http server port")
+	serverBaseURL := flag.String("server-baseurl", "", "http server base URL (e.g. \"https://site.com\", \"http://site.com:8080\")")
 	serverJwtSecret := flag.String("server-jwtsecret", "", "http server jwt secret")
 
 	flag.Parse()
@@ -53,6 +55,7 @@ func CmdParse() *CmdConfig {
 		// http server
 		ServerHost:      serverHost,
 		ServerPort:      serverPort,
+		ServerBaseURL:   serverBaseURL,
 		ServerJwtSecret: serverJwtSecret,
 	}
 }
@@ -98,12 +101,15 @@ func (db *DatabaseConfig) DSN() string {
 type ServerConfig struct {
 	Host      string
 	Port      int
+	BaseURL   string
 	JwtSecret string
 }
 
 func (srv *ServerConfig) check(cmd *CmdConfig) error {
 	srv.Host = mergeCmdEnvCurrentDefaultString(cmd.ServerHost, "FORUM_SERVER_HOST", srv.Host, "::1")
 	srv.Port = mergeCmdEnvCurrentDefaultInt(cmd.ServerPort, "FORUM_SERVER_PORT", srv.Port, 8080)
+	srv.BaseURL = mergeCmdEnvCurrentDefaultString(
+		cmd.ServerBaseURL, "FORUM_SERVER_BASEURL", srv.BaseURL, "http://localhost:8080")
 	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWTSECRET", srv.JwtSecret, "")
 
 	if srv.Port <= 0 {
@@ -111,6 +117,9 @@ func (srv *ServerConfig) check(cmd *CmdConfig) error {
 	}
 	if srv.Port > 65535 {
 		return fmt.Errorf("server port is greater than 65535")
+	}
+	if len(srv.BaseURL) == 0 { // TODO: check valid URL format
+		return fmt.Errorf("server base URL is empty")
 	}
 	if srv.JwtSecret == "" {
 		return fmt.Errorf("server jwt secret is empty")
