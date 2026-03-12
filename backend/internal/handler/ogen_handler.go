@@ -60,7 +60,7 @@ func NewSecurityHandler(jwtService *jwtService.JwtAuthorizator) *securityHandler
 func (h *securityHandler) HandleCookieAuth(
 	ctx context.Context, operationName forumApi.OperationName, t forumApi.CookieAuth) (context.Context, error) {
 
-	fmt.Printf("Cookie Auth with operation name %s and APIKey %s\n", operationName, t.APIKey)
+	fmt.Printf("Cookie Auth with operation name %s\n", operationName)
 	global := GlobalContextFromContext(ctx)
 	if global == nil {
 		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
