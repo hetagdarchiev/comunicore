@@ -15,7 +15,6 @@ import (
 	"time"
 
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler"
-
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
 )
 
