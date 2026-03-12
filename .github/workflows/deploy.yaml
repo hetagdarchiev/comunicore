@@ -1,5 +1,6 @@
-# .github/workflows/ci.yml
 name: Deploy to comunicore.mooo.com
+permissions:
+  contents: read
 
 on:
   push:
@@ -11,10 +12,10 @@ jobs:
     # build frontend
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22'
           cache: 'npm'
@@ -33,7 +34,7 @@ jobs:
 
       # build backend
       - name: Setup Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version: '1.26'
           cache-dependency-path: ./backend/go.sum
