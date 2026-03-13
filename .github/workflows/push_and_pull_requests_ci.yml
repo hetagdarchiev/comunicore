@@ -5,11 +5,9 @@ permissions:
 
 on:
   push:
-    branches-ignore:
-      - 'wip**'
-      - deploy
+    branches: [ "main", "run-ci" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   frontend:
