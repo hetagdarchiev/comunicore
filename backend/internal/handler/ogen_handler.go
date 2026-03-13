@@ -11,6 +11,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/rs/cors"
+
 	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
 	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
 	"github.com/ogen-go/ogen/ogenerrors"
@@ -138,11 +140,23 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	if err != nil {
 		panic(err)
 	}
-	mux.Handle("/api/", WithGlobalContext(srv))
+	apiHandler := WithGlobalContext(srv)
+
+	fmt.Printf("cors enabled for origins %s\n", config.Server.PermittedOrigin)
+	if len(config.Server.PermittedOrigin) > 0 {
+		fmt.Printf("cors enabled for origins %s\n", config.Server.PermittedOrigin)
+		corsHandler := cors.New(cors.Options{
+			AllowedOrigins:   []string{config.Server.PermittedOrigin},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"Authorization", "Content-Type"},
+			AllowCredentials: true,
+		})
+		apiHandler = corsHandler.Handler(apiHandler)
+	}
+	mux.Handle("/api/", apiHandler)
 }
 
 // Thread handlers
-
 func (h *OgenHandler) ThreadAddPost(ctx context.Context, req *forumApi.ThreadCreatePostRequest, params forumApi.ThreadAddPostParams) (forumApi.ThreadAddPostRes, error) {
 	return h.threadsHandler.ThreadAddPost(ctx, req, params)
 }

@@ -22,10 +22,11 @@ type CmdConfig struct {
 	DatabasePassword *string
 	DatabaseName     *string
 	// http server
-	ServerHost      *string
-	ServerPort      *int
-	ServerBaseURL   *string // "http://foo.com", "http://foo.com:8080"
-	ServerJwtSecret *string
+	ServerHost            *string
+	ServerPort            *int
+	ServerBaseURL         *string // "http://foo.com", "http://foo.com:8080"
+	ServerPermittedOrigin *string // CORS origin: "http://test.com" or "http://site.me:8080"
+	ServerJwtSecret       *string
 }
 
 // CmdParse parses command-line arguments and returns a CmdConfig struct.
@@ -40,6 +41,9 @@ func CmdParse() *CmdConfig {
 	serverHost := flag.String("server-host", "", "http server host")
 	serverPort := flag.Int("server-port", 0, "http server port")
 	serverBaseURL := flag.String("server-baseurl", "", "http server base URL (e.g. \"https://site.com\", \"http://site.com:8080\")")
+	serverPermittedOrigin := flag.String(
+		"server-permitted-origin", "",
+		"http server permitted extra single origin (e.g. \"http://localhost:3000\" or \"http://site.com\")")
 	serverJwtSecret := flag.String("server-jwtsecret", "", "http server jwt secret")
 
 	flag.Parse()
@@ -53,10 +57,11 @@ func CmdParse() *CmdConfig {
 		DatabasePassword: dbPassword,
 		DatabaseName:     dbName,
 		// http server
-		ServerHost:      serverHost,
-		ServerPort:      serverPort,
-		ServerBaseURL:   serverBaseURL,
-		ServerJwtSecret: serverJwtSecret,
+		ServerHost:            serverHost,
+		ServerPort:            serverPort,
+		ServerBaseURL:         serverBaseURL,
+		ServerPermittedOrigin: serverPermittedOrigin,
+		ServerJwtSecret:       serverJwtSecret,
 	}
 }
 
@@ -99,10 +104,11 @@ func (db *DatabaseConfig) DSN() string {
 }
 
 type ServerConfig struct {
-	Host      string
-	Port      int
-	BaseURL   string
-	JwtSecret string
+	Host            string
+	Port            int
+	BaseURL         string
+	PermittedOrigin string
+	JwtSecret       string
 }
 
 func (srv *ServerConfig) check(cmd *CmdConfig) error {
@@ -110,6 +116,8 @@ func (srv *ServerConfig) check(cmd *CmdConfig) error {
 	srv.Port = mergeCmdEnvCurrentDefaultInt(cmd.ServerPort, "FORUM_SERVER_PORT", srv.Port, 8080)
 	srv.BaseURL = mergeCmdEnvCurrentDefaultString(
 		cmd.ServerBaseURL, "FORUM_SERVER_BASEURL", srv.BaseURL, "http://localhost:8080")
+	srv.PermittedOrigin = mergeCmdEnvCurrentDefaultString(
+		cmd.ServerPermittedOrigin, "FORUM_SERVER_PERMITTED_ORIGIN", srv.PermittedOrigin, "")
 	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWTSECRET", srv.JwtSecret, "")
 
 	if srv.Port <= 0 {
