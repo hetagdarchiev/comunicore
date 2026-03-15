@@ -1,7 +1,11 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 
+import Providers from './providers';
+
 import './styles/globals.css';
+
+import '@/shared/api/setup';
 
 const robotoSans = Roboto({
   variable: '--font-roboto-sans',
@@ -20,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${robotoSans.variable}`}>{children}</body>
+      <body className={`${robotoSans.variable}`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
