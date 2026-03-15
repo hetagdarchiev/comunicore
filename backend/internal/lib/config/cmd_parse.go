@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package config
 
@@ -44,7 +44,7 @@ func CmdParse() *CmdConfig {
 	serverPermittedOrigin := flag.String(
 		"server-permitted-origin", "",
 		"http server permitted extra single origin (e.g. \"http://localhost:3000\" or \"http://site.com\")")
-	serverJwtSecret := flag.String("server-jwtsecret", "", "http server jwt secret")
+	serverJwtSecret := flag.String("server-jwt-secret", "", "http server jwt secret")
 
 	flag.Parse()
 
@@ -107,8 +107,8 @@ type ServerConfig struct {
 	Host            string
 	Port            int
 	BaseURL         string
-	PermittedOrigin string
-	JwtSecret       string
+	PermittedOrigin string `toml:"permitted_origin"`
+	JwtSecret       string `toml:"jwt_secret"`
 }
 
 func (srv *ServerConfig) check(cmd *CmdConfig) error {
@@ -118,7 +118,7 @@ func (srv *ServerConfig) check(cmd *CmdConfig) error {
 		cmd.ServerBaseURL, "FORUM_SERVER_BASEURL", srv.BaseURL, "http://localhost:8080")
 	srv.PermittedOrigin = mergeCmdEnvCurrentDefaultString(
 		cmd.ServerPermittedOrigin, "FORUM_SERVER_PERMITTED_ORIGIN", srv.PermittedOrigin, "")
-	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWTSECRET", srv.JwtSecret, "")
+	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWT_SECRET", srv.JwtSecret, "")
 
 	if srv.Port <= 0 {
 		return fmt.Errorf("server port is zero or negative")

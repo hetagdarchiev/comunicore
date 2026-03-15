@@ -7,6 +7,14 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
+func (s *AuthLoginBadRequest) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *AuthLoginRequest) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
@@ -42,6 +50,14 @@ func (s *AuthLoginRequest) Validate() error {
 	return nil
 }
 
+func (s *AuthLoginUnauthorized) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *ErrorNotUnique) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer
@@ -68,6 +84,45 @@ func (s *ErrorNotUnique) Validate() error {
 func (s ErrorNotUniqueCode) Validate() error {
 	switch s {
 	case "ErrorNotUnique":
+		return nil
+	default:
+		return errors.Errorf("invalid value: %v", s)
+	}
+}
+
+func (s *ErrorStringMessage) Validate() error {
+	if s == nil {
+		return validate.ErrNilPointer
+	}
+
+	var failures []validate.FieldError
+	if err := func() error {
+		if value, ok := s.Code.Get(); ok {
+			if err := func() error {
+				if err := value.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return err
+			}
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "code",
+			Error: err,
+		})
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s ErrorStringMessageCode) Validate() error {
+	switch s {
+	case "ErrorStringMessage":
 		return nil
 	default:
 		return errors.Errorf("invalid value: %v", s)
@@ -118,6 +173,23 @@ func (s *ThreadWithPostsListResponse) Validate() error {
 		return &validate.Error{Fields: failures}
 	}
 	return nil
+}
+
+func (s UserCreateBadRequest) Validate() error {
+	switch s.Type {
+	case ErrorNotUniqueUserCreateBadRequest:
+		if err := s.ErrorNotUnique.Validate(); err != nil {
+			return err
+		}
+		return nil
+	case ErrorStringMessageUserCreateBadRequest:
+		if err := s.ErrorStringMessage.Validate(); err != nil {
+			return err
+		}
+		return nil
+	default:
+		return errors.Errorf("invalid type %q", s.Type)
+	}
 }
 
 func (s *UserCreateRequest) Validate() error {
@@ -209,6 +281,30 @@ func (s *UserCreateResponse) Validate() error {
 	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
+	}
+	return nil
+}
+
+func (s *UserGetBadRequest) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *UserGetForbidden) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *UserGetUnauthorized) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
 	}
 	return nil
 }

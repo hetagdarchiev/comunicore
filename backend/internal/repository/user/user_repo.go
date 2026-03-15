@@ -1,18 +1,15 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package user
 
 import (
 	"context"
-	"fmt"
 
-	"github.com/jackc/pgx/v5/pgconn"
-
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/apperror"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
-	userDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/model"
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
+	"github.com/hetagdarchiev/comunicore/backend/internal/repository"
+	userDb "github.com/hetagdarchiev/comunicore/backend/internal/repository/sqlc/db"
+	"github.com/hetagdarchiev/comunicore/backend/internal/service/model"
 )
 
 type UserRepo struct {
@@ -29,6 +26,9 @@ func NewUserRepo(dsn string) (*UserRepo, error) {
 
 func (r *UserRepo) Get(ctx context.Context, userId int) (model.User, error) {
 	row, err := r.queries.UserGet(ctx, int32(userId))
+	if err != nil {
+		err = apperror.PgErrorToAppError(err)
+	}
 	return model.User{
 		ID:    int(row.ID),
 		Name:  row.Name,
@@ -43,13 +43,7 @@ func (r *UserRepo) GetNameById(ctx context.Context, userId int) (string, error) 
 func (r *UserRepo) Create(ctx context.Context, name, email string) (model.User, error) {
 	row, err := r.queries.UserCreate(ctx, userDb.UserCreateParams{Name: name, Email: email})
 	if err != nil {
-		if pgErr, ok := err.(*pgconn.PgError); ok {
-			if pgErr.Code == "23505" { // unique_violation
-				return model.User{}, apperror.NewErrNotUnique("name", "email")
-			}
-			fmt.Printf("PostgreSQL unknown error code: %s, message: %s\n error struct %+v\n",
-				pgErr.Code, pgErr.Message, *pgErr)
-		}
+		err = apperror.PgErrorToAppError(err)
 	}
 	return model.User{
 		ID:    int(row.ID),

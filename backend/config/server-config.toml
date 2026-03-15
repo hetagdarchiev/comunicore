@@ -12,9 +12,9 @@ port = 8080
 # default "http://localhost:8080", cmd --server-baseurl, env FORUM_SERVER_BASEURL
 baseurl = "http://localhost:8080"
 # default "" (CORS disabled), cmd --server-permitted-origin, env FORUM_SERVER_PERMITTED_ORIGIN
-permittedOrigin = ""
-# no default, must by nonempty, cmd --server-jwtsecret, env FORUM_SERVER_JWTSECRET
-jwtsecret = ""
+permitted_origin = ""
+# no default, must by nonempty, cmd --server-jwt-secret, env FORUM_SERVER_JWT_SECRET
+jwt_secret = ""
 
 [database]
 # default "localhost", cmd --database-host, env FORUM_DATABASE_HOST

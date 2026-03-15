@@ -63,7 +63,7 @@ func (s *Server) handleAuthLoginRequest(args [0]string, argsEscaped bool, w http
 		}
 	}()
 
-	var response *JwtToken
+	var response AuthLoginRes
 	if m := s.cfg.Middleware; m != nil {
 		mreq := middleware.Request{
 			Context:          ctx,
@@ -79,7 +79,7 @@ func (s *Server) handleAuthLoginRequest(args [0]string, argsEscaped bool, w http
 		type (
 			Request  = *AuthLoginRequest
 			Params   = struct{}
-			Response = *JwtToken
+			Response = AuthLoginRes
 		)
 		response, err = middleware.HookMiddleware[
 			Request,

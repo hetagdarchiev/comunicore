@@ -1,4 +1,7 @@
-package tests
+// SPDX-License-Identifier: MIT
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
+
+package e2e
 
 import (
 	"fmt"
@@ -6,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/gavv/httpexpect/v2"
+	"github.com/hetagdarchiev/comunicore/backend/internal/tests"
 )
 
 type ForumUser struct {
@@ -17,14 +21,14 @@ type ForumUser struct {
 
 func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 	user := ForumUser{
-		Name:     "testUser",
-		Email:    "test@example.com",
-		Password: "testpassword",
+		Name:     tests.RandomString(8),
+		Email:    tests.RandomString(10) + "@example.com",
+		Password: tests.RandomString(12),
 	}
 	t.Run("Test UserCreate OK", func(t *testing.T) {
 		exp := expectCreate(t, baseURL)
 
-		obj := exp.POST(baseURL + userCreatePath).
+		obj := exp.POST(userCreatePath).
 			WithJSON(map[string]any{
 				"name":     user.Name,
 				"email":    user.Email,
@@ -39,10 +43,13 @@ func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 
 		user.ID = int(obj.Value("id").Number().Raw())
 	})
+	return user
+}
+func testUserCreateAgainFailure(t *testing.T, baseURL string, user ForumUser) {
 	t.Run("Test UserCreate Again Failure", func(t *testing.T) {
 		exp := expectCreate(t, baseURL)
 
-		obj := exp.POST(baseURL + userCreatePath).
+		obj := exp.POST(userCreatePath).
 			WithJSON(map[string]any{
 				"name":     user.Name,
 				"email":    user.Email,
@@ -55,10 +62,9 @@ func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 		obj.Value("code").IsEqual("ErrorNotUnique")
 		obj.Value("data").Array().ContainsOnly("name", "email")
 	})
-	return user
 }
 
-func testUserCreateBad(t *testing.T, baseURL string) {
+func TestUserCreateBad(t *testing.T) {
 	tests := []struct {
 		name           string
 		payload        map[string]any
@@ -92,16 +98,18 @@ func testUserCreateBad(t *testing.T, baseURL string) {
 		},
 	}
 
+	baseURL := globalConfig.URL
+
 	for _, tt := range tests {
 		t.Run("Test UserCreate bad ("+tt.name+")", func(t *testing.T) {
 			exp := expectCreate(t, baseURL)
 
-			obj := exp.POST(baseURL + userCreatePath).
+			obj := exp.POST(userCreatePath).
 				WithJSON(tt.payload).
 				Expect().
 				Status(http.StatusBadRequest).JSON().Object()
-			obj.Keys().ContainsOnly("error_message")
-			obj.Value("error_message").String().Contains(tt.expectedError)
+			obj.Keys().ContainsOnly("code", "message")
+			obj.Value("message").String().Contains(tt.expectedError)
 		})
 	}
 }
@@ -115,7 +123,7 @@ func testUserUpdateOk(t *testing.T, baseURL string, accessToken string, userID i
 			req.WithHeader("Authorization", "Bearer "+accessToken)
 		})
 
-		res := auth.POST(baseURL+userUpdatePath, userIdStr).
+		res := auth.POST(userUpdatePath, userIdStr).
 			WithJSON(map[string]any{
 				"name":     "tester",
 				"email":    "new@mail.ru",
@@ -141,12 +149,7 @@ func testUserMeOk(t *testing.T, baseURL string, accessToken string) ForumUser {
 			req.WithHeader("Authorization", "Bearer "+accessToken)
 		})
 
-		res := auth.GET(baseURL + userMePath).
-			WithJSON(map[string]any{
-				"name":     "tester",
-				"email":    "new@mail.ru",
-				"password": "super_password_forever",
-			}).
+		res := auth.GET(userMePath).
 			Expect().
 			Status(http.StatusOK).JSON().Object()
 
@@ -169,7 +172,7 @@ func testUserGetOk(t *testing.T, baseURL string, accessToken string, userID int)
 			req.WithHeader("Authorization", "Bearer "+accessToken)
 		})
 
-		res := auth.GET(baseURL+userGetPath, userIdStr).
+		res := auth.GET(userGetPath, userIdStr).
 			Expect().
 			Status(http.StatusOK).JSON().Object()
 

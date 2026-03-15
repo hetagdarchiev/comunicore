@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package handler
 
 import (
 	"context"
 	"errors"
+	"fmt"
+	"log"
 
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/apperror"
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 
-	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
-	userService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/user"
+	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	"github.com/hetagdarchiev/comunicore/backend/internal/service/jwt"
+	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
 )
 
 type UserHandler struct {
@@ -42,16 +44,22 @@ func (u *UserHandler) userGetById(ctx context.Context, userId int) (*forumApi.Us
 	}, nil
 }
 func (u *UserHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
-	return u.userGetById(ctx, 1) // TODO: get user id from JWT token
+	globalCtx := GlobalContextFromContext(ctx)
+	if globalCtx == nil || globalCtx.UserIDIsSet == false || globalCtx.UserID <= 0 {
+		log.Printf("global context %p, %+v\n", globalCtx, globalCtx)
+		return nil, fmt.Errorf("handler UserMe invalid UserID")
+	}
+	return u.userGetById(ctx, globalCtx.UserID)
 }
 func (u *UserHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRequest) (forumApi.UserCreateRes, error) {
 	user, err := u.userService.Create(ctx, req.Name, req.Email, req.Password)
 	if err != nil {
 		if _, ok := errors.AsType[*apperror.NotUniqueError](err); ok {
-			res := forumApi.ErrorNotUnique{
-				Code: forumApi.ErrorNotUniqueCode(forumApi.ErrorNotUniqueCodeErrorNotUnique),
-				Data: []string{"name", "email"},
-			}
+			res := forumApi.NewErrorNotUniqueUserCreateBadRequest(
+				forumApi.ErrorNotUnique{
+					Code: forumApi.ErrorNotUniqueCode(forumApi.ErrorNotUniqueCodeErrorNotUnique),
+					Data: []string{"name", "email"},
+				})
 			return &res, nil
 		}
 		return nil, err
