@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package threads
 
 import (
 	"context"
 
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
-	threadDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/model"
+	"github.com/hetagdarchiev/comunicore/backend/internal/repository"
+	threadDb "github.com/hetagdarchiev/comunicore/backend/internal/repository/sqlc/db"
+	"github.com/hetagdarchiev/comunicore/backend/internal/service/model"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 

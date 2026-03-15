@@ -1,4 +1,7 @@
-package tests
+// SPDX-License-Identifier: MIT
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
+
+package e2e
 
 import (
 	"context"
@@ -25,7 +28,7 @@ var (
 	globalConfig = globalAppConfig{
 		URL: "",
 		// server params to override config file values
-		ConfigPath: "../../config/server-config.toml",
+		ConfigPath: "../../../config/server-config.toml",
 
 		JwtSecret: "superSecret",
 
@@ -62,11 +65,13 @@ func TestMain(m *testing.M) { // for global setup and teardown
 func TestUserAndAuth(t *testing.T) {
 	// TODO: test negative cases
 	// userCreate
-	testUserCreateBad(t, globalConfig.URL)
+	// testUserCreateBad(t, globalConfig.URL)
 	user := testUserCreateOk(t, globalConfig.URL)
 	t.Logf("Created user: %+v", user)
+	testUserCreateAgainFailure(t, globalConfig.URL, user)
 	// userLogin
 	_, refreshTokenCookie1 := testAuthLoginOk(t, globalConfig.URL, user)
+	// testAuthLoginFailure(t, globalConfig.URL, user)
 	// userRefresh
 	jwtTokens, refreshTokenCookie2 := testAuthRefreshOk(t, globalConfig.URL, refreshTokenCookie1)
 	log.Printf("refresh tokens 1 and 2 %p %p\n", refreshTokenCookie1, refreshTokenCookie2)

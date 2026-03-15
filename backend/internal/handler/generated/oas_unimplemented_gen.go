@@ -18,7 +18,7 @@ var _ Handler = UnimplementedHandler{}
 // Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
 //
 // POST /api/auth/login
-func (UnimplementedHandler) AuthLogin(ctx context.Context, req *AuthLoginRequest) (r *JwtToken, _ error) {
+func (UnimplementedHandler) AuthLogin(ctx context.Context, req *AuthLoginRequest) (r AuthLoginRes, _ error) {
 	return r, ht.ErrNotImplemented
 }
 

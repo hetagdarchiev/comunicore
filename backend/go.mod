@@ -1,4 +1,4 @@
-module github.com/hetagdarchiev/forum-interaction-analytics/backend
+module github.com/hetagdarchiev/comunicore/backend
 
 go 1.26.0
 

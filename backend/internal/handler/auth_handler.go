@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package handler
 
@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"time"
 
-	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
-	authService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/auth"
+	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
 )
 
 type AuthHandler struct {
@@ -22,7 +22,7 @@ func NewAuthHandler(authService *authService.AuthService) *AuthHandler {
 	return &AuthHandler{authService: authService}
 }
 
-func (u *AuthHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequest) (*forumApi.JwtToken, error) {
+func (u *AuthHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequest) (forumApi.AuthLoginRes, error) {
 	access, refresh, err := u.authService.Login(ctx, req.Login, req.Password)
 	if err != nil {
 		return nil, err

@@ -1,39 +1,42 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package handler
 
-//go:generate go run github.com/ogen-go/ogen/cmd/ogen@latest --target ./generated/ --clean ../../../config/forum-api.yaml
+//go:generate go run github.com/ogen-go/ogen/cmd/ogen@latest --target ./generated/ --clean ../../../config/comunicore-api.yaml
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 
 	"github.com/rs/cors"
 
-	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
+	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	"github.com/hetagdarchiev/comunicore/backend/internal/lib/config"
 	"github.com/ogen-go/ogen/ogenerrors"
 
-	authRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/auth"
-	postsRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/posts"
-	threadsRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/threads"
-	userRepo "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/user"
+	authRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/auth"
+	postsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/posts"
+	threadsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/threads"
+	userRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/user"
 
-	authService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/auth"
-	jwtService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
-	threadsService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/threads"
-	userService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/user"
+	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
+	jwtService "github.com/hetagdarchiev/comunicore/backend/internal/service/jwt"
+	threadsService "github.com/hetagdarchiev/comunicore/backend/internal/service/threads"
+	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
 )
 
-// OgenHandler implements forumApi.Handler.
+// OgenHandler implements api.Handler.
 type OgenHandler struct {
 	authHandler    *AuthHandler
 	userHandler    *UserHandler
 	threadsHandler *ThreadsHandler
-	forumApi.UnimplementedHandler
+	api.UnimplementedHandler
 }
 
 func NewOgenHandler(
@@ -60,18 +63,20 @@ func NewSecurityHandler(jwtService *jwtService.JwtAuthorizator) *securityHandler
 }
 
 func (h *securityHandler) HandleCookieAuth(
-	ctx context.Context, operationName forumApi.OperationName, t forumApi.CookieAuth) (context.Context, error) {
+	ctx context.Context, operationName api.OperationName, t api.CookieAuth) (context.Context, error) {
 
+	op := "securityHandler.HandleCookieAuth"
 	fmt.Printf("Cookie Auth with operation name %s\n", operationName)
 	global := GlobalContextFromContext(ctx)
 	if global == nil {
-		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		return ctx, apperror.NewAuthenticationError(op, nil, "context not found")
 	}
 	claims, err := h.jwtService.ValidateToken(t.APIKey)
 	if err != nil {
 		log.Printf("JWT refresh token validation error: %v\n", err)
-		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		return ctx, apperror.NewAuthenticationError(op, err, "invalid Cookie JWT token")
 	}
+	fmt.Printf("op %s, Cookie auth valid, claims: %+v\n", op, claims)
 	global.RefreshToken = t.APIKey
 	global.RefreshTokenIsSet = true
 	if !global.UserIDIsSet {
@@ -82,8 +87,9 @@ func (h *securityHandler) HandleCookieAuth(
 	return ctx, nil
 }
 func (h *securityHandler) HandleJwtAuth(
-	ctx context.Context, operationName forumApi.OperationName, t forumApi.JwtAuth) (context.Context, error) {
+	ctx context.Context, operationName api.OperationName, t api.JwtAuth) (context.Context, error) {
 
+	op := "securityHandler.HandleJwtAuth"
 	fmt.Printf("JWT Auth with operation name %s and token %s\n", operationName, t.Token)
 
 	global := GlobalContextFromContext(ctx)
@@ -93,7 +99,7 @@ func (h *securityHandler) HandleJwtAuth(
 	claims, err := h.jwtService.ValidateToken(t.Token)
 	if err != nil {
 		log.Printf("JWT access token validation error: %v\n", err)
-		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		return ctx, apperror.NewAuthenticationError(op, err, "invalid JWT token")
 	}
 	global.AccessToken = t.Token
 	global.AccessTokenIsSet = true
@@ -102,6 +108,48 @@ func (h *securityHandler) HandleJwtAuth(
 		global.UserIDIsSet = true
 	}
 	return ctx, nil
+}
+
+type errorHandler struct{}
+
+func sendErrorStringMessage(w http.ResponseWriter, httpCode int, err error, errMessage string) {
+	e := api.ErrorStringMessage{
+		Code:    api.NewOptErrorStringMessageCode(api.ErrorStringMessageCodeErrorStringMessage),
+		Message: errMessage,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	data, err := e.MarshalJSON()
+	if err != nil {
+	}
+	w.WriteHeader(httpCode)
+	_, _ = w.Write(data)
+}
+func (h *errorHandler) handler(ctx context.Context, w http.ResponseWriter, r *http.Request, err error) {
+	fmt.Printf("in ogen error handler\n")
+	var (
+		code = http.StatusInternalServerError
+	)
+	// !!! errors handling order here is VERY important, because some errors can be wrapped in other errors,
+	// so we need to check for more specific errors first
+	if authenticationError, ok := errors.AsType[*apperror.AuthenticationError](err); ok {
+		log.Printf("AuthenticationError: %v\n", authenticationError)
+		sendErrorStringMessage(w, http.StatusUnauthorized, err, "incorrect login or password or login not exists")
+		return
+	}
+	if decodeRequestError, ok := errors.AsType[*ogenerrors.DecodeRequestError](err); ok {
+		log.Printf("DecodeRequestError: %v\n", decodeRequestError)
+		sendErrorStringMessage(w, http.StatusBadRequest, err, decodeRequestError.Error())
+		return
+	}
+	if securityError, ok := errors.AsType[*ogenerrors.SecurityError](err); ok {
+		// security error means request did not reach JWT or Cookie auth handlers (they returns apperror),
+		// so we can return 401
+		log.Printf("SecurityError: %v\n", securityError)
+		sendErrorStringMessage(w, http.StatusUnauthorized, securityError, "failed to read security credentials")
+		return
+	}
+	fmt.Printf("error handler called with error: %T %v\n", err, err)
+	_, _ = io.WriteString(w, http.StatusText(code))
 }
 func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	jwtS := jwtService.NewJwtService(config.Server.JwtSecret)
@@ -136,7 +184,8 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	ogenHandler := NewOgenHandler(authH, userH, threadsH)
 	secHandler := NewSecurityHandler(jwtS)
 
-	srv, err := forumApi.NewServer(ogenHandler, secHandler)
+	errHandler := &errorHandler{}
+	srv, err := api.NewServer(ogenHandler, secHandler, api.WithErrorHandler(errHandler.handler))
 	if err != nil {
 		panic(err)
 	}
@@ -157,49 +206,50 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 }
 
 // Thread handlers
-func (h *OgenHandler) ThreadAddPost(ctx context.Context, req *forumApi.ThreadCreatePostRequest, params forumApi.ThreadAddPostParams) (forumApi.ThreadAddPostRes, error) {
+
+func (h *OgenHandler) ThreadAddPost(ctx context.Context, req *api.ThreadCreatePostRequest, params api.ThreadAddPostParams) (api.ThreadAddPostRes, error) {
 	return h.threadsHandler.ThreadAddPost(ctx, req, params)
 }
 
-func (h *OgenHandler) ThreadCreate(ctx context.Context, req *forumApi.ThreadCreateRequest) (forumApi.ThreadCreateRes, error) {
+func (h *OgenHandler) ThreadCreate(ctx context.Context, req *api.ThreadCreateRequest) (api.ThreadCreateRes, error) {
 	return h.threadsHandler.ThreadCreate(ctx, req)
 }
 
-func (h *OgenHandler) ThreadGet(ctx context.Context, params forumApi.ThreadGetParams) (forumApi.ThreadGetRes, error) {
+func (h *OgenHandler) ThreadGet(ctx context.Context, params api.ThreadGetParams) (api.ThreadGetRes, error) {
 	return h.threadsHandler.ThreadGet(ctx, params)
 }
 
-func (h *OgenHandler) ThreadsList(ctx context.Context, params forumApi.ThreadsListParams) (forumApi.ThreadsListRes, error) {
+func (h *OgenHandler) ThreadsList(ctx context.Context, params api.ThreadsListParams) (api.ThreadsListRes, error) {
 	return h.threadsHandler.ThreadsList(ctx, params)
 }
 
 // User handlers
 
-func (h *OgenHandler) UserGet(ctx context.Context, params forumApi.UserGetParams) (forumApi.UserGetRes, error) {
+func (h *OgenHandler) UserGet(ctx context.Context, params api.UserGetParams) (api.UserGetRes, error) {
 	return h.userHandler.UserGet(ctx, params)
 }
 
-func (h *OgenHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
+func (h *OgenHandler) UserMe(ctx context.Context) (api.UserMeRes, error) {
 	return h.userHandler.UserMe(ctx)
 }
 
-func (h *OgenHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRequest) (forumApi.UserCreateRes, error) {
+func (h *OgenHandler) UserCreate(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
 	return h.userHandler.UserCreate(ctx, req)
 }
 
-func (h *OgenHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponse, error) {
+func (h *OgenHandler) UserUpdate(ctx context.Context, req *api.UserUpdateRequest, params api.UserUpdateParams) (*api.UserCreateResponse, error) {
 	return h.userHandler.UserUpdate(ctx, req, params)
 }
 
 // Auth handlers
 
-func (h *OgenHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequest) (*forumApi.JwtToken, error) {
+func (h *OgenHandler) AuthLogin(ctx context.Context, req *api.AuthLoginRequest) (api.AuthLoginRes, error) {
 	return h.authHandler.AuthLogin(ctx, req)
 }
 func (h *OgenHandler) AuthLogout(ctx context.Context) error {
 	return h.authHandler.AuthLogout(ctx)
 }
-func (h *OgenHandler) AuthRefresh(ctx context.Context) (forumApi.AuthRefreshRes, error) {
+func (h *OgenHandler) AuthRefresh(ctx context.Context) (api.AuthRefreshRes, error) {
 	res, err := h.authHandler.AuthRefresh(ctx)
 	if err != nil {
 		log.Printf("AuthRefresh error: %v\n", err)

@@ -1,6 +1,6 @@
 openapi: '3.1.2'
 info:
-  title: Forum interaction analyzis API
+  title: Comunicore API
   description: API for analyzing interactions in a forum.
   contact:
     name: API Support
@@ -32,7 +32,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ErrorNotUnique'
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorNotUnique'
+                  - $ref: '#/components/schemas/ErrorStringMessage'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/user/me:
@@ -49,7 +51,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserCreateResponse'
         "401":
-          $ref: '#/components/responses/ErrorStringDescription'
+          description: client must be authenticated to get his own data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/user/{userId}:
@@ -72,6 +78,22 @@ paths:
                 $ref: '#/components/schemas/UserCreateResponse'
         "400":
           description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        "401":
+          description: client must be authenticated to get user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        "403":
+          description: client can get only his own data, so if userId in path is not equal to id from token - 403
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
         "500":
           description: UserNotFound or Internal Server Error
     post:
@@ -116,6 +138,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/JwtToken'
+        '400':
+          description: Bad request error
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorStringMessage'
+        '401':
+          description: incorrect login or password or login not exists
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/ErrorStringMessage'
+        '500':
+          $ref: '#/components/responses/ErrorStringDescription'
   /api/auth/refresh:
     post:
       operationId: authRefresh
@@ -132,7 +170,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/JwtToken'
         "401":
-          $ref: '#/components/responses/ErrorStringDescription'
+          description: Client is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
   /api/auth/logout:
@@ -204,7 +246,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ThreadListResponse'
         "401":
-          $ref: '#/components/responses/ErrorStringDescription'
+          description: client must be authenticated to get threads list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
     post:
@@ -569,6 +615,22 @@ components:
       example:
         content: "I want to learn Go, but I don't know where to start. Any advice?"
     # errors
+    ErrorStringMessage:
+      description: |
+        Error with just string message, without code or other data. For simple errors,
+        when we don't need to send any additional data, just a message for log.
+      type: object
+      properties:
+        code:
+          type: string
+          enum: ["ErrorStringMessage"]
+          example: "ErrorStringMessage"
+        message:
+          type: string
+      example:
+        message: "Some error description for log"
+      required:
+        - message
     ErrorNotUnique:
       description: Error in some of listed parameters, one or more is not unique.
       type: object

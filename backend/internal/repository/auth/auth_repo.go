@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package auth
 
@@ -9,9 +9,10 @@ import (
 	"log"
 
 	"github.com/google/uuid"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository"
-	authDb "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/repository/sqlc/db"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/jwt"
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
+	"github.com/hetagdarchiev/comunicore/backend/internal/repository"
+	authDb "github.com/hetagdarchiev/comunicore/backend/internal/repository/sqlc/db"
+	"github.com/hetagdarchiev/comunicore/backend/internal/service/jwt"
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
@@ -36,24 +37,34 @@ func (r *AuthRepo) AuthCreate(ctx context.Context, user_id int64, login, passwor
 	passwordHash := hashPassword(password)
 	fmt.Printf("password hash %s\n", passwordHash)
 
-	return r.queries.AuthCreate(ctx, authDb.AuthCreateParams{
+	err := r.queries.AuthCreate(ctx, authDb.AuthCreateParams{
 		UserID:       int32(user_id),
 		Login:        login,
 		PasswordHash: passwordHash,
 	})
+	if err != nil {
+		err = apperror.PgErrorToAppError(err)
+	}
+	return err
 }
 func (r *AuthRepo) AuthUpdatePassword(ctx context.Context, user_id int64, password string) error {
 	passwordHash := hashPassword(password)
-	fmt.Printf("password hash %s\n", passwordHash)
+	fmt.Printf("password hash \"%s\"\n", passwordHash)
 	// TODO: make upsert query
-	return r.queries.AuthUpdatePassword(ctx, authDb.AuthUpdatePasswordParams{
+
+	err := r.queries.AuthUpdatePassword(ctx, authDb.AuthUpdatePasswordParams{
 		UserID:       int32(user_id),
 		PasswordHash: passwordHash,
 	})
+	if err != nil {
+		err = apperror.PgErrorToAppError(err)
+	}
+	return err
 }
 func (r *AuthRepo) Login(ctx context.Context, login, password string) (access, refresh string, err error) {
 	userId, err := r.checkLoginPassword(ctx, login, password)
 	if err != nil {
+		err = apperror.PgErrorToAppError(err) // FIXME: move this deeper, here it is not db error
 		return "", "", err
 	}
 
@@ -69,6 +80,9 @@ func (r *AuthRepo) Login(ctx context.Context, login, password string) (access, r
 		JwtID:  pgtype.UUID{Bytes: refreshUuid, Valid: true},
 		UserID: int32(userId),
 	})
+	if err != nil {
+		err = apperror.PgErrorToAppError(err)
+	}
 
 	return accessToken, refreshToken, err
 }
@@ -132,11 +146,14 @@ func (r *AuthRepo) createTokens(userId int64) (access, refresh string, refreshUu
 
 func (r *AuthRepo) checkLoginPassword(ctx context.Context, login, password string) (int, error) {
 	row, err := r.queries.AuthGetUserAndPasswordHash(ctx, login)
-	fmt.Printf("stored hash %s\n", row.PasswordHash)
+	if err != nil {
+		err = apperror.NewAuthenticationError("checkLoginPassword", err, "invalid login or password or login not found")
+		return 0, err
+	}
 
 	err = authenticateUser(row.PasswordHash, password)
 	if err != nil {
-		return 0, err
+		return 0, apperror.NewAuthenticationError("checkLoginPassword", err, "invalid login or password")
 	}
 	return int(row.UserID), nil
 }

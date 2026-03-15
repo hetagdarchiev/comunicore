@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package handler
 
 import (
 	"context"
 
-	forumApi "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler/generated"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/model"
-	threadsService "github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/service/threads"
+	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	"github.com/hetagdarchiev/comunicore/backend/internal/service/model"
+	threadsService "github.com/hetagdarchiev/comunicore/backend/internal/service/threads"
 )
 
 type ThreadsHandler struct {
