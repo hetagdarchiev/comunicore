@@ -6,17 +6,15 @@ type Props = {
   email: string | null;
 };
 
+const countdown = 10;
+
 export const VerificationForm = (props: Props) => {
   const { email } = props;
 
-  const [secondsLeft, setSecondsLeft] = useState(10);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [secondsLeft, setSecondsLeft] = useState(0);
 
   useEffect(() => {
-    if (secondsLeft <= 0) {
-      setIsDisabled(false);
-      return;
-    }
+    if (secondsLeft <= 0) return;
 
     const timer = setTimeout(() => {
       setSecondsLeft((prev) => prev - 1);
@@ -24,6 +22,12 @@ export const VerificationForm = (props: Props) => {
 
     return () => clearTimeout(timer);
   }, [secondsLeft]);
+
+  const handleResend = async () => {
+    console.log('Запрос на повторную отправку ссылки для:', email);
+
+    setSecondsLeft(countdown);
+  };
 
   return (
     <div className='flex flex-col gap-y-3'>
@@ -37,10 +41,14 @@ export const VerificationForm = (props: Props) => {
       )}
       <span className='text-gray-80 text-sm'>
         {secondsLeft > 0
-          ? `Повторная отправка доступна через ${secondsLeft}`
+          ? `Повторная отправка доступна через ${secondsLeft} сек.`
           : 'Отправьте еще раз если письмо не пришло'}
       </span>
-      <Button className='bg-black hover:bg-black' type='submit' disabled={isDisabled}>
+      <Button
+        className='disabled:bg-gray-80 bg-black hover:bg-black disabled:cursor-not-allowed'
+        disabled={secondsLeft > 0 || !email}
+        onClick={handleResend}
+      >
         Отправить повторно
       </Button>
     </div>
