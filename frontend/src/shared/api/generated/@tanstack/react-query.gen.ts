@@ -4,7 +4,7 @@ import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOption
 
 import { client } from '../client.gen';
 import { authLogin, authLogout, authRefresh, type Options, threadAddPost, threadCreate, threadGet, threadsList, userCreate, userDelete, userGet, userMe, userUpdate } from '../sdk.gen';
-import type { AuthLoginData, AuthLoginResponse, AuthLogoutData, AuthLogoutResponse, AuthRefreshData, AuthRefreshError, AuthRefreshResponse, ThreadAddPostData, ThreadAddPostError, ThreadAddPostResponse, ThreadCreateData, ThreadCreateError, ThreadCreateResponse, ThreadGetData, ThreadGetError, ThreadGetResponse, ThreadsListData, ThreadsListError, ThreadsListResponse, UserCreateData, UserCreateError, UserCreateResponse2, UserDeleteData, UserDeleteResponse, UserGetData, UserGetResponse2, UserMeData, UserMeError, UserMeResponse, UserUpdateData, UserUpdateResponse } from '../types.gen';
+import type { AuthLoginData, AuthLoginError, AuthLoginResponse, AuthLogoutData, AuthLogoutResponse, AuthRefreshData, AuthRefreshError, AuthRefreshResponse, ThreadAddPostData, ThreadAddPostError, ThreadAddPostResponse, ThreadCreateData, ThreadCreateError, ThreadCreateResponse, ThreadGetData, ThreadGetError, ThreadGetResponse, ThreadsListData, ThreadsListError, ThreadsListResponse, UserCreateData, UserCreateError, UserCreateResponse2, UserDeleteData, UserDeleteResponse, UserGetData, UserGetError, UserGetResponse2, UserMeData, UserMeError, UserMeResponse, UserUpdateData, UserUpdateResponse } from '../types.gen';
 
 /**
  * Create a new user
@@ -96,7 +96,7 @@ export const userGetQueryKey = (options: Options<UserGetData>) => createQueryKey
 /**
  * Get user information
  */
-export const userGetOptions = (options: Options<UserGetData>) => queryOptions<UserGetResponse2, DefaultError, UserGetResponse2, ReturnType<typeof userGetQueryKey>>({
+export const userGetOptions = (options: Options<UserGetData>) => queryOptions<UserGetResponse2, UserGetError, UserGetResponse2, ReturnType<typeof userGetQueryKey>>({
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await userGet({
             ...options,
@@ -132,8 +132,8 @@ export const userUpdateMutation = (options?: Partial<Options<UserUpdateData>>): 
  * Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
  *
  */
-export const authLoginMutation = (options?: Partial<Options<AuthLoginData>>): UseMutationOptions<AuthLoginResponse, DefaultError, Options<AuthLoginData>> => {
-    const mutationOptions: UseMutationOptions<AuthLoginResponse, DefaultError, Options<AuthLoginData>> = {
+export const authLoginMutation = (options?: Partial<Options<AuthLoginData>>): UseMutationOptions<AuthLoginResponse, AuthLoginError, Options<AuthLoginData>> => {
+    const mutationOptions: UseMutationOptions<AuthLoginResponse, AuthLoginError, Options<AuthLoginData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await authLogin({
                 ...options,

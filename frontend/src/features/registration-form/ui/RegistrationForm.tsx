@@ -40,7 +40,6 @@ export function RegistrationForm() {
     ...userCreateMutation(),
     onSuccess: () => {
       reset();
-      router.push('/verification');
     },
     onError: (error: UserCreateError) => {
       alert(getErrorMessage(error));
@@ -57,13 +56,14 @@ export function RegistrationForm() {
     mode: 'onSubmit',
   });
 
-  const onSubmit: SubmitHandler<TRegistrationForm> = (data) => {
+  const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
     const body: UserCreateRequest = {
       name: data.login,
       email: data.email,
       password: data.password,
     };
-    registration.mutate({ body });
+    await registration.mutateAsync({ body });
+    router.push(`/verification?email=${encodeURIComponent(data.email)}`);
   };
 
   return (
