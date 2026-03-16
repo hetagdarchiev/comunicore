@@ -13,7 +13,7 @@ type Handler interface {
 	// Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
 	//
 	// POST /api/auth/login
-	AuthLogin(ctx context.Context, req *AuthLoginRequest) (*JwtToken, error)
+	AuthLogin(ctx context.Context, req *AuthLoginRequest) (AuthLoginRes, error)
 	// AuthLogout implements authLogout operation.
 	//
 	// User logout.

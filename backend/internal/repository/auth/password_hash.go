@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package auth
 
@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 	"golang.org/x/crypto/argon2"
 )
 
@@ -91,9 +92,10 @@ func parseArgon2Hash(encodedHash string) (*argon2Config, error) {
 }
 
 func verifyPassword(storedHash, providedPassword string) (bool, error) {
+	op := "repo.auth.verifyPassword"
 	config, err := parseArgon2Hash(storedHash)
 	if err != nil {
-		return false, fmt.Errorf("hash parsing failed: %w", err)
+		return false, apperror.NewErrValidation(op, err, "invalid password hash format")
 	}
 
 	computedHash := argon2.IDKey(
@@ -113,11 +115,11 @@ func verifyPassword(storedHash, providedPassword string) (bool, error) {
 func authenticateUser(storedHash, password string) error {
 	isValid, err := verifyPassword(storedHash, password)
 	if err != nil {
-		return fmt.Errorf("authentication process failed: %w", err)
+		return fmt.Errorf("password verification failed: %w", err)
 	}
 
 	if !isValid {
-		return errors.New("authentication credentials invalid")
+		return errors.New("invalid password")
 	}
 
 	return nil

@@ -8,6 +8,18 @@ import (
 	"github.com/go-faster/errors"
 )
 
+type AuthLoginBadRequest ErrorStringMessage
+
+func (*AuthLoginBadRequest) authLoginRes() {}
+
+type AuthLoginInternalServerErrorApplicationJSON string
+
+func (*AuthLoginInternalServerErrorApplicationJSON) authLoginRes()   {}
+func (*AuthLoginInternalServerErrorApplicationJSON) authRefreshRes() {}
+func (*AuthLoginInternalServerErrorApplicationJSON) threadsListRes() {}
+func (*AuthLoginInternalServerErrorApplicationJSON) userCreateRes()  {}
+func (*AuthLoginInternalServerErrorApplicationJSON) userMeRes()      {}
+
 // Ref: #/components/schemas/AuthLoginRequest
 type AuthLoginRequest struct {
 	Login    string `json:"login"`
@@ -34,20 +46,12 @@ func (s *AuthLoginRequest) SetPassword(val string) {
 	s.Password = val
 }
 
+type AuthLoginUnauthorized ErrorStringMessage
+
+func (*AuthLoginUnauthorized) authLoginRes() {}
+
 // AuthLogoutNoContent is response for AuthLogout operation.
 type AuthLogoutNoContent struct{}
-
-type AuthRefreshInternalServerError AuthRefreshInternalServerErrorApplicationJSON
-
-func (*AuthRefreshInternalServerError) authRefreshRes() {}
-
-type AuthRefreshInternalServerErrorApplicationJSON string
-
-func (*AuthRefreshInternalServerErrorApplicationJSON) userCreateRes() {}
-
-type AuthRefreshUnauthorized AuthRefreshInternalServerErrorApplicationJSON
-
-func (*AuthRefreshUnauthorized) authRefreshRes() {}
 
 type CookieAuth struct {
 	APIKey string
@@ -101,8 +105,6 @@ func (s *ErrorNotUnique) SetData(val []string) {
 	s.Data = val
 }
 
-func (*ErrorNotUnique) userCreateRes() {}
-
 type ErrorNotUniqueCode string
 
 const (
@@ -131,6 +133,72 @@ func (s *ErrorNotUniqueCode) UnmarshalText(data []byte) error {
 	switch ErrorNotUniqueCode(data) {
 	case ErrorNotUniqueCodeErrorNotUnique:
 		*s = ErrorNotUniqueCodeErrorNotUnique
+		return nil
+	default:
+		return errors.Errorf("invalid value: %q", data)
+	}
+}
+
+// Error with just string message, without code or other data. For simple errors,
+// when we don't need to send any additional data, just a message for log.
+// Ref: #/components/schemas/ErrorStringMessage
+type ErrorStringMessage struct {
+	Code    OptErrorStringMessageCode `json:"code"`
+	Message string                    `json:"message"`
+}
+
+// GetCode returns the value of Code.
+func (s *ErrorStringMessage) GetCode() OptErrorStringMessageCode {
+	return s.Code
+}
+
+// GetMessage returns the value of Message.
+func (s *ErrorStringMessage) GetMessage() string {
+	return s.Message
+}
+
+// SetCode sets the value of Code.
+func (s *ErrorStringMessage) SetCode(val OptErrorStringMessageCode) {
+	s.Code = val
+}
+
+// SetMessage sets the value of Message.
+func (s *ErrorStringMessage) SetMessage(val string) {
+	s.Message = val
+}
+
+func (*ErrorStringMessage) authRefreshRes() {}
+func (*ErrorStringMessage) threadsListRes() {}
+func (*ErrorStringMessage) userMeRes()      {}
+
+type ErrorStringMessageCode string
+
+const (
+	ErrorStringMessageCodeErrorStringMessage ErrorStringMessageCode = "ErrorStringMessage"
+)
+
+// AllValues returns all ErrorStringMessageCode values.
+func (ErrorStringMessageCode) AllValues() []ErrorStringMessageCode {
+	return []ErrorStringMessageCode{
+		ErrorStringMessageCodeErrorStringMessage,
+	}
+}
+
+// MarshalText implements encoding.TextMarshaler.
+func (s ErrorStringMessageCode) MarshalText() ([]byte, error) {
+	switch s {
+	case ErrorStringMessageCodeErrorStringMessage:
+		return []byte(s), nil
+	default:
+		return nil, errors.Errorf("invalid value: %q", s)
+	}
+}
+
+// UnmarshalText implements encoding.TextUnmarshaler.
+func (s *ErrorStringMessageCode) UnmarshalText(data []byte) error {
+	switch ErrorStringMessageCode(data) {
+	case ErrorStringMessageCodeErrorStringMessage:
+		*s = ErrorStringMessageCodeErrorStringMessage
 		return nil
 	default:
 		return errors.Errorf("invalid value: %q", data)
@@ -188,7 +256,54 @@ func (s *JwtToken) SetAccessToken(val string) {
 	s.AccessToken = val
 }
 
+func (*JwtToken) authLoginRes()   {}
 func (*JwtToken) authRefreshRes() {}
+
+// NewOptErrorStringMessageCode returns new OptErrorStringMessageCode with value set to v.
+func NewOptErrorStringMessageCode(v ErrorStringMessageCode) OptErrorStringMessageCode {
+	return OptErrorStringMessageCode{
+		Value: v,
+		Set:   true,
+	}
+}
+
+// OptErrorStringMessageCode is optional ErrorStringMessageCode.
+type OptErrorStringMessageCode struct {
+	Value ErrorStringMessageCode
+	Set   bool
+}
+
+// IsSet returns true if OptErrorStringMessageCode was set.
+func (o OptErrorStringMessageCode) IsSet() bool { return o.Set }
+
+// Reset unsets value.
+func (o *OptErrorStringMessageCode) Reset() {
+	var v ErrorStringMessageCode
+	o.Value = v
+	o.Set = false
+}
+
+// SetTo sets value to v.
+func (o *OptErrorStringMessageCode) SetTo(v ErrorStringMessageCode) {
+	o.Set = true
+	o.Value = v
+}
+
+// Get returns value and boolean that denotes whether value was set.
+func (o OptErrorStringMessageCode) Get() (v ErrorStringMessageCode, ok bool) {
+	if !o.Set {
+		return v, false
+	}
+	return o.Value, true
+}
+
+// Or returns value if set, or given parameter if does not.
+func (o OptErrorStringMessageCode) Or(d ErrorStringMessageCode) ErrorStringMessageCode {
+	if v, ok := o.Get(); ok {
+		return v
+	}
+	return d
+}
 
 // NewOptInt returns new OptInt with value set to v.
 func NewOptInt(v int) OptInt {
@@ -236,15 +351,15 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
-type ThreadAddPostBadRequest AuthRefreshInternalServerErrorApplicationJSON
+type ThreadAddPostBadRequest AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadAddPostBadRequest) threadAddPostRes() {}
 
-type ThreadAddPostInternalServerError AuthRefreshInternalServerErrorApplicationJSON
+type ThreadAddPostInternalServerError AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadAddPostInternalServerError) threadAddPostRes() {}
 
-type ThreadCreateInternalServerError AuthRefreshInternalServerErrorApplicationJSON
+type ThreadCreateInternalServerError AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadCreateInternalServerError) threadCreateRes() {}
 
@@ -289,15 +404,15 @@ func (s *ThreadCreateRequest) SetContent(val string) {
 	s.Content = val
 }
 
-type ThreadCreateUnauthorized AuthRefreshInternalServerErrorApplicationJSON
+type ThreadCreateUnauthorized AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadCreateUnauthorized) threadCreateRes() {}
 
-type ThreadGetBadRequest AuthRefreshInternalServerErrorApplicationJSON
+type ThreadGetBadRequest AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadGetBadRequest) threadGetRes() {}
 
-type ThreadGetInternalServerError AuthRefreshInternalServerErrorApplicationJSON
+type ThreadGetInternalServerError AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadGetInternalServerError) threadGetRes() {}
 
@@ -589,13 +704,75 @@ func (s *ThreadWithPostsListResponse) SetPosts(val []ThreadPostItem) {
 
 func (*ThreadWithPostsListResponse) threadGetRes() {}
 
-type ThreadsListInternalServerError AuthRefreshInternalServerErrorApplicationJSON
+// UserCreateBadRequest represents sum type.
+type UserCreateBadRequest struct {
+	Type               UserCreateBadRequestType // switch on this field
+	ErrorNotUnique     ErrorNotUnique
+	ErrorStringMessage ErrorStringMessage
+}
 
-func (*ThreadsListInternalServerError) threadsListRes() {}
+// UserCreateBadRequestType is oneOf type of UserCreateBadRequest.
+type UserCreateBadRequestType string
 
-type ThreadsListUnauthorized AuthRefreshInternalServerErrorApplicationJSON
+// Possible values for UserCreateBadRequestType.
+const (
+	ErrorNotUniqueUserCreateBadRequest     UserCreateBadRequestType = "ErrorNotUnique"
+	ErrorStringMessageUserCreateBadRequest UserCreateBadRequestType = "ErrorStringMessage"
+)
 
-func (*ThreadsListUnauthorized) threadsListRes() {}
+// IsErrorNotUnique reports whether UserCreateBadRequest is ErrorNotUnique.
+func (s UserCreateBadRequest) IsErrorNotUnique() bool {
+	return s.Type == ErrorNotUniqueUserCreateBadRequest
+}
+
+// IsErrorStringMessage reports whether UserCreateBadRequest is ErrorStringMessage.
+func (s UserCreateBadRequest) IsErrorStringMessage() bool {
+	return s.Type == ErrorStringMessageUserCreateBadRequest
+}
+
+// SetErrorNotUnique sets UserCreateBadRequest to ErrorNotUnique.
+func (s *UserCreateBadRequest) SetErrorNotUnique(v ErrorNotUnique) {
+	s.Type = ErrorNotUniqueUserCreateBadRequest
+	s.ErrorNotUnique = v
+}
+
+// GetErrorNotUnique returns ErrorNotUnique and true boolean if UserCreateBadRequest is ErrorNotUnique.
+func (s UserCreateBadRequest) GetErrorNotUnique() (v ErrorNotUnique, ok bool) {
+	if !s.IsErrorNotUnique() {
+		return v, false
+	}
+	return s.ErrorNotUnique, true
+}
+
+// NewErrorNotUniqueUserCreateBadRequest returns new UserCreateBadRequest from ErrorNotUnique.
+func NewErrorNotUniqueUserCreateBadRequest(v ErrorNotUnique) UserCreateBadRequest {
+	var s UserCreateBadRequest
+	s.SetErrorNotUnique(v)
+	return s
+}
+
+// SetErrorStringMessage sets UserCreateBadRequest to ErrorStringMessage.
+func (s *UserCreateBadRequest) SetErrorStringMessage(v ErrorStringMessage) {
+	s.Type = ErrorStringMessageUserCreateBadRequest
+	s.ErrorStringMessage = v
+}
+
+// GetErrorStringMessage returns ErrorStringMessage and true boolean if UserCreateBadRequest is ErrorStringMessage.
+func (s UserCreateBadRequest) GetErrorStringMessage() (v ErrorStringMessage, ok bool) {
+	if !s.IsErrorStringMessage() {
+		return v, false
+	}
+	return s.ErrorStringMessage, true
+}
+
+// NewErrorStringMessageUserCreateBadRequest returns new UserCreateBadRequest from ErrorStringMessage.
+func NewErrorStringMessageUserCreateBadRequest(v ErrorStringMessage) UserCreateBadRequest {
+	var s UserCreateBadRequest
+	s.SetErrorStringMessage(v)
+	return s
+}
+
+func (*UserCreateBadRequest) userCreateRes() {}
 
 // Ref: #/components/schemas/UserCreateRequest
 type UserCreateRequest struct {
@@ -678,23 +855,22 @@ func (*UserCreateResponse) userMeRes()     {}
 // UserDeleteNoContent is response for UserDelete operation.
 type UserDeleteNoContent struct{}
 
-// UserGetBadRequest is response for UserGet operation.
-type UserGetBadRequest struct{}
+type UserGetBadRequest ErrorStringMessage
 
 func (*UserGetBadRequest) userGetRes() {}
+
+type UserGetForbidden ErrorStringMessage
+
+func (*UserGetForbidden) userGetRes() {}
 
 // UserGetInternalServerError is response for UserGet operation.
 type UserGetInternalServerError struct{}
 
 func (*UserGetInternalServerError) userGetRes() {}
 
-type UserMeInternalServerError AuthRefreshInternalServerErrorApplicationJSON
+type UserGetUnauthorized ErrorStringMessage
 
-func (*UserMeInternalServerError) userMeRes() {}
-
-type UserMeUnauthorized AuthRefreshInternalServerErrorApplicationJSON
-
-func (*UserMeUnauthorized) userMeRes() {}
+func (*UserGetUnauthorized) userGetRes() {}
 
 // Ref: #/components/schemas/UserUpdateRequest
 type UserUpdateRequest struct {

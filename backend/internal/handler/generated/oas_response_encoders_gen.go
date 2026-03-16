@@ -9,17 +9,59 @@ import (
 	"github.com/go-faster/jx"
 )
 
-func encodeAuthLoginResponse(response *JwtToken, w http.ResponseWriter) error {
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(200)
+func encodeAuthLoginResponse(response AuthLoginRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *JwtToken:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
 
-	e := new(jx.Encoder)
-	response.Encode(e)
-	if _, err := e.WriteTo(w); err != nil {
-		return errors.Wrap(err, "write")
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *AuthLoginBadRequest:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(400)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *AuthLoginUnauthorized:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(401)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *AuthLoginInternalServerErrorApplicationJSON:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(500)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
 	}
-
-	return nil
 }
 
 func encodeAuthLogoutResponse(response *AuthLogoutNoContent, w http.ResponseWriter) error {
@@ -42,7 +84,7 @@ func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *AuthRefreshUnauthorized:
+	case *ErrorStringMessage:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
 
@@ -54,7 +96,7 @@ func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *AuthRefreshInternalServerError:
+	case *AuthLoginInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -214,7 +256,7 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *ThreadsListUnauthorized:
+	case *ErrorStringMessage:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
 
@@ -226,7 +268,7 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *ThreadsListInternalServerError:
+	case *AuthLoginInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -257,7 +299,7 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) err
 
 		return nil
 
-	case *ErrorNotUnique:
+	case *UserCreateBadRequest:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
 
@@ -269,7 +311,7 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) err
 
 		return nil
 
-	case *AuthRefreshInternalServerErrorApplicationJSON:
+	case *AuthLoginInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -307,7 +349,38 @@ func encodeUserGetResponse(response UserGetRes, w http.ResponseWriter) error {
 		return nil
 
 	case *UserGetBadRequest:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(400)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *UserGetUnauthorized:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(401)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *UserGetForbidden:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(403)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
 
 		return nil
 
@@ -335,7 +408,7 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter) error {
 
 		return nil
 
-	case *UserMeUnauthorized:
+	case *ErrorStringMessage:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
 
@@ -347,7 +420,7 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter) error {
 
 		return nil
 
-	case *UserMeInternalServerError:
+	case *AuthLoginInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 

@@ -1,4 +1,7 @@
-package tests
+// SPDX-License-Identifier: MIT
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
+
+package e2e
 
 import (
 	"context"
@@ -11,15 +14,15 @@ import (
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
+	"github.com/hetagdarchiev/comunicore/backend/internal/handler"
+	"github.com/hetagdarchiev/comunicore/backend/internal/lib/config"
 )
 
 func postgresStart(ctx context.Context) (stop func()) {
 	postgresContainer, err := postgres.Run(ctx,
 		// "postgres:16-alpine",
 		"postgres:18",
-		postgres.WithInitScripts("../repository/sqlc/schema.sql"),
+		postgres.WithInitScripts("../../repository/sqlc/schema.sql"),
 		postgres.WithDatabase(globalConfig.DbName),
 		postgres.WithUsername(globalConfig.DbUser),
 		postgres.WithPassword(globalConfig.DbPassword),

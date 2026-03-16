@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Copyright 2025 Alex Syrnikov <alex19srv@gmail.com>
+// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
 
 package main
 
@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/handler"
-	"github.com/hetagdarchiev/forum-interaction-analytics/backend/internal/lib/config"
+	"github.com/hetagdarchiev/comunicore/backend/internal/handler"
+	"github.com/hetagdarchiev/comunicore/backend/internal/lib/config"
 )
 
 func main() {

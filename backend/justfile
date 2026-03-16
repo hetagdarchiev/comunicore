@@ -3,7 +3,7 @@ set shell := ["bash", "-c"]
 GO_BIN_DIR := `pwd` + "/bin"
 
 build:
-  go build -o ./target/comunicore ./cmd/forum
+  go build -o ./target/comunicore ./cmd/comunicore
   go build -o ./target/migrate ./cmd/migrate
 
 run +CONFIG: build
@@ -41,4 +41,7 @@ e2e_tests:
     @go test -count=1 ./internal/tests/...
 e2e_tests_verbose:
     @echo "Starting API e2e tests..."
-    @go test -count=1 ./internal/tests/... -v
+    @go test ./internal/tests/... -v
+e2e_tests_specific +TEST_NAME:
+    @echo "Starting API e2e tests..."
+    @go test ./internal/tests/e2e/... -v -run {{TEST_NAME}}

@@ -118,6 +118,13 @@ const eslintConfig = defineConfig([
       'import/no-default-export': 'off',
     },
   },
+  {
+    files: ['src/**/*.gen.{js,mjs,ts}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'warn',
+    },
+  },
 ]);
 
 export default eslintConfig;
