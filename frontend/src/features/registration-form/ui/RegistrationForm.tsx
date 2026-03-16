@@ -10,9 +10,10 @@ import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import {
-  validationSchema,
   TRegistrationForm,
+  validationSchema,
 } from '../model/validation-schema';
 
 export function RegistrationForm() {

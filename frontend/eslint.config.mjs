@@ -45,9 +45,6 @@ const eslintConfig = defineConfig([
 
       // Forbids direct import of the global store
       'fsd/no-global-store-imports': 'error',
-
-      // Enforces import order based on FSD layers
-      'fsd/ordered-imports': 'warn',
     },
   },
   {
