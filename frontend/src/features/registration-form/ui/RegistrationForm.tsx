@@ -20,18 +20,8 @@ import { useMutation } from '@tanstack/react-query';
 import {
   TRegistrationForm,
   validationSchema,
-} from '../model/validation-schema';
-
-// Функция для безопасного получения сообщения об ошибке
-const getErrorMessage = (error: UserCreateError): string => {
-  if (typeof error === 'string') {
-    return error;
-  }
-  if (error && typeof error === 'object') {
-    return (error as any).detail || 'Ошибка валидации';
-  }
-  return 'Неизвестная ошибка';
-};
+} from '../model/schema/validation-schema';
+import { getErrorMessage } from '@/shared/lib/helpers';
 
 export function RegistrationForm() {
   const router = useRouter();

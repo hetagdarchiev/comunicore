@@ -8,7 +8,7 @@ type Props = {
 
 const countdown = 10;
 
-export const VerificationForm = (props: Props) => {
+export function VerificationForm(props: Props) {
   const { email } = props;
 
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -53,4 +53,4 @@ export const VerificationForm = (props: Props) => {
       </Button>
     </div>
   );
-};
+}
