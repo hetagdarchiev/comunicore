@@ -1,11 +1,10 @@
+import { useSearchParams } from 'next/navigation';
+
 import { VerificationForm } from '@/features/verification-form';
 
-type Props = {
-  email: string | null;
-};
-
-export const VerificationBody = (props: Props) => {
-  const { email } = props;
+export const VerificationBody = () => {
+  const searchParams = useSearchParams();
+  const email = searchParams.get('email');
 
   return (
     <div className='flex flex-col gap-y-5'>
