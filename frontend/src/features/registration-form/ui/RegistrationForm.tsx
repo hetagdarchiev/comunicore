@@ -11,6 +11,7 @@ import type {
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
 import userIcon from '@/shared/assets/icons/form/user.svg';
+import { getErrorMessage } from '@/shared/lib/helpers';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
@@ -21,7 +22,6 @@ import {
   TRegistrationForm,
   validationSchema,
 } from '../model/schema/validation-schema';
-import { getErrorMessage } from '@/shared/lib/helpers';
 
 export function RegistrationForm() {
   const router = useRouter();
