@@ -1,13 +1,17 @@
-import { VerificationForm } from '@/features/verification-form';
+'use client';
 
-export default function Verification() {
+import { Suspense } from 'react';
+
+import { VerificationBody } from '@/widgets/VerificationBody';
+
+function Verification() {
   return (
     <main className='flex-1 bg-white px-2.5 py-2.5'>
-      <div className='flex flex-col gap-y-7'>
-        <h2 className='text-4xl font-bold'>Подтверждение эл. почты</h2>
-        <p>Введите код из письма, которые мы отправили на example@gmail.com</p>
-        <VerificationForm />
-      </div>
+      <Suspense fallback={<div>Загрузка...</div>}>
+        <VerificationBody />
+      </Suspense>
     </main>
   );
 }
+
+export default Verification;

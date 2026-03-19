@@ -2,73 +2,133 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthLoginData, AuthLoginResponses, AuthLogoutData, AuthLogoutResponses, AuthRefreshData, AuthRefreshErrors, AuthRefreshResponses, ThreadAddPostData, ThreadAddPostErrors, ThreadAddPostResponses, ThreadCreateData, ThreadCreateErrors, ThreadCreateResponses, ThreadGetData, ThreadGetErrors, ThreadGetResponses, ThreadsListData, ThreadsListErrors, ThreadsListResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteResponses, UserGetData, UserGetErrors, UserGetResponses, UserMeData, UserMeErrors, UserMeResponses, UserUpdateData, UserUpdateResponses } from './types.gen';
+import type {
+  AuthLoginData,
+  AuthLoginErrors,
+  AuthLoginResponses,
+  AuthLogoutData,
+  AuthLogoutResponses,
+  AuthRefreshData,
+  AuthRefreshErrors,
+  AuthRefreshResponses,
+  ThreadAddPostData,
+  ThreadAddPostErrors,
+  ThreadAddPostResponses,
+  ThreadCreateData,
+  ThreadCreateErrors,
+  ThreadCreateResponses,
+  ThreadGetData,
+  ThreadGetErrors,
+  ThreadGetResponses,
+  ThreadsListData,
+  ThreadsListErrors,
+  ThreadsListResponses,
+  UserCreateData,
+  UserCreateErrors,
+  UserCreateResponses,
+  UserDeleteData,
+  UserDeleteResponses,
+  UserGetData,
+  UserGetErrors,
+  UserGetResponses,
+  UserMeData,
+  UserMeErrors,
+  UserMeResponses,
+  UserUpdateData,
+  UserUpdateResponses,
+} from './types.gen';
 
-export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
-    /**
-     * You can provide a client instance returned by `createClient()` instead of
-     * individual options. This might be also useful if you want to implement a
-     * custom client.
-     */
-    client?: Client;
-    /**
-     * You can pass arbitrary values through the `meta` object. This can be
-     * used to access values that aren't defined as part of the SDK function.
-     */
-    meta?: Record<string, unknown>;
+export type Options<
+  TData extends TDataShape = TDataShape,
+  ThrowOnError extends boolean = boolean,
+> = Options2<TData, ThrowOnError> & {
+  /**
+   * You can provide a client instance returned by `createClient()` instead of
+   * individual options. This might be also useful if you want to implement a
+   * custom client.
+   */
+  client?: Client;
+  /**
+   * You can pass arbitrary values through the `meta` object. This can be
+   * used to access values that aren't defined as part of the SDK function.
+   */
+  meta?: Record<string, unknown>;
 };
 
 /**
  * Create a new user
  */
-export const userCreate = <ThrowOnError extends boolean = false>(options: Options<UserCreateData, ThrowOnError>) => (options.client ?? client).post<UserCreateResponses, UserCreateErrors, ThrowOnError>({
+export const userCreate = <ThrowOnError extends boolean = false>(
+  options: Options<UserCreateData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<
+    UserCreateResponses,
+    UserCreateErrors,
+    ThrowOnError
+  >({
     url: '/api/user',
     ...options,
     headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
 
 /**
  * Get current user information
  */
-export const userMe = <ThrowOnError extends boolean = false>(options?: Options<UserMeData, ThrowOnError>) => (options?.client ?? client).get<UserMeResponses, UserMeErrors, ThrowOnError>({
+export const userMe = <ThrowOnError extends boolean = false>(
+  options?: Options<UserMeData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<UserMeResponses, UserMeErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/user/me',
-    ...options
-});
+    ...options,
+  });
 
 /**
  * Delete a user
  */
-export const userDelete = <ThrowOnError extends boolean = false>(options: Options<UserDeleteData, ThrowOnError>) => (options.client ?? client).delete<UserDeleteResponses, unknown, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/user/{userId}',
-    ...options
-});
+export const userDelete = <ThrowOnError extends boolean = false>(
+  options: Options<UserDeleteData, ThrowOnError>,
+) =>
+  (options.client ?? client).delete<UserDeleteResponses, unknown, ThrowOnError>(
+    {
+      security: [{ scheme: 'bearer', type: 'http' }],
+      url: '/api/user/{userId}',
+      ...options,
+    },
+  );
 
 /**
  * Get user information
  */
-export const userGet = <ThrowOnError extends boolean = false>(options: Options<UserGetData, ThrowOnError>) => (options.client ?? client).get<UserGetResponses, UserGetErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
-    url: '/api/user/{userId}',
-    ...options
-});
+export const userGet = <ThrowOnError extends boolean = false>(
+  options: Options<UserGetData, ThrowOnError>,
+) =>
+  (options.client ?? client).get<UserGetResponses, UserGetErrors, ThrowOnError>(
+    {
+      security: [{ scheme: 'bearer', type: 'http' }],
+      url: '/api/user/{userId}',
+      ...options,
+    },
+  );
 
 /**
  * Update user information
  */
-export const userUpdate = <ThrowOnError extends boolean = false>(options: Options<UserUpdateData, ThrowOnError>) => (options.client ?? client).post<UserUpdateResponses, unknown, ThrowOnError>({
+export const userUpdate = <ThrowOnError extends boolean = false>(
+  options: Options<UserUpdateData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<UserUpdateResponses, unknown, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/user/{userId}',
     ...options,
     headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
 
 /**
  * User login
@@ -76,14 +136,21 @@ export const userUpdate = <ThrowOnError extends boolean = false>(options: Option
  * Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
  *
  */
-export const authLogin = <ThrowOnError extends boolean = false>(options: Options<AuthLoginData, ThrowOnError>) => (options.client ?? client).post<AuthLoginResponses, unknown, ThrowOnError>({
+export const authLogin = <ThrowOnError extends boolean = false>(
+  options: Options<AuthLoginData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<
+    AuthLoginResponses,
+    AuthLoginErrors,
+    ThrowOnError
+  >({
     url: '/api/auth/login',
     ...options,
     headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
 
 /**
  * Refresh JWT token
@@ -91,28 +158,42 @@ export const authLogin = <ThrowOnError extends boolean = false>(options: Options
  * Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
  *
  */
-export const authRefresh = <ThrowOnError extends boolean = false>(options?: Options<AuthRefreshData, ThrowOnError>) => (options?.client ?? client).post<AuthRefreshResponses, AuthRefreshErrors, ThrowOnError>({
-    security: [{
-            in: 'cookie',
-            name: 'refreshToken',
-            type: 'apiKey'
-        }],
+export const authRefresh = <ThrowOnError extends boolean = false>(
+  options?: Options<AuthRefreshData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<
+    AuthRefreshResponses,
+    AuthRefreshErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        in: 'cookie',
+        name: 'refreshToken',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/auth/refresh',
-    ...options
-});
+    ...options,
+  });
 
 /**
  * User logout
  */
-export const authLogout = <ThrowOnError extends boolean = false>(options?: Options<AuthLogoutData, ThrowOnError>) => (options?.client ?? client).post<AuthLogoutResponses, unknown, ThrowOnError>({
-    security: [{
-            in: 'cookie',
-            name: 'refreshToken',
-            type: 'apiKey'
-        }],
+export const authLogout = <ThrowOnError extends boolean = false>(
+  options?: Options<AuthLogoutData, ThrowOnError>,
+) =>
+  (options?.client ?? client).post<AuthLogoutResponses, unknown, ThrowOnError>({
+    security: [
+      {
+        in: 'cookie',
+        name: 'refreshToken',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/auth/logout',
-    ...options
-});
+    ...options,
+  });
 
 /**
  * Get list of threads with pagination
@@ -139,43 +220,71 @@ export const authLogout = <ThrowOnError extends boolean = false>(options?: Optio
  * а более новым (after) - больший id. И при этом не важно, удалены эти сообщения или нет.
  *
  */
-export const threadsList = <ThrowOnError extends boolean = false>(options?: Options<ThreadsListData, ThrowOnError>) => (options?.client ?? client).get<ThreadsListResponses, ThreadsListErrors, ThrowOnError>({
+export const threadsList = <ThrowOnError extends boolean = false>(
+  options?: Options<ThreadsListData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    ThreadsListResponses,
+    ThreadsListErrors,
+    ThrowOnError
+  >({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/threads',
-    ...options
-});
+    ...options,
+  });
 
 /**
  * Create a new thread
  */
-export const threadCreate = <ThrowOnError extends boolean = false>(options: Options<ThreadCreateData, ThrowOnError>) => (options.client ?? client).post<ThreadCreateResponses, ThreadCreateErrors, ThrowOnError>({
+export const threadCreate = <ThrowOnError extends boolean = false>(
+  options: Options<ThreadCreateData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<
+    ThreadCreateResponses,
+    ThreadCreateErrors,
+    ThrowOnError
+  >({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/threads',
     ...options,
     headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
 
 /**
  * Get single thread with all posts by thread id
  */
-export const threadGet = <ThrowOnError extends boolean = false>(options: Options<ThreadGetData, ThrowOnError>) => (options.client ?? client).get<ThreadGetResponses, ThreadGetErrors, ThrowOnError>({
+export const threadGet = <ThrowOnError extends boolean = false>(
+  options: Options<ThreadGetData, ThrowOnError>,
+) =>
+  (options.client ?? client).get<
+    ThreadGetResponses,
+    ThreadGetErrors,
+    ThrowOnError
+  >({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/threads/{threadId}',
-    ...options
-});
+    ...options,
+  });
 
 /**
  * Add a new post to thread
  */
-export const threadAddPost = <ThrowOnError extends boolean = false>(options: Options<ThreadAddPostData, ThrowOnError>) => (options.client ?? client).post<ThreadAddPostResponses, ThreadAddPostErrors, ThrowOnError>({
+export const threadAddPost = <ThrowOnError extends boolean = false>(
+  options: Options<ThreadAddPostData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<
+    ThreadAddPostResponses,
+    ThreadAddPostErrors,
+    ThrowOnError
+  >({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/api/threads/{threadId}/posts',
     ...options,
     headers: {
-        'Content-Type': 'application/json',
-        ...options.headers
-    }
-});
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });

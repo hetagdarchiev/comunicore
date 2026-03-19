@@ -11,6 +11,7 @@ import type {
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
 import userIcon from '@/shared/assets/icons/form/user.svg';
+import { getErrorMessage } from '@/shared/lib/helpers';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
 import { Input } from '@/shared/ui/Input';
@@ -20,18 +21,7 @@ import { useMutation } from '@tanstack/react-query';
 import {
   TRegistrationForm,
   validationSchema,
-} from '../model/validation-schema';
-
-// Функция для безопасного получения сообщения об ошибке
-const getErrorMessage = (error: UserCreateError): string => {
-  if (typeof error === 'string') {
-    return error;
-  }
-  if (error && typeof error === 'object') {
-    return (error as any).detail || 'Ошибка валидации';
-  }
-  return 'Неизвестная ошибка';
-};
+} from '../model/schema/validation-schema';
 
 export function RegistrationForm() {
   const router = useRouter();
@@ -40,7 +30,6 @@ export function RegistrationForm() {
     ...userCreateMutation(),
     onSuccess: () => {
       reset();
-      router.push('/verification');
     },
     onError: (error: UserCreateError) => {
       alert(getErrorMessage(error));
@@ -57,13 +46,14 @@ export function RegistrationForm() {
     mode: 'onSubmit',
   });
 
-  const onSubmit: SubmitHandler<TRegistrationForm> = (data) => {
+  const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
     const body: UserCreateRequest = {
       name: data.login,
       email: data.email,
       password: data.password,
     };
-    registration.mutate({ body });
+    await registration.mutateAsync({ body });
+    router.push(`/verification?email=${encodeURIComponent(data.email)}`);
   };
 
   return (

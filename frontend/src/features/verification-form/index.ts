@@ -1,1 +1,1 @@
-export { VerificationForm } from './verification-form';
+export { VerificationForm } from './ui/verification-form';
