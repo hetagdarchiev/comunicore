@@ -2,7 +2,11 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
+<<<<<<< HEAD
 import type { AuthLoginData, AuthLoginResponses, AuthLogoutData, AuthLogoutResponses, AuthRefreshData, AuthRefreshErrors, AuthRefreshResponses, ThreadAddPostData, ThreadAddPostErrors, ThreadAddPostResponses, ThreadCreateData, ThreadCreateErrors, ThreadCreateResponses, ThreadGetData, ThreadGetErrors, ThreadGetResponses, ThreadsListData, ThreadsListErrors, ThreadsListResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteResponses, UserGetData, UserGetErrors, UserGetResponses, UserMeData, UserMeErrors, UserMeResponses, UserUpdateData, UserUpdateResponses } from './types.gen';
+=======
+import type { AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutResponses, AuthRefreshData, AuthRefreshErrors, AuthRefreshResponses, ThreadAddPostData, ThreadAddPostErrors, ThreadAddPostResponses, ThreadCreateData, ThreadCreateErrors, ThreadCreateResponses, ThreadGetData, ThreadGetErrors, ThreadGetResponses, ThreadsListData, ThreadsListErrors, ThreadsListResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteResponses, UserGetData, UserGetErrors, UserGetResponses, UserMeData, UserMeErrors, UserMeResponses, UserUpdateData, UserUpdateResponses } from './types.gen';
+>>>>>>> 443bfbb (Убрал скролл в body , добавил класс в глобальный стиль для скрола , сделал начальную логику и прорисовку данных в списке постов)
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -76,7 +80,11 @@ export const userUpdate = <ThrowOnError extends boolean = false>(options: Option
  * Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
  *
  */
+<<<<<<< HEAD
 export const authLogin = <ThrowOnError extends boolean = false>(options: Options<AuthLoginData, ThrowOnError>) => (options.client ?? client).post<AuthLoginResponses, unknown, ThrowOnError>({
+=======
+export const authLogin = <ThrowOnError extends boolean = false>(options: Options<AuthLoginData, ThrowOnError>) => (options.client ?? client).post<AuthLoginResponses, AuthLoginErrors, ThrowOnError>({
+>>>>>>> 443bfbb (Убрал скролл в body , добавил класс в глобальный стиль для скрола , сделал начальную логику и прорисовку данных в списке постов)
     url: '/api/auth/login',
     ...options,
     headers: {

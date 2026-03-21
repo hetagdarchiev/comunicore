@@ -1,5 +1,6 @@
 'use client';
 
+import { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -12,7 +13,7 @@ interface PostProps {
   avatarUrl: string; //Ссылка на картинку профиля
   timeAgo: string; //Строка с датой
   title: string; //Заголовок поста
-  description: string; //Основной текст поста.
+  children: ReactNode; //Основной текст поста.
   tags: string[]; //Массив тегов
   user_id: number; //Уникальные числовые ID. Он нужен для формирования ссылок
   post_id: number; //Уникальные числовые ID. Он нужен для формирования ссылок
@@ -26,7 +27,7 @@ export const PostCard = ({
   avatarUrl,
   timeAgo,
   title,
-  description,
+  children,
   tags,
   isLiked,
   onLike,
@@ -38,7 +39,7 @@ export const PostCard = ({
   const uniqueTags = Array.from(new Set(tags));
 
   return (
-    <article className='border-gray-ea bg-post-card mx-auto max-w-5xl rounded-md border px-7.5 py-5 shadow-[2px_1px_5px_0px_#00000026]'>
+    <article className='border-gray-ea bg-post-card mx-auto w-full max-w-5xl rounded-md border px-7.5 py-5 shadow-[2px_1px_5px_0px_#00000026]'>
       <Link
         href={`/user/${user_id}`}
         className='mb-4 flex w-fit items-center gap-3 tracking-wider'
@@ -67,7 +68,7 @@ export const PostCard = ({
           </h2>
         </Link>
         <p className='line-clamp-6 text-base leading-6 font-light tracking-wider'>
-          {description}
+          {children}
         </p>
       </div>
 

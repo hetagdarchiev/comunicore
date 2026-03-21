@@ -4,7 +4,11 @@ import { type DefaultError, type InfiniteData, infiniteQueryOptions, queryOption
 
 import { client } from '../client.gen';
 import { authLogin, authLogout, authRefresh, type Options, threadAddPost, threadCreate, threadGet, threadsList, userCreate, userDelete, userGet, userMe, userUpdate } from '../sdk.gen';
+<<<<<<< HEAD
 import type { AuthLoginData, AuthLoginResponse, AuthLogoutData, AuthLogoutResponse, AuthRefreshData, AuthRefreshError, AuthRefreshResponse, ThreadAddPostData, ThreadAddPostError, ThreadAddPostResponse, ThreadCreateData, ThreadCreateError, ThreadCreateResponse, ThreadGetData, ThreadGetError, ThreadGetResponse, ThreadsListData, ThreadsListError, ThreadsListResponse, UserCreateData, UserCreateError, UserCreateResponse2, UserDeleteData, UserDeleteResponse, UserGetData, UserGetResponse2, UserMeData, UserMeError, UserMeResponse, UserUpdateData, UserUpdateResponse } from '../types.gen';
+=======
+import type { AuthLoginData, AuthLoginError, AuthLoginResponse, AuthLogoutData, AuthLogoutResponse, AuthRefreshData, AuthRefreshError, AuthRefreshResponse, ThreadAddPostData, ThreadAddPostError, ThreadAddPostResponse, ThreadCreateData, ThreadCreateError, ThreadCreateResponse, ThreadGetData, ThreadGetError, ThreadGetResponse, ThreadsListData, ThreadsListError, ThreadsListResponse, UserCreateData, UserCreateError, UserCreateResponse2, UserDeleteData, UserDeleteResponse, UserGetData, UserGetError, UserGetResponse2, UserMeData, UserMeError, UserMeResponse, UserUpdateData, UserUpdateResponse } from '../types.gen';
+>>>>>>> 443bfbb (Убрал скролл в body , добавил класс в глобальный стиль для скрола , сделал начальную логику и прорисовку данных в списке постов)
 
 /**
  * Create a new user
@@ -96,7 +100,11 @@ export const userGetQueryKey = (options: Options<UserGetData>) => createQueryKey
 /**
  * Get user information
  */
+<<<<<<< HEAD
 export const userGetOptions = (options: Options<UserGetData>) => queryOptions<UserGetResponse2, DefaultError, UserGetResponse2, ReturnType<typeof userGetQueryKey>>({
+=======
+export const userGetOptions = (options: Options<UserGetData>) => queryOptions<UserGetResponse2, UserGetError, UserGetResponse2, ReturnType<typeof userGetQueryKey>>({
+>>>>>>> 443bfbb (Убрал скролл в body , добавил класс в глобальный стиль для скрола , сделал начальную логику и прорисовку данных в списке постов)
     queryFn: async ({ queryKey, signal }) => {
         const { data } = await userGet({
             ...options,
@@ -132,8 +140,13 @@ export const userUpdateMutation = (options?: Partial<Options<UserUpdateData>>): 
  * Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
  *
  */
+<<<<<<< HEAD
 export const authLoginMutation = (options?: Partial<Options<AuthLoginData>>): UseMutationOptions<AuthLoginResponse, DefaultError, Options<AuthLoginData>> => {
     const mutationOptions: UseMutationOptions<AuthLoginResponse, DefaultError, Options<AuthLoginData>> = {
+=======
+export const authLoginMutation = (options?: Partial<Options<AuthLoginData>>): UseMutationOptions<AuthLoginResponse, AuthLoginError, Options<AuthLoginData>> => {
+    const mutationOptions: UseMutationOptions<AuthLoginResponse, AuthLoginError, Options<AuthLoginData>> = {
+>>>>>>> 443bfbb (Убрал скролл в body , добавил класс в глобальный стиль для скрола , сделал начальную логику и прорисовку данных в списке постов)
         mutationFn: async (fnOptions) => {
             const { data } = await authLogin({
                 ...options,
