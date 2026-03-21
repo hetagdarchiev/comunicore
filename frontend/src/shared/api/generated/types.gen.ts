@@ -81,6 +81,19 @@ export type ThreadCreateRequest = {
 
 export type ThreadCreatePostRequest = {
   content: string;
+<<<<<<< HEAD
+=======
+};
+
+/**
+ * Error with just string message, without code or other data. For simple errors,
+ * when we don't need to send any additional data, just a message for log.
+ *
+ */
+export type ErrorStringMessage = {
+  code?: 'ErrorStringMessage';
+  message: string;
+>>>>>>> d69c45e43ca0ce1ee6e0d1f2c3cf3d4fe697288e
 };
 
 /**
@@ -102,7 +115,11 @@ export type UserCreateErrors = {
   /**
    * Bad request error
    */
+<<<<<<< HEAD
   400: ErrorNotUnique;
+=======
+  400: ErrorNotUnique | ErrorStringMessage;
+>>>>>>> d69c45e43ca0ce1ee6e0d1f2c3cf3d4fe697288e
   /**
    * Error in request with string description (for log, not for user).
    */
@@ -130,9 +147,15 @@ export type UserMeData = {
 
 export type UserMeErrors = {
   /**
+<<<<<<< HEAD
    * Error in request with string description (for log, not for user).
    */
   401: string;
+=======
+   * client must be authenticated to get his own data
+   */
+  401: ErrorStringMessage;
+>>>>>>> d69c45e43ca0ce1ee6e0d1f2c3cf3d4fe697288e
   /**
    * Error in request with string description (for log, not for user).
    */
@@ -187,12 +210,26 @@ export type UserGetErrors = {
   /**
    * Bad Request
    */
+<<<<<<< HEAD
   400: unknown;
+=======
+  400: ErrorStringMessage;
+  /**
+   * client must be authenticated to get user data
+   */
+  401: ErrorStringMessage;
+  /**
+   * client can get only his own data, so if userId in path is not equal to id from token - 403
+   */
+  403: ErrorStringMessage;
+>>>>>>> d69c45e43ca0ce1ee6e0d1f2c3cf3d4fe697288e
   /**
    * UserNotFound or Internal Server Error
    */
   500: unknown;
 };
+
+export type UserGetError = UserGetErrors[keyof UserGetErrors];
 
 export type UserGetResponses = {
   /**
@@ -231,6 +268,23 @@ export type AuthLoginData = {
   url: '/api/auth/login';
 };
 
+export type AuthLoginErrors = {
+  /**
+   * Bad request error
+   */
+  400: ErrorStringMessage;
+  /**
+   * incorrect login or password or login not exists
+   */
+  401: ErrorStringMessage;
+  /**
+   * Error in request with string description (for log, not for user).
+   */
+  500: string;
+};
+
+export type AuthLoginError = AuthLoginErrors[keyof AuthLoginErrors];
+
 export type AuthLoginResponses = {
   /**
    * JWT token for authentication
@@ -249,9 +303,15 @@ export type AuthRefreshData = {
 
 export type AuthRefreshErrors = {
   /**
+<<<<<<< HEAD
    * Error in request with string description (for log, not for user).
    */
   401: string;
+=======
+   * Client is not authenticated
+   */
+  401: ErrorStringMessage;
+>>>>>>> d69c45e43ca0ce1ee6e0d1f2c3cf3d4fe697288e
   /**
    * Error in request with string description (for log, not for user).
    */
@@ -312,9 +372,15 @@ export type ThreadsListData = {
 
 export type ThreadsListErrors = {
   /**
+<<<<<<< HEAD
    * Error in request with string description (for log, not for user).
    */
   401: string;
+=======
+   * client must be authenticated to get threads list
+   */
+  401: ErrorStringMessage;
+>>>>>>> d69c45e43ca0ce1ee6e0d1f2c3cf3d4fe697288e
   /**
    * Error in request with string description (for log, not for user).
    */

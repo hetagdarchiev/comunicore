@@ -1,11 +1,16 @@
 import * as z from 'zod';
 
+const minPasswordLength = 8;
+
 export const validationSchema = z.object({
   login: z.string().min(1, 'Введите логин'),
   email: z.email('Неверный формат почты'),
   password: z
     .string()
-    .min(4, 'Пароль должен содержать не менее 4 символов')
+    .min(
+      minPasswordLength,
+      `Пароль должен содержать не менее ${minPasswordLength} символов`,
+    )
     .regex(/[a-zA-Z]/, 'Пароль должен содержать хотя бы одну латинскую букву')
     .regex(
       /^[a-zA-Z0-9!@#$%^&*()_+=\-[\]{};':"\\|,.<>/?]+$/,

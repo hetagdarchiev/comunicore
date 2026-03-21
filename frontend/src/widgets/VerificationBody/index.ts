@@ -1,0 +1,1 @@
+export { VerificationBody } from './VerificationBody';
