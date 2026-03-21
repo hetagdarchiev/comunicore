@@ -18,7 +18,12 @@ export function PostList() {
     },
   });
 
-  if (isLoading) return <div>Загрузка...</div>;
+  if (isLoading)
+    return (
+      <div className='absolute top-[50%] left-[50%] m-auto flex items-center justify-center'>
+        <div className='border-blue-16 h-10 w-10 animate-spin rounded-full border-t-2 border-b-2' />
+      </div>
+    );
   if (error) return <div>Ошибка: {error.message}</div>;
 
   const threads = data?.items || [];
@@ -42,6 +47,10 @@ export function PostList() {
           {post.description}
         </PostCard>
       ))}
+      <div>
+        <button></button>
+        <button></button>
+      </div>
     </div>
   );
 }
