@@ -4,34 +4,19 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
 import { userCreateMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
-import type {
-  UserCreateError,
-  UserCreateRequest,
-} from '@/shared/api/generated/types.gen';
+import type { UserCreateRequest } from '@/shared/api/generated/types.gen';
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
 import userIcon from '@/shared/assets/icons/form/user.svg';
+import { getErrorMessage } from '@/shared/lib/helpers';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 
-import {
-  TRegistrationForm,
-  validationSchema,
-} from '../model/validation-schema';
-
-// Функция для безопасного получения сообщения об ошибке
-const getErrorMessage = (error: UserCreateError): string => {
-  if (typeof error === 'string') {
-    return error;
-  }
-  if (error && typeof error === 'object') {
-    return (error as any).detail || 'Ошибка валидации';
-  }
-  return 'Неизвестная ошибка';
-};
+import { TRegistrationForm, validationSchema } from '../model';
 
 export function RegistrationForm() {
   const router = useRouter();
@@ -42,19 +27,16 @@ export function RegistrationForm() {
       reset();
       router.push('/verification');
     },
-    onError: (error: UserCreateError) => {
-      alert(getErrorMessage(error));
-    },
   });
 
   const {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<TRegistrationForm>({
     resolver: zodResolver(validationSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
   });
 
   const onSubmit: SubmitHandler<TRegistrationForm> = (data) => {
@@ -97,14 +79,12 @@ export function RegistrationForm() {
         {...register('policy')}
       />
 
-      <Button type='submit' disabled={registration.isPending}>
+      <Button type='submit' disabled={registration.isPending || !isValid}>
         {registration.isPending ? 'Загрузка...' : 'Зарегистрироваться'}
       </Button>
 
       {registration.isError && (
-        <p className='text-center text-sm text-red-500'>
-          {getErrorMessage(registration.error)}
-        </p>
+        <ErrorMessage error={getErrorMessage(registration.error)} />
       )}
     </form>
   );

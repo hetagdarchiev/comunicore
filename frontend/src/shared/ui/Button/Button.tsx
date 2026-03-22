@@ -16,7 +16,7 @@ export function Button(props: ButtonProps) {
   const commonClassName = `
     inline-flex items-center justify-center w-fit 
     bg-blue-16 hover:bg-blue-20 rounded-md px-5 py-3 
-    duration-200 text-center text-white font-bold 
+    duration-200 text-center text-white font-bold disabled:opacity-50 disabled:pointer-events-none
     ${className}
   `;
 

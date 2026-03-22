@@ -1,9 +1,9 @@
-import { PostEditor } from '@/features/post-editor';
+import { TextEditor } from '@/features/text-editor';
 
 export default function Home() {
   return (
     <main className='w-full p-5'>
-      <PostEditor />
+      <TextEditor />
     </main>
   );
 }
