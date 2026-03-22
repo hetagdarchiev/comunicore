@@ -13,19 +13,20 @@ function deploy_copy_files() {
       echo "error: destination directory not exists: \"$DST_DIR\""
       exit 1
     fi
-       pushd . > /dev/null
+
+    pushd . > /dev/null
     cd "$DST_DIR"
     DST_DIR="$(pwd)"
     cd "$PROJECT_ROOT"
-       mkdir -p "$DST_DIR"/backend "$DST_DIR"/frontend
+    mkdir -p "${DST_DIR}/backend/"{bin,conf} "${DST_DIR}/frontend"
     cp -a ./backend/internal/repository/migrations \
-        ./backend/config/server-config.toml \
         ./backend/target/comunicore \
-        ./backend/target/migrate "$DST_DIR"/backend
+        ./backend/target/migrate "${DST_DIR}/backend/bin/"
+    cp -a ./backend/config/server-config.toml "${DST_DIR}/backend/conf/"
 
-    cp ./backend/config/comunicore.service "$DST_DIR"
+    cp ./backend/config/comunicore.service "${DST_DIR}/"
 
-    cp -a ./frontend/out/./ "$DST_DIR"/frontend
+    cp -a ./frontend/out/./ "${DST_DIR}/frontend"
 
     popd > /dev/null
 }

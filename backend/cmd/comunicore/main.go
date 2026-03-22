@@ -21,6 +21,7 @@ import (
 func main() {
 	cmdConfig := config.CmdParse()
 	appConfig := config.MustReadAppConfig(cmdConfig)
+	os.Chdir(appConfig.Server.WorkDir)
 
 	mux := http.NewServeMux()
 	handler.RegisterOgenRoutes(mux, appConfig)

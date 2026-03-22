@@ -9,6 +9,8 @@ const (
 	AuthLoginOperation     OperationName = "AuthLogin"
 	AuthLogoutOperation    OperationName = "AuthLogout"
 	AuthRefreshOperation   OperationName = "AuthRefresh"
+	MediaGetOperation      OperationName = "MediaGet"
+	MediaUploadOperation   OperationName = "MediaUpload"
 	ThreadAddPostOperation OperationName = "ThreadAddPost"
 	ThreadCreateOperation  OperationName = "ThreadCreate"
 	ThreadGetOperation     OperationName = "ThreadGet"

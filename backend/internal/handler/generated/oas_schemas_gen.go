@@ -3,9 +3,12 @@
 package api
 
 import (
+	"io"
+	"net/url"
 	"time"
 
 	"github.com/go-faster/errors"
+	ht "github.com/ogen-go/ogen/http"
 )
 
 type AuthLoginBadRequest ErrorStringMessage
@@ -16,6 +19,8 @@ type AuthLoginInternalServerErrorApplicationJSON string
 
 func (*AuthLoginInternalServerErrorApplicationJSON) authLoginRes()   {}
 func (*AuthLoginInternalServerErrorApplicationJSON) authRefreshRes() {}
+func (*AuthLoginInternalServerErrorApplicationJSON) mediaGetRes()    {}
+func (*AuthLoginInternalServerErrorApplicationJSON) mediaUploadRes() {}
 func (*AuthLoginInternalServerErrorApplicationJSON) threadsListRes() {}
 func (*AuthLoginInternalServerErrorApplicationJSON) userCreateRes()  {}
 func (*AuthLoginInternalServerErrorApplicationJSON) userMeRes()      {}
@@ -168,6 +173,7 @@ func (s *ErrorStringMessage) SetMessage(val string) {
 }
 
 func (*ErrorStringMessage) authRefreshRes() {}
+func (*ErrorStringMessage) mediaUploadRes() {}
 func (*ErrorStringMessage) threadsListRes() {}
 func (*ErrorStringMessage) userMeRes()      {}
 
@@ -258,6 +264,88 @@ func (s *JwtToken) SetAccessToken(val string) {
 
 func (*JwtToken) authLoginRes()   {}
 func (*JwtToken) authRefreshRes() {}
+
+type MediaGetBadRequest ErrorStringMessage
+
+func (*MediaGetBadRequest) mediaGetRes() {}
+
+type MediaGetNotFound ErrorStringMessage
+
+func (*MediaGetNotFound) mediaGetRes() {}
+
+type MediaGetOK struct {
+	Data io.Reader
+}
+
+// Read reads data from the Data reader.
+//
+// Kept to satisfy the io.Reader interface.
+func (s MediaGetOK) Read(p []byte) (n int, err error) {
+	if s.Data == nil {
+		return 0, io.EOF
+	}
+	return s.Data.Read(p)
+}
+
+func (*MediaGetOK) mediaGetRes() {}
+
+type MediaGetUnauthorized ErrorStringMessage
+
+func (*MediaGetUnauthorized) mediaGetRes() {}
+
+// Ref: #/components/schemas/MediaUploadRequest
+type MediaUploadRequestMultipart struct {
+	FileComment string           `json:"fileComment"`
+	Content     ht.MultipartFile `json:"content"`
+}
+
+// GetFileComment returns the value of FileComment.
+func (s *MediaUploadRequestMultipart) GetFileComment() string {
+	return s.FileComment
+}
+
+// GetContent returns the value of Content.
+func (s *MediaUploadRequestMultipart) GetContent() ht.MultipartFile {
+	return s.Content
+}
+
+// SetFileComment sets the value of FileComment.
+func (s *MediaUploadRequestMultipart) SetFileComment(val string) {
+	s.FileComment = val
+}
+
+// SetContent sets the value of Content.
+func (s *MediaUploadRequestMultipart) SetContent(val ht.MultipartFile) {
+	s.Content = val
+}
+
+// Ref: #/components/schemas/MediaUploadResponse
+type MediaUploadResponse struct {
+	FileComment string  `json:"fileComment"`
+	URL         url.URL `json:"url"`
+}
+
+// GetFileComment returns the value of FileComment.
+func (s *MediaUploadResponse) GetFileComment() string {
+	return s.FileComment
+}
+
+// GetURL returns the value of URL.
+func (s *MediaUploadResponse) GetURL() url.URL {
+	return s.URL
+}
+
+// SetFileComment sets the value of FileComment.
+func (s *MediaUploadResponse) SetFileComment(val string) {
+	s.FileComment = val
+}
+
+// SetURL sets the value of URL.
+func (s *MediaUploadResponse) SetURL(val url.URL) {
+	s.URL = val
+}
+
+func (*MediaUploadResponse) mediaUploadRes() {}
 
 // NewOptErrorStringMessageCode returns new OptErrorStringMessageCode with value set to v.
 func NewOptErrorStringMessageCode(v ErrorStringMessageCode) OptErrorStringMessageCode {

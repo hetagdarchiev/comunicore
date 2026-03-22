@@ -39,6 +39,18 @@ type Invoker interface {
 	//
 	// POST /api/auth/refresh
 	AuthRefresh(ctx context.Context) (AuthRefreshRes, error)
+	// MediaGet invokes mediaGet operation.
+	//
+	// Get media file by name.
+	//
+	// GET /storage/media/{fileName}
+	MediaGet(ctx context.Context, params MediaGetParams) (MediaGetRes, error)
+	// MediaUpload invokes mediaUpload operation.
+	//
+	// Upload media file.
+	//
+	// POST /api/media
+	MediaUpload(ctx context.Context, request *MediaUploadRequestMultipart) (MediaUploadRes, error)
 	// ThreadAddPost invokes threadAddPost operation.
 	//
 	// Add a new post to thread.
@@ -347,6 +359,167 @@ func (c *Client) sendAuthRefresh(ctx context.Context) (res AuthRefreshRes, err e
 	defer body.Close()
 
 	result, err := decodeAuthRefreshResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// MediaGet invokes mediaGet operation.
+//
+// Get media file by name.
+//
+// GET /storage/media/{fileName}
+func (c *Client) MediaGet(ctx context.Context, params MediaGetParams) (MediaGetRes, error) {
+	res, err := c.sendMediaGet(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendMediaGet(ctx context.Context, params MediaGetParams) (res MediaGetRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [2]string
+	pathParts[0] = "/storage/media/"
+	{
+		// Encode "fileName" parameter.
+		e := uri.NewPathEncoder(uri.PathEncoderConfig{
+			Param:   "fileName",
+			Style:   uri.PathStyleSimple,
+			Explode: false,
+		})
+		if err := func() error {
+			return e.EncodeValue(conv.StringToString(params.FileName))
+		}(); err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		encoded, err := e.Result()
+		if err != nil {
+			return res, errors.Wrap(err, "encode path")
+		}
+		pathParts[1] = encoded
+	}
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+
+			switch err := c.securityJwtAuth(ctx, MediaGetOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"JwtAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	result, err := decodeMediaGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// MediaUpload invokes mediaUpload operation.
+//
+// Upload media file.
+//
+// POST /api/media
+func (c *Client) MediaUpload(ctx context.Context, request *MediaUploadRequestMultipart) (MediaUploadRes, error) {
+	res, err := c.sendMediaUpload(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendMediaUpload(ctx context.Context, request *MediaUploadRequestMultipart) (res MediaUploadRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/api/media"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeMediaUploadRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+
+			switch err := c.securityJwtAuth(ctx, MediaUploadOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"JwtAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	result, err := decodeMediaUploadResponse(resp)
 	if err != nil {
 		return res, errors.Wrap(err, "decode response")
 	}

@@ -21,7 +21,7 @@ type ForumUser struct {
 
 func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 	user := ForumUser{
-		Name:     tests.RandomString(8),
+		Name:     "test" + tests.RandomString(8),
 		Email:    tests.RandomString(10) + "@example.com",
 		Password: tests.RandomString(12),
 	}
