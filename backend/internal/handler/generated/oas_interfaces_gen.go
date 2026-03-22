@@ -9,6 +9,14 @@ type AuthRefreshRes interface {
 	authRefreshRes()
 }
 
+type MediaGetRes interface {
+	mediaGetRes()
+}
+
+type MediaUploadRes interface {
+	mediaUploadRes()
+}
+
 type ThreadAddPostRes interface {
 	threadAddPostRes()
 }
