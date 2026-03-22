@@ -66,6 +66,13 @@ func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, 
 		}
 		return "", fmt.Errorf("failed to create temporary upload file: %w", err)
 	}
+	temporaryFileName := dstFile.Name()
+	fileRenamed := false
+	defer func() {
+		if !fileRenamed {
+			os.Remove(temporaryFileName)
+		}
+	}()
 	defer dstFile.Close()
 
 	hash := sha256.New()
@@ -93,6 +100,7 @@ func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, 
 	if err := os.Rename(dstFile.Name(), newFileName); err != nil {
 		return "", fmt.Errorf("failed to rename uploaded file: %w", err)
 	}
+	fileRenamed = true
 	err = os.Chmod(newFileName, 0644)
 	if err != nil {
 		return "", fmt.Errorf("failed to change file permissions: %w", err)
