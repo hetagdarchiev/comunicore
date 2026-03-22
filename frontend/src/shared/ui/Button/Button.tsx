@@ -1,5 +1,7 @@
 import { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
 import Link from 'next/link';
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 type ButtonProps = Partial<
   AnchorHTMLAttributes<HTMLAnchorElement> &
@@ -10,15 +12,19 @@ type ButtonProps = Partial<
   className?: string;
 };
 
+function mergeClassNames(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 export function Button(props: ButtonProps) {
   const { children, href, className = '', ...restProps } = props;
 
-  const commonClassName = `
-    inline-flex items-center justify-center w-fit 
+  const commonClassName = mergeClassNames(
+    `inline-flex items-center justify-center w-fit
     bg-blue-16 hover:bg-blue-20 rounded-md px-5 py-3 
-    duration-200 text-center text-white font-bold disabled:opacity-50 disabled:pointer-events-none
-    ${className}
-  `;
+    duration-200 text-center text-white font-bold`,
+    className,
+  );
 
   if (href) {
     return (

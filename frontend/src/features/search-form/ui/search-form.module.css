@@ -12,6 +12,6 @@
     width: 1.125rem;
     height: 1.125rem;
     content: '';
-    background: url('@/shared/assets/icons/search-icon.svg') center no-repeat;
+    background: url('@/assets/icons/search-icon.svg') center no-repeat;
   }
 }

@@ -129,6 +129,30 @@ func (s ErrorStringMessageCode) Validate() error {
 	}
 }
 
+func (s *MediaGetBadRequest) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *MediaGetNotFound) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *MediaGetUnauthorized) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *ThreadListResponse) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer

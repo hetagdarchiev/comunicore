@@ -16,7 +16,10 @@ import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 
-import { TRegistrationForm, validationSchema } from '../model';
+import {
+  TRegistrationForm,
+  validationSchema,
+} from '../model/schema/validation-schema';
 
 export function RegistrationForm() {
   const router = useRouter();
@@ -25,7 +28,6 @@ export function RegistrationForm() {
     ...userCreateMutation(),
     onSuccess: () => {
       reset();
-      router.push('/verification');
     },
   });
 
@@ -39,13 +41,14 @@ export function RegistrationForm() {
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<TRegistrationForm> = (data) => {
+  const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
     const body: UserCreateRequest = {
       name: data.login,
       email: data.email,
       password: data.password,
     };
-    registration.mutate({ body });
+    await registration.mutateAsync({ body });
+    router.push(`/verification?email=${encodeURIComponent(data.email)}`);
   };
 
   return (

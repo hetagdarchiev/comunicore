@@ -12,9 +12,17 @@ port = 8080
 # default "http://localhost:8080", cmd --server-baseurl, env FORUM_SERVER_BASEURL
 baseurl = "http://localhost:8080"
 # default "" (CORS disabled), cmd --server-permitted-origin, env FORUM_SERVER_PERMITTED_ORIGIN
-permitted_origin = ""
+# permitted_origin = ""
 # no default, must by nonempty, cmd --server-jwt-secret, env FORUM_SERVER_JWT_SECRET
 jwt_secret = ""
+# default is cwd of process (installed by systemd or if running from cmdline),
+# if filled and not absolute, it is relative to current cwd (strange case, but who knows)
+# cmd --server-work-dir, env FORUM_SERVER_WORK_DIR
+# work_dir = ""
+# default is "work_dir/upload",
+# not absolute path will relative to work_dir,
+# cmd --server-upload-dir, env FORUM_SERVER_UPLOAD_DIR
+# upload_dir = ""
 
 [database]
 # default "localhost", cmd --database-host, env FORUM_DATABASE_HOST
