@@ -50,8 +50,18 @@ export class MdEditor {
   }
 
   static apply(ctx: Ctx, result: ReturnNewValues) {
+    if (!ctx.textarea) return;
+    const textarea = ctx.textarea;
+    const scrollTop = textarea.scrollTop;
+
     ctx.setValue('markdown', result.newText);
-    this.restoreSelection(ctx.textarea!, result.newStart, result.newEnd);
+
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.selectionStart = result.newStart;
+      textarea.selectionEnd = result.newEnd;
+      textarea.scrollTop = scrollTop;
+    });
   }
 
   static addLineStart(

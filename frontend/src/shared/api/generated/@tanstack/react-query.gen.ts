@@ -13,6 +13,8 @@ import {
   authLogin,
   authLogout,
   authRefresh,
+  mediaGet,
+  mediaUpload,
   type Options,
   threadAddPost,
   threadCreate,
@@ -33,6 +35,12 @@ import type {
   AuthRefreshData,
   AuthRefreshError,
   AuthRefreshResponse,
+  MediaGetData,
+  MediaGetError,
+  MediaGetResponse,
+  MediaUploadData,
+  MediaUploadError,
+  MediaUploadResponse2,
   ThreadAddPostData,
   ThreadAddPostError,
   ThreadAddPostResponse,
@@ -549,3 +557,55 @@ export const threadAddPostMutation = (
   };
   return mutationOptions;
 };
+
+/**
+ * Upload media file
+ */
+export const mediaUploadMutation = (
+  options?: Partial<Options<MediaUploadData>>,
+): UseMutationOptions<
+  MediaUploadResponse2,
+  MediaUploadError,
+  Options<MediaUploadData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    MediaUploadResponse2,
+    MediaUploadError,
+    Options<MediaUploadData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await mediaUpload({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const mediaGetQueryKey = (options: Options<MediaGetData>) =>
+  createQueryKey('mediaGet', options);
+
+/**
+ * Get media file by name
+ */
+export const mediaGetOptions = (options: Options<MediaGetData>) =>
+  queryOptions<
+    MediaGetResponse,
+    MediaGetError,
+    MediaGetResponse,
+    ReturnType<typeof mediaGetQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await mediaGet({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: mediaGetQueryKey(options),
+  });

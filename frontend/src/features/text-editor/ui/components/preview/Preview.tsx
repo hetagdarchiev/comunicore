@@ -1,19 +1,20 @@
 'use client';
 
-import { useMemo } from 'react';
+import { MouseEvent, useMemo } from 'react';
 
-import { renderHtml } from '../../model/lib/markdown';
+import { renderHtml } from '../../../model/lib/markdown';
 
 export function Preview({ markdown }: { markdown: string }) {
   const html = useMemo(() => renderHtml(markdown), [markdown]);
 
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const target = e.target as HTMLElement;
-
+  const handleClick = (e: MouseEvent<HTMLDivElement>) => {
     const link = (e.target as HTMLElement).closest('a');
 
     if (link) {
-      const url = target.getAttribute('href');
+      const url = link.getAttribute('href'); // Берем атрибут у самой ссылки
+
+      // Проверка на якоря (внутренние ссылки #header не должны вызывать конфирм)
+      if (!url || url.startsWith('#')) return;
 
       const confirmLeave = window.confirm(
         `Вы переходите на внешний сайт:\n${url}\nПродолжить?`,
@@ -28,7 +29,7 @@ export function Preview({ markdown }: { markdown: string }) {
   return (
     <div
       onClick={handleClick}
-      className='p-2 duration-200'
+      className='wrap-break-word'
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

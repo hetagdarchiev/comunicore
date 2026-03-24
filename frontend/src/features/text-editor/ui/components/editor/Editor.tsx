@@ -4,11 +4,12 @@ import { RefObject, useCallback, useEffect } from 'react';
 import { SubmitHandler, UseFormReturn } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { toolsGroup } from '../../model/data';
-import { useDragHandler } from '../../model/hooks/useDragHandel';
-import { renderHtml } from '../../model/lib/markdown';
-import { MdEditorKeyBoard } from '../../model/lib/mdEditor/MdEditorKeyBoard';
-import { MarkDownSchema } from '../../model/schema/markdown.schema';
+import { useEditorDraft } from '@/features/text-editor/model/hooks/useEditorDraft';
+import { useEditorKeyBoard } from '@/features/text-editor/model/hooks/useEditorKeyBoard';
+
+import { useDragHandler } from '../../../model/hooks/useDragHandel';
+import { renderHtml } from '../../../model/lib/markdown';
+import { MarkDownSchema } from '../../../model/schema/markdown.schema';
 
 interface Props {
   form: UseFormReturn<MarkDownSchema>;
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export function Editor({ form, markdownFieldRef }: Props) {
-  const { register, reset, handleSubmit, getValues, setValue } = form;
+  const { register, reset, handleSubmit } = form;
 
   const {
     handleDragLeave,
@@ -25,6 +26,9 @@ export function Editor({ form, markdownFieldRef }: Props) {
     isDragging,
     markdownLink,
   } = useDragHandler();
+
+  const { clearDraft } = useEditorDraft(form);
+  const { onKeyDown } = useEditorKeyBoard(form);
 
   const { ref, ...mdRedister } = register('markdown');
 
@@ -37,16 +41,22 @@ export function Editor({ form, markdownFieldRef }: Props) {
     async (data) => {
       const html = renderHtml(data.markdown);
 
-      await new Promise((res) => {
-        setTimeout(() => {
-          console.log(html);
-          reset({ markdown: '' });
-          return res(null);
-        }, 1000);
-      });
+      try {
+        await new Promise((res) => setTimeout(res, 1000));
+        console.log(html);
+        reset({ markdown: '' });
+        clearDraft();
+      } catch (error) {
+        console.error(error);
+      }
     },
-    [reset],
+    [reset, clearDraft],
   );
+
+  const setRefs = (element: HTMLTextAreaElement | null) => {
+    ref(element);
+    markdownFieldRef.current = element;
+  };
 
   // Make dropDown actions in useDragHandler
 
@@ -66,23 +76,8 @@ export function Editor({ form, markdownFieldRef }: Props) {
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
-        onKeyDown={(event) =>
-          MdEditorKeyBoard.handleKeyDown(
-            event,
-            {
-              textarea: event.currentTarget,
-              getValues,
-              setValue,
-            },
-            toolsGroup,
-          )
-        }
-        ref={(el) => {
-          ref(el);
-          if (markdownFieldRef) {
-            markdownFieldRef.current = el;
-          }
-        }}
+        onKeyDown={onKeyDown}
+        ref={(element) => setRefs(element)}
         aria-label='Text Editor'
         placeholder='Describe text...'
       />

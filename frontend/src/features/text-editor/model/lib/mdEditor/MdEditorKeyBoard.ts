@@ -1,7 +1,7 @@
 import { KeyboardEvent } from 'react';
 
 import { Ctx } from '../../types/ctx.types';
-import { MdTools } from '../../types/mdTools.types';
+import { MdTools, ToolsName } from '../../types/mdTools.types';
 
 import { MdEditor } from './MdEditor';
 
@@ -105,7 +105,7 @@ export class MdEditorKeyBoard extends MdEditor {
   static handleKeyDown(
     event: KeyboardEvent<HTMLTextAreaElement>,
     ctx: Ctx,
-    toolsGroup: MdTools[][],
+    toolsMap: Map<ToolsName, MdTools>,
   ) {
     if (event.code === 'Enter') {
       const handleList = this.lineHandler(event, ctx, '-');
@@ -124,22 +124,19 @@ export class MdEditorKeyBoard extends MdEditor {
     switch (event.code) {
       case 'KeyB':
         event.preventDefault();
-        const boldTool = toolsGroup.flat().find((t) => t.title === 'Bold');
+        const boldTool = toolsMap.get('Bold');
         boldTool?.toolFn(ctx);
         break;
 
       case 'KeyI':
         event.preventDefault();
-        const ItalicTool = toolsGroup.flat().find((t) => t.title === 'Italic');
+        const ItalicTool = toolsMap.get('Italic');
         ItalicTool?.toolFn(ctx);
         break;
 
       case 'KeyH':
         event.preventDefault();
-
-        const HeadingTool = toolsGroup
-          .flat()
-          .find((t) => t.title === 'Heading');
+        const HeadingTool = toolsMap.get('Heading');
         HeadingTool?.toolFn(ctx);
         break;
     }

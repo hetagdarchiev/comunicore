@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from 'react';
 import clsx from 'clsx';
 
-import { EditorMode } from '../../model/types/mode.types';
+import { EditorMode } from '../../../model/types/mode.types';
 
 const modes: EditorMode[] = ['edit', 'preview'];
 
@@ -30,7 +30,7 @@ export function ModeSwitcher({
           aria-selected={mode === item}
           onClick={() => setMode(item)}
           className={clsx(
-            'w-full px-3 py-2',
+            'w-full px-3 py-2 duration-200',
             mode === item && buttonStyles[item],
           )}
         >
