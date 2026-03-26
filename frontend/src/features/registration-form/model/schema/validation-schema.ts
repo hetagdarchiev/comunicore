@@ -3,7 +3,7 @@ import * as z from 'zod';
 const minPasswordLength = 8;
 
 export const validationSchema = z.object({
-  login: z.string().min(1, 'Введите логин'),
+  name: z.string().min(1, 'Введите имя'),
   email: z.email('Неверный формат почты'),
   password: z
     .string()

@@ -8,9 +8,9 @@ import (
 )
 
 type AuthRepo interface {
-	// AuthCreate(ctx context.Context, user_id int64, login, password string) error
+	// AuthCreate(ctx context.Context, user_id int64, page, password string) error
 	// AuthUpdatePassword(ctx context.Context, user_id int64, password string) error
-	Login(ctx context.Context, login, password string) (access, refresh string, err error)
+	Login(ctx context.Context, page, password string) (access, refresh string, err error)
 	Refresh(ctx context.Context, refreshToken string) (newAccess, newRefresh string, err error)
 	Logout(ctx context.Context, refreshToken string) error
 }
@@ -23,8 +23,8 @@ func NewAuthService(authRepo AuthRepo) *AuthService {
 	return &AuthService{authRepo: authRepo}
 }
 
-func (r *AuthService) Login(ctx context.Context, login, password string) (access, refresh string, err error) {
-	access, refresh, err = r.authRepo.Login(ctx, login, password)
+func (r *AuthService) Login(ctx context.Context, page, password string) (access, refresh string, err error) {
+	access, refresh, err = r.authRepo.Login(ctx, page, password)
 	if err != nil {
 		return "", "", err
 	}

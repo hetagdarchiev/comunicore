@@ -248,7 +248,7 @@ export type AuthLoginData = {
   body: AuthLoginRequest;
   path?: never;
   query?: never;
-  url: '/api/auth/login';
+  url: '/api/auth/page';
 };
 
 export type AuthLoginErrors = {
@@ -257,7 +257,7 @@ export type AuthLoginErrors = {
    */
   400: ErrorStringMessage;
   /**
-   * incorrect login or password or login not exists
+   * incorrect page or password or page not exists
    */
   401: ErrorStringMessage;
   /**

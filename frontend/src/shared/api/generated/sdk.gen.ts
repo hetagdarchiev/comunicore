@@ -131,7 +131,7 @@ export const userUpdate = <ThrowOnError extends boolean = false>(
   });
 
 /**
- * User login
+ * User page
  *
  * Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
  *

@@ -32,17 +32,17 @@ func TestAuthLoginFailure(t *testing.T) {
 
 	tests := []struct {
 		name     string
-		login    string
+		page    string
 		password string
 	}{
 		{
 			name:     "Invalid password",
-			login:    user.Email,
+			page:    user.Email,
 			password: user.Password + "bad",
 		},
 		{
-			name:     "Invalid login",
-			login:    user.Email + "bad",
+			name:     "Invalid page",
+			page:    user.Email + "bad",
 			password: user.Password,
 		},
 	}
@@ -53,7 +53,7 @@ func TestAuthLoginFailure(t *testing.T) {
 
 			res := exp.POST(authLoginPath).
 				WithJSON(map[string]any{
-					"login":    tt.login,
+					"page":    tt.page,
 					"password": tt.password,
 				}).
 				Expect().
@@ -82,7 +82,7 @@ func testAuthLoginOk(t *testing.T, baseURL string, user ForumUser) (JwtTokens, *
 
 		res := exp.POST(authLoginPath).
 			WithJSON(map[string]any{
-				"login":    user.Email,
+				"page":    user.Email,
 				"password": user.Password,
 			}).
 			Expect().

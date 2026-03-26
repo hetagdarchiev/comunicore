@@ -25,7 +25,7 @@ type Invoker interface {
 	//
 	// Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
 	//
-	// POST /api/auth/login
+	// POST /api/auth/page
 	AuthLogin(ctx context.Context, request *AuthLoginRequest) (AuthLoginRes, error)
 	// AuthLogout invokes authLogout operation.
 	//
@@ -178,7 +178,7 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 //
 // Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
 //
-// POST /api/auth/login
+// POST /api/auth/page
 func (c *Client) AuthLogin(ctx context.Context, request *AuthLoginRequest) (AuthLoginRes, error) {
 	res, err := c.sendAuthLogin(ctx, request)
 	return res, err
@@ -188,7 +188,7 @@ func (c *Client) sendAuthLogin(ctx context.Context, request *AuthLoginRequest) (
 
 	u := uri.Clone(c.requestURL(ctx))
 	var pathParts [1]string
-	pathParts[0] = "/api/auth/login"
+	pathParts[0] = "/api/auth/page"
 	uri.AddPathParts(u, pathParts[:]...)
 
 	r, err := ht.NewRequest(ctx, "POST", u)

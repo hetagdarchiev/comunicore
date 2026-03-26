@@ -100,7 +100,7 @@ func (s *AuthLoginRequest) Encode(e *jx.Encoder) {
 // encodeFields encodes fields.
 func (s *AuthLoginRequest) encodeFields(e *jx.Encoder) {
 	{
-		e.FieldStart("login")
+		e.FieldStart("page")
 		e.Str(s.Login)
 	}
 	{
@@ -110,7 +110,7 @@ func (s *AuthLoginRequest) encodeFields(e *jx.Encoder) {
 }
 
 var jsonFieldsNameOfAuthLoginRequest = [2]string{
-	0: "login",
+	0: "page",
 	1: "password",
 }
 
@@ -123,7 +123,7 @@ func (s *AuthLoginRequest) Decode(d *jx.Decoder) error {
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "login":
+		case "page":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
 				v, err := d.Str()
@@ -133,7 +133,7 @@ func (s *AuthLoginRequest) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"login\"")
+				return errors.Wrap(err, "decode field \"page\"")
 			}
 		case "password":
 			requiredBitSet[0] |= 1 << 1

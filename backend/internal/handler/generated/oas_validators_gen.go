@@ -40,7 +40,7 @@ func (s *AuthLoginRequest) Validate() error {
 		return nil
 	}(); err != nil {
 		failures = append(failures, validate.FieldError{
-			Name:  "login",
+			Name:  "page",
 			Error: err,
 		})
 	}

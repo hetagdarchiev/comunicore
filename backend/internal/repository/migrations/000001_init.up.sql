@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- used for password authentication
 CREATE TABLE IF NOT EXISTS auth_passwords (
     user_id INTEGER PRIMARY KEY,
-    login TEXT NOT NULL UNIQUE,
+    page TEXT NOT NULL UNIQUE,
     password_hash TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS sessions (

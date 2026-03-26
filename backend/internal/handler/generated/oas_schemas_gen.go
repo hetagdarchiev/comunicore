@@ -22,7 +22,7 @@ func (*AuthLoginInternalServerErrorApplicationJSON) userMeRes()      {}
 
 // Ref: #/components/schemas/AuthLoginRequest
 type AuthLoginRequest struct {
-	Login    string `json:"login"`
+	Login    string `json:"page"`
 	Password string `json:"password"`
 }
 

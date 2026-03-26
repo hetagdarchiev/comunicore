@@ -521,10 +521,10 @@ func (s *Server) FindPath(method string, u *url.URL) (r Route, _ bool) {
 							switch method {
 							case "POST":
 								r.name = AuthLoginOperation
-								r.summary = "User login"
+								r.summary = "User page"
 								r.operationID = "authLogin"
 								r.operationGroup = ""
-								r.pathPattern = "/api/auth/login"
+								r.pathPattern = "/api/auth/page"
 								r.args = args
 								r.count = 0
 								return r, true

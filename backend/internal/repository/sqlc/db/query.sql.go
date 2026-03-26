@@ -12,7 +12,7 @@ import (
 )
 
 const authCreate = `-- name: AuthCreate :exec
-INSERT INTO auth_passwords (user_id, login, password_hash) VALUES ($1, $2, $3)
+INSERT INTO auth_passwords (user_id, page, password_hash) VALUES ($1, $2, $3)
 `
 
 type AuthCreateParams struct {
@@ -59,7 +59,7 @@ func (q *Queries) AuthDeleteSession(ctx context.Context, jwtID pgtype.UUID) erro
 }
 
 const authGetUserAndPasswordHash = `-- name: AuthGetUserAndPasswordHash :one
-SELECT user_id, password_hash FROM auth_passwords WHERE login = $1
+SELECT user_id, password_hash FROM auth_passwords WHERE page = $1
 `
 
 type AuthGetUserAndPasswordHashRow struct {
@@ -67,8 +67,8 @@ type AuthGetUserAndPasswordHashRow struct {
 	PasswordHash string
 }
 
-func (q *Queries) AuthGetUserAndPasswordHash(ctx context.Context, login string) (AuthGetUserAndPasswordHashRow, error) {
-	row := q.db.QueryRow(ctx, authGetUserAndPasswordHash, login)
+func (q *Queries) AuthGetUserAndPasswordHash(ctx context.Context, page string) (AuthGetUserAndPasswordHashRow, error) {
+	row := q.db.QueryRow(ctx, authGetUserAndPasswordHash, page)
 	var i AuthGetUserAndPasswordHashRow
 	err := row.Scan(&i.UserID, &i.PasswordHash)
 	return i, err

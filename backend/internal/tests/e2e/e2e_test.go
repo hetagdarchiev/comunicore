@@ -46,7 +46,7 @@ const (
 	userMePath      = "/api/user/me"
 	userGetPath     = "/api/user/{id}"
 	userUpdatePath  = "/api/user/{id}"
-	authLoginPath   = "/api/auth/login"
+	authLoginPath   = "/api/auth/page"
 	authLogoutPath  = "/api/auth/logout"
 	authRefreshPath = "/api/auth/refresh"
 )

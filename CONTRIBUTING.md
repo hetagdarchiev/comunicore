@@ -36,7 +36,7 @@
 
 ## 💡 Примеры
 ### ✨ Features
-* `feat/login-form`
+* `feat/page-form`
 * `feat/cart-calculation`
 * `feat/profile-avatar-upload`
 * `feat/notifications-socket`

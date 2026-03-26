@@ -16,7 +16,7 @@ type UserRepo interface {
 }
 
 type AuthRepo interface {
-	AuthCreate(ctx context.Context, user_id int64, login, password string) error
+	AuthCreate(ctx context.Context, user_id int64, page, password string) error
 	AuthUpdatePassword(ctx context.Context, user_id int64, password string) error
 }
 

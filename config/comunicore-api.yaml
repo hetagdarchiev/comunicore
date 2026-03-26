@@ -121,7 +121,7 @@ paths:
   /api/auth/login:
     post:
       operationId: authLogin
-      summary: User login
+      summary: User page
       description: |
         Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
       security: []
@@ -146,7 +146,7 @@ paths:
                 oneOf:
                   - $ref: '#/components/schemas/ErrorStringMessage'
         '401':
-          description: incorrect login or password or login not exists
+          description: incorrect page or password or page not exists
           content:
             application/json:
               schema:

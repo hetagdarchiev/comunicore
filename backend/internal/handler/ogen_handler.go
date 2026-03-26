@@ -133,7 +133,7 @@ func (h *errorHandler) handler(ctx context.Context, w http.ResponseWriter, r *ht
 	// so we need to check for more specific errors first
 	if authenticationError, ok := errors.AsType[*apperror.AuthenticationError](err); ok {
 		log.Printf("AuthenticationError: %v\n", authenticationError)
-		sendErrorStringMessage(w, http.StatusUnauthorized, err, "incorrect login or password or login not exists")
+		sendErrorStringMessage(w, http.StatusUnauthorized, err, "incorrect page or password or page not exists")
 		return
 	}
 	if decodeRequestError, ok := errors.AsType[*ogenerrors.DecodeRequestError](err); ok {

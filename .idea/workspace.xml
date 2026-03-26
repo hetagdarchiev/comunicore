@@ -5,17 +5,63 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1eecaa79-207c-4a29-b849-3f892d70da09" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONTRIBUTING.md" beforeDir="false" afterPath="$PROJECT_DIR$/CONTRIBUTING.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_client_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_client_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_handlers_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_handlers_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_json_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_json_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_router_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_router_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_schemas_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_schemas_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_server_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_server_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_unimplemented_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_unimplemented_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/generated/oas_validators_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/generated/oas_validators_gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/handler/ogen_handler.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/handler/ogen_handler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/repository/auth/auth_repo.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/repository/auth/auth_repo.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/repository/migrations/000001_init.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/repository/migrations/000001_init.up.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/repository/sqlc/db/query.sql.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/repository/sqlc/db/query.sql.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/repository/sqlc/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/repository/sqlc/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/service/auth/auth_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/service/auth/auth_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/service/user/user_service.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/service/user/user_service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/tests/e2e/auth_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/tests/e2e/auth_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/internal/tests/e2e/e2e_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/internal/tests/e2e/e2e_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/comunicore-api.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/comunicore-api.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/features/registration-form/model/schema/validation-schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/registration-form/model/schema/validation-schema.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/features/registration-form/ui/RegistrationForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/registration-form/ui/RegistrationForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/shared/api/generated/@tanstack/react-query.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/api/generated/@tanstack/react-query.gen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/shared/api/generated/sdk.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/api/generated/sdk.gen.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/shared/api/generated/types.gen.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/api/generated/types.gen.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TSX Component Folder with styles.tsx.child.0" />
+        <option value="TSX Component Folder with styles.tsx.child.1" />
+        <option value="TSX Component Folder with styles" />
+        <option value="TSX Component Folder.tsx.child.0" />
+        <option value="TSX Component Folder" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Hamelonov&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/hetagdarchiev/forum-interaction-analytics.git&quot;,
+    &quot;accountId&quot;: &quot;c53c35db-60f7-4441-944b-4c149c3fa6f3&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 5
 }</component>
@@ -35,9 +81,9 @@
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "refactor/hamelonov-code-rules",
+    "git-widget-placeholder": "main",
     "javascript.preferred.runtime.type.id": "node",
-    "last_opened_file_path": "C:/Shahzod/Projects/forum-interaction-analytics",
+    "last_opened_file_path": "C:/Shahzod/Projects/comunicore",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.standard": "true",
     "node.js.detected.package.stylelint": "true",
@@ -47,12 +93,20 @@
     "node.js.selected.package.stylelint": "C:\\Shahzod\\Projects\\forum-interaction-analytics\\frontend\\node_modules\\stylelint",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "prettierjs.PrettierConfiguration.Package": "C:\\Shahzod\\Projects\\forum-interaction-analytics\\frontend\\node_modules\\prettier",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Shahzod\\Projects\\Communicore\\frontend\\node_modules\\prettier",
     "settings.editor.selected.configurable": "preferences.sourceCode",
-    "ts.external.directory.path": "C:\\Shahzod\\Projects\\forum-interaction-analytics\\frontend\\node_modules\\typescript\\lib",
+    "ts.external.directory.path": "C:\\Shahzod\\Projects\\comunicore\\frontend\\node_modules\\typescript\\lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Shahzod\Projects\Communicore\frontend\src\features\auth-form\ui" />
+      <recent name="C:\Shahzod\Projects\Communicore\frontend\src\features\search-form\ui" />
+      <recent name="C:\Shahzod\Projects\Communicore\frontend\src\shared\lib\helpers" />
+      <recent name="C:\Shahzod\Projects\Communicore\frontend\src\features\registration-form\model\schema" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -72,6 +126,14 @@
       <workItem from="1771677260255" duration="15000" />
       <workItem from="1772289055485" duration="3185000" />
       <workItem from="1772358825614" duration="2995000" />
+      <workItem from="1773743487153" duration="553000" />
+      <workItem from="1773744312533" duration="923000" />
+      <workItem from="1773813439840" duration="4373000" />
+      <workItem from="1773864278630" duration="3661000" />
+      <workItem from="1773898361016" duration="7852000" />
+      <workItem from="1773991304553" duration="312000" />
+      <workItem from="1774504452191" duration="10000" />
+      <workItem from="1774504511210" duration="1237000" />
     </task>
     <servers />
   </component>

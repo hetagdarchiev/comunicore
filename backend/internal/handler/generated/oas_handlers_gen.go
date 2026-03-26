@@ -32,7 +32,7 @@ func recordError(string, error) {}
 //
 // Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
 //
-// POST /api/auth/login
+// POST /api/auth/page
 func (s *Server) handleAuthLoginRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
 	statusWriter := &codeRecorder{ResponseWriter: w}
 	w = statusWriter
@@ -68,7 +68,7 @@ func (s *Server) handleAuthLoginRequest(args [0]string, argsEscaped bool, w http
 		mreq := middleware.Request{
 			Context:          ctx,
 			OperationName:    AuthLoginOperation,
-			OperationSummary: "User login",
+			OperationSummary: "User page",
 			OperationID:      "authLogin",
 			Body:             request,
 			RawBody:          rawBody,

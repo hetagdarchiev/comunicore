@@ -48,7 +48,7 @@ export function RegistrationForm() {
 
   const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
     const body: UserCreateRequest = {
-      name: data.login,
+      name: data.name,
       email: data.email,
       password: data.password,
     };
@@ -63,9 +63,9 @@ export function RegistrationForm() {
     >
       <Input
         icon={userIcon}
-        placeholder='Login'
-        error={errors.login}
-        {...register('login')}
+        placeholder='Name'
+        error={errors.name}
+        {...register('name')}
       />
       <Input
         icon={mailIcon}

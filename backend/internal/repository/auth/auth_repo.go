@@ -33,13 +33,13 @@ func NewAuthRepo(dsn string, jwtAuthorizator *jwt.JwtAuthorizator) (*AuthRepo, e
 	}, nil
 }
 
-func (r *AuthRepo) AuthCreate(ctx context.Context, user_id int64, login, password string) error {
+func (r *AuthRepo) AuthCreate(ctx context.Context, user_id int64, page, password string) error {
 	passwordHash := hashPassword(password)
 	fmt.Printf("password hash %s\n", passwordHash)
 
 	err := r.queries.AuthCreate(ctx, authDb.AuthCreateParams{
 		UserID:       int32(user_id),
-		Login:        login,
+		Login:        page,
 		PasswordHash: passwordHash,
 	})
 	if err != nil {
@@ -61,8 +61,8 @@ func (r *AuthRepo) AuthUpdatePassword(ctx context.Context, user_id int64, passwo
 	}
 	return err
 }
-func (r *AuthRepo) Login(ctx context.Context, login, password string) (access, refresh string, err error) {
-	userId, err := r.checkLoginPassword(ctx, login, password)
+func (r *AuthRepo) Login(ctx context.Context, page, password string) (access, refresh string, err error) {
+	userId, err := r.checkLoginPassword(ctx, page, password)
 	if err != nil {
 		err = apperror.PgErrorToAppError(err) // FIXME: move this deeper, here it is not db error
 		return "", "", err
@@ -144,16 +144,16 @@ func (r *AuthRepo) createTokens(userId int64) (access, refresh string, refreshUu
 	return accessToken, refreshToken, refreshUuid, nil
 }
 
-func (r *AuthRepo) checkLoginPassword(ctx context.Context, login, password string) (int, error) {
-	row, err := r.queries.AuthGetUserAndPasswordHash(ctx, login)
+func (r *AuthRepo) checkLoginPassword(ctx context.Context, page, password string) (int, error) {
+	row, err := r.queries.AuthGetUserAndPasswordHash(ctx, page)
 	if err != nil {
-		err = apperror.NewAuthenticationError("checkLoginPassword", err, "invalid login or password or login not found")
+		err = apperror.NewAuthenticationError("checkLoginPassword", err, "invalid page or password or page not found")
 		return 0, err
 	}
 
 	err = authenticateUser(row.PasswordHash, password)
 	if err != nil {
-		return 0, apperror.NewAuthenticationError("checkLoginPassword", err, "invalid login or password")
+		return 0, apperror.NewAuthenticationError("checkLoginPassword", err, "invalid page or password")
 	}
 	return int(row.UserID), nil
 }
