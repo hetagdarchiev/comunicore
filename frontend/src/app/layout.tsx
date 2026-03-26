@@ -5,8 +5,6 @@ import Providers from './providers';
 
 import './styles/globals.css';
 
-import '@/shared/api/setup';
-
 const robotoSans = Roboto({
   variable: '--font-roboto-sans',
   subsets: ['latin'],
