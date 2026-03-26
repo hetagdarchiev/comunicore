@@ -28,7 +28,7 @@ export function AuthForm() {
   const loginMutation = useMutation({
     ...authLoginMutation(),
     onError: (error: AuthLoginError) => {
-      alert(getErrorMessage(error));
+      alert(getErrorMessage(error?.message));
     },
   });
 
@@ -50,12 +50,8 @@ export function AuthForm() {
     });
 
     localStorage.setItem('accessToken', tokenData.accessToken);
-    localStorage.setItem('refreshToken', tokenData.refreshToken);
 
-    // Tell `useAuth` hook to re-read localStorage and re-render.
     window.dispatchEvent(new Event('accessTokenUpdated'));
-
-    // Wait until `/api/user/me` is available, then navigate to avoid header flicker.
     await queryClient.fetchQuery(userMeOptions());
 
     router.push('/');
@@ -92,7 +88,7 @@ export function AuthForm() {
 
       {loginMutation.isError && (
         <p className='mt-2 text-center text-sm text-red-500'>
-          {getErrorMessage(loginMutation.error)}
+          {getErrorMessage(loginMutation.error?.message)}
         </p>
       )}
     </form>
