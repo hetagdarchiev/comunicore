@@ -10,6 +10,8 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
+import { Sorting } from './sorting';
+
 type Post = {
   post_id: number;
   description: string;
@@ -132,32 +134,34 @@ export function PostList() {
       ) || [];
 
   return (
-    <div className='custom-scrollbar flex h-screen w-full flex-col gap-4 overflow-y-auto py-4 pr-2 pb-32'>
-      {threads.map((post, index) => {
-        if (threads.length === index + 1) {
+    <div>
+      <Sorting />
+      <div className='custom-scrollbar flex h-screen w-full flex-col gap-4 overflow-y-auto py-4 pr-2 pb-32'>
+        {threads.map((post, index) => {
+          if (threads.length === index + 1) {
+            return (
+              <div ref={lastElementRef} key={post.post_id}>
+                <PostCard {...post} onLike={() => handleLike(post.post_id)}>
+                  {post.description}
+                </PostCard>
+              </div>
+            );
+          }
           return (
-            <div ref={lastElementRef} key={post.post_id}>
-              <PostCard {...post} onLike={() => handleLike(post.post_id)}>
-                {post.description}
-              </PostCard>
-            </div>
+            <PostCard
+              key={post.post_id}
+              {...post}
+              onLike={() => handleLike(post.post_id)}
+            >
+              {post.description}
+            </PostCard>
           );
-        }
+        })}
 
-        return (
-          <PostCard
-            key={post.post_id}
-            {...post}
-            onLike={() => handleLike(post.post_id)}
-          >
-            {post.description}
-          </PostCard>
-        );
-      })}
-
-      {/* фикс дергания loader */}
-      <div className='h-6 text-center'>
-        {isFetchingNextPage && 'Загрузка ещё...'}
+        {/* фикс дергания loader */}
+        <div className='h-6 text-center'>
+          {isFetchingNextPage && 'Загрузка ещё...'}
+        </div>
       </div>
     </div>
   );
