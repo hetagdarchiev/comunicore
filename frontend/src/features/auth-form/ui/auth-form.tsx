@@ -4,20 +4,21 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { authLoginMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
+import {
+  authLoginMutation,
+  userMeOptions,
+} from '@/shared/api/generated/@tanstack/react-query.gen';
 import type {
   AuthLoginError,
   JwtToken,
 } from '@/shared/api/generated/types.gen';
-import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
-import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
+import { getAuthErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { authSchema, type TAuthForm } from '../model/validation-schema';
 
@@ -28,7 +29,7 @@ export function AuthForm() {
   const loginMutation = useMutation({
     ...authLoginMutation(),
     onError: (error: AuthLoginError) => {
-      alert(getErrorMessage(error?.message));
+      return getAuthErrorMessage(error);
     },
   });
 
@@ -42,7 +43,7 @@ export function AuthForm() {
   });
 
   const onSubmit = async (data: TAuthForm) => {
-    const tokenData = await loginMutation.mutateAsync({
+    const tokenData: JwtToken = await loginMutation.mutateAsync({
       body: {
         login: data.email,
         password: data.password,
@@ -88,7 +89,7 @@ export function AuthForm() {
 
       {loginMutation.isError && (
         <p className='mt-2 text-center text-sm text-red-500'>
-          {getErrorMessage(loginMutation.error?.message)}
+          {getAuthErrorMessage(loginMutation.error)}
         </p>
       )}
     </form>

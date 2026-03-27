@@ -3,17 +3,15 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { useAuth } from '@/entities/user';
 import { SearchForm } from '@/features/search-form';
 import logo from '@/shared/assets/images/logo.svg';
 
 import { Buttons } from './buttons';
 import { NavList } from './navList';
-import { useAuth } from '@/entities/user';
 
 export function Header() {
   const { user, isAuthenticated, isLoading } = useAuth();
-
-  console.log(user);
 
   return (
     <header className='bg-white'>
