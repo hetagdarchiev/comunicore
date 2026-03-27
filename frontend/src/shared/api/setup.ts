@@ -66,12 +66,14 @@ client.interceptors.response.use(async (response, request, options) => {
     return response;
   }
 
-  const headers = new Headers(options.headers);
+  const headers = new Headers((options.headers as HeadersInit) || {});
   headers.set('Authorization', `Bearer ${newAccessToken}`);
   headers.set('x-auth-retry', '1');
 
   const retriedResult = await client.request({
     ...options,
+    // Мы гарантируем TS, что метод будет, даже если он не пришел в options
+    method: options.method || 'GET',
     headers,
   });
 
