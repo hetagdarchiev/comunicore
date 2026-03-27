@@ -1,13 +1,13 @@
 'use client';
 
-import { RefObject, useCallback, useEffect } from 'react';
+import { RefObject, useCallback } from 'react';
 import { SubmitHandler, UseFormReturn } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { useEditorDraft } from '@/features/text-editor/model/hooks/useEditorDraft';
-import { useEditorKeyBoard } from '@/features/text-editor/model/hooks/useEditorKeyBoard';
-
-import { useDragHandler } from '../../../model/hooks/useDragHandel';
+import { MdEditor } from '../../..//model/lib/mdEditor/MdEditor';
+import { useEditorDraft } from '../../../model/hooks/useEditorDraft';
+import { useEditorKeyBoard } from '../../../model/hooks/useEditorKeyBoard';
+import { useMedia } from '../../../model/hooks/useMedia';
 import { renderHtml } from '../../../model/lib/markdown';
 import { MarkDownSchema } from '../../../model/schema/markdown.schema';
 
@@ -23,19 +23,22 @@ export function Editor({ form, markdownFieldRef }: Props) {
     handleDragLeave,
     handleDragOver,
     handleDrop,
+    handlePaste,
     isDragging,
-    markdownLink,
-  } = useDragHandler();
+    isUploading,
+  } = useMedia((url, alt) => {
+    if (!markdownFieldRef.current) return;
+    MdEditor.addImageOnDrop(url, alt, {
+      getValues: form.getValues,
+      setValue: form.setValue,
+      textarea: markdownFieldRef.current,
+    });
+  });
 
   const { clearDraft } = useEditorDraft(form);
   const { onKeyDown } = useEditorKeyBoard(form);
 
   const { ref, ...mdRedister } = register('markdown');
-
-  useEffect(() => {
-    if (!markdownLink) return;
-    console.log(markdownLink);
-  }, [markdownLink]);
 
   const onSubmit: SubmitHandler<MarkDownSchema> = useCallback(
     async (data) => {
@@ -64,7 +67,7 @@ export function Editor({ form, markdownFieldRef }: Props) {
     <form
       onSubmit={handleSubmit(onSubmit)}
       id='text-editor-form'
-      className='grid h-full gap-y-4'
+      className='relative grid h-full gap-y-4'
     >
       <textarea
         id='markdown-editor'
@@ -77,10 +80,16 @@ export function Editor({ form, markdownFieldRef }: Props) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onKeyDown={onKeyDown}
+        onPaste={handlePaste}
         ref={(element) => setRefs(element)}
         aria-label='Text Editor'
         placeholder='Describe text...'
       />
+      {isUploading && (
+        <div className='pointer-events-none absolute inset-0 flex items-center justify-center bg-white/50'>
+          <span>Загрузка картинки...</span>
+        </div>
+      )}
     </form>
   );
 }

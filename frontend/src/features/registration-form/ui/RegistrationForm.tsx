@@ -3,7 +3,10 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import { userCreateMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
+import {
+  authLoginMutation,
+  userCreateMutation,
+} from '@/shared/api/generated/@tanstack/react-query.gen';
 import type { UserCreateRequest } from '@/shared/api/generated/types.gen';
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
@@ -31,6 +34,14 @@ export function RegistrationForm() {
     },
   });
 
+  const loginUser = useMutation({
+    ...authLoginMutation(),
+    onSuccess: (data) => {
+      localStorage.setItem('accessToken', data.accessToken);
+      router.back();
+    },
+  });
+
   const {
     register,
     handleSubmit,
@@ -42,13 +53,22 @@ export function RegistrationForm() {
   });
 
   const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
-    const body: UserCreateRequest = {
+    const newUser: UserCreateRequest = {
       name: data.login,
       email: data.email,
       password: data.password,
     };
-    await registration.mutateAsync({ body });
-    router.push(`/verification?email=${encodeURIComponent(data.email)}`);
+
+    try {
+      await registration.mutateAsync({ body: newUser });
+
+      await loginUser.mutateAsync({
+        body: { login: data.email, password: data.password },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    // router.push(`/verification?email=${encodeURIComponent(data.email)}`);
   };
 
   return (

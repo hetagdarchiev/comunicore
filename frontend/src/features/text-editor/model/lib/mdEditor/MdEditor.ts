@@ -152,6 +152,25 @@ export class MdEditor {
     };
   }
 
+  static addImageOnDrop(url: string, alt: string, ctx: Ctx) {
+    const { getValues, textarea } = ctx;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const text = getValues('markdown') || '';
+
+    const mdImageTemplete = `![${alt}](${url})`;
+
+    const newValues: ReturnNewValues = {
+      newText: `${text.slice(0, start)} ${mdImageTemplete} ${text.slice(end)}`,
+      newStart: start + mdImageTemplete.length + 1,
+      newEnd: end + mdImageTemplete.length + 1,
+    };
+
+    this.apply(ctx, newValues);
+  }
+
   static restoreSelection(
     editor: HTMLTextAreaElement,
     newStart: number,

@@ -3,7 +3,7 @@
 import { KeyboardEvent, useCallback, useMemo } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 
-import { MdEditorKeyBoard } from '../lib/mdEditor/MdEditorKeyBoard';
+import { MdEditorKeyBoard } from '../lib/mdEditor';
 import { MarkDownSchema } from '../schema/markdown.schema';
 import { toolsGroup } from '../tools';
 import { MdTools, ToolsName } from '../types/mdTools.types';

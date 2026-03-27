@@ -1,7 +1,7 @@
 import { BsListOl } from 'react-icons/bs';
 import { LuList } from 'react-icons/lu';
 
-import { MdEditor } from '../lib/mdEditor/MdEditor';
+import { MdEditor } from '../lib/mdEditor';
 import { MdTools } from '../types/mdTools.types';
 
 export const listTools: MdTools[] = [

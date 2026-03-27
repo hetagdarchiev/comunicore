@@ -1,7 +1,7 @@
 import { BsTypeBold, BsTypeItalic, BsTypeStrikethrough } from 'react-icons/bs';
 import { LuHeading, LuLink, LuSquareCode, LuTextQuote } from 'react-icons/lu';
 
-import { MdEditor } from '../lib/mdEditor/MdEditor';
+import { MdEditor } from '../lib/mdEditor';
 import { MdTools } from '../types/mdTools.types';
 
 export const baseTools: MdTools[] = [
