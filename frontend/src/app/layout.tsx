@@ -3,6 +3,7 @@ import { Roboto } from 'next/font/google';
 
 import Providers from './providers';
 
+import 'highlight.js/styles/atom-one-dark.css';
 import './styles/globals.css';
 
 import '@/shared/api/setup';

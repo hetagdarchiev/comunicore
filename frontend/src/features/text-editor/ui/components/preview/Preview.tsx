@@ -4,6 +4,8 @@ import { MouseEvent, useMemo } from 'react';
 
 import { renderHtml } from '../../../model/lib/markdown';
 
+import styles from './preview.module.css';
+
 export function Preview({ markdown }: { markdown: string }) {
   const html = useMemo(() => renderHtml(markdown), [markdown]);
 
@@ -29,7 +31,7 @@ export function Preview({ markdown }: { markdown: string }) {
   return (
     <div
       onClick={handleClick}
-      className='wrap-break-word'
+      className={`wrap-break-word ${styles['preview-content']}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

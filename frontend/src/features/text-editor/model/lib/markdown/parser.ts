@@ -1,9 +1,27 @@
+import hljs from 'highlight.js';
 import MarkdownIt from 'markdown-it';
 
 export const md: MarkdownIt = new MarkdownIt({
   html: false,
   linkify: true,
   typographer: true,
+  highlight: function (str, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      try {
+        return (
+          `<pre><code class="hljs language-${lang}">` +
+          hljs.highlight(str, { language: lang, ignoreIllegals: true }).value +
+          '</code></pre>'
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    return (
+      '<pre><code class="hljs">' + md.utils.escapeHtml(str) + '</code></pre>'
+    );
+  },
 });
 
 // Links security
