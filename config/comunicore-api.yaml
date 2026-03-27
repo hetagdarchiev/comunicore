@@ -323,6 +323,78 @@ paths:
           $ref: '#/components/responses/ErrorStringDescription'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
+  /api/media:
+    post:
+      summary: Upload media file
+      operationId: mediaUpload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MediaUploadRequest'
+          application/octet-stream:
+            schema:
+              $ref: '#/components/schemas/MediaUploadRequest'
+      responses:
+        '200':
+          description: Uploaded file URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaUploadResponse'
+        "401":
+          description: Client is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+  /storage/media/{fileName}:
+    get:
+      summary: Get media file by name
+      operationId: mediaGet
+      security: []
+      parameters:
+        - name: fileName
+          in: path
+          description: File name
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        "401":
+          description: Client is not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        "404":
+          description: File not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        "500":
+          $ref: '#/components/responses/ErrorStringDescription'
 components:
   securitySchemes:
     jwtAuth:
@@ -614,6 +686,28 @@ components:
         - content
       example:
         content: "I want to learn Go, but I don't know where to start. Any advice?"
+    # media (files)
+    MediaUploadRequest:
+      type: object
+      properties:
+        fileComment:
+          type: string
+        content:
+          type: string
+          format: binary
+      required: [ fileComment, content ]
+      example:
+        fileComment: "КДПВ с котиком"
+        content: (binary file content)
+    MediaUploadResponse:
+      type: object
+      properties:
+        fileComment:
+          type: string
+        url:
+          type: string
+          format: uri
+      required: [url, fileComment]
     # errors
     ErrorStringMessage:
       description: |

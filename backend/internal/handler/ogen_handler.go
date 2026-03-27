@@ -21,12 +21,14 @@ import (
 	"github.com/ogen-go/ogen/ogenerrors"
 
 	authRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/auth"
+	mediaRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/media"
 	postsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/posts"
 	threadsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/threads"
 	userRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/user"
 
 	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
 	jwtService "github.com/hetagdarchiev/comunicore/backend/internal/service/jwt"
+	mediaService "github.com/hetagdarchiev/comunicore/backend/internal/service/media"
 	threadsService "github.com/hetagdarchiev/comunicore/backend/internal/service/threads"
 	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
 )
@@ -36,6 +38,7 @@ type OgenHandler struct {
 	authHandler    *AuthHandler
 	userHandler    *UserHandler
 	threadsHandler *ThreadsHandler
+	mediaHandler   *MediaHandler
 	api.UnimplementedHandler
 }
 
@@ -43,12 +46,14 @@ func NewOgenHandler(
 	authHandler *AuthHandler,
 	userHandler *UserHandler,
 	threadsHandler *ThreadsHandler,
+	mediaHandler *MediaHandler,
 ) *OgenHandler {
 
 	return &OgenHandler{
 		threadsHandler: threadsHandler,
 		userHandler:    userHandler,
 		authHandler:    authHandler,
+		mediaHandler:   mediaHandler,
 	}
 }
 
@@ -148,12 +153,17 @@ func (h *errorHandler) handler(ctx context.Context, w http.ResponseWriter, r *ht
 		sendErrorStringMessage(w, http.StatusUnauthorized, securityError, "failed to read security credentials")
 		return
 	}
-	fmt.Printf("error handler called with error: %T %v\n", err, err)
+	fmt.Printf("error handler called with error: %T %+v\n", err, err.Error())
 	_, _ = io.WriteString(w, http.StatusText(code))
 }
 func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	jwtS := jwtService.NewJwtService(config.Server.JwtSecret)
 
+	mediaR, err := mediaRepo.NewMediaRepo(config.Server.UploadDir)
+	if err != nil {
+		fmt.Printf("Failed to create media repo: %v\n", err)
+		return
+	}
 	authR, err := authRepo.NewAuthRepo(config.Database.DSN(), jwtS)
 	if err != nil {
 		fmt.Printf("Failed to create auth repo: %v\n", err)
@@ -175,13 +185,16 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 
 	authS := authService.NewAuthService(authR)
 	userS := userService.NewUserService(userR, authR)
+	mediaS := mediaService.NewMediaService(config.Server.BaseURL, mediaR)
+
 	threadsS := threadsService.NewThreadsService(threadR, postR, userR)
 
 	authH := NewAuthHandler(authS)
 	userH := NewUserHandler(userS, jwtS)
 	threadsH := NewThreadsHandler(threadsS)
+	mediaH := NewMediaHandler(mediaS)
 
-	ogenHandler := NewOgenHandler(authH, userH, threadsH)
+	ogenHandler := NewOgenHandler(authH, userH, threadsH, mediaH)
 	secHandler := NewSecurityHandler(jwtS)
 
 	errHandler := &errorHandler{}
@@ -256,4 +269,7 @@ func (h *OgenHandler) AuthRefresh(ctx context.Context) (api.AuthRefreshRes, erro
 		return nil, err
 	}
 	return res, err
+}
+func (h *OgenHandler) MediaUpload(ctx context.Context, req *api.MediaUploadRequestMultipart) (api.MediaUploadRes, error) {
+	return h.mediaHandler.MediaUpload(ctx, req)
 }

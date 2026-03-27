@@ -26,6 +26,18 @@ type Handler interface {
 	//
 	// POST /api/auth/refresh
 	AuthRefresh(ctx context.Context) (AuthRefreshRes, error)
+	// MediaGet implements mediaGet operation.
+	//
+	// Get media file by name.
+	//
+	// GET /storage/media/{fileName}
+	MediaGet(ctx context.Context, params MediaGetParams) (MediaGetRes, error)
+	// MediaUpload implements mediaUpload operation.
+	//
+	// Upload media file.
+	//
+	// POST /api/media
+	MediaUpload(ctx context.Context, req *MediaUploadRequestMultipart) (MediaUploadRes, error)
 	// ThreadAddPost implements threadAddPost operation.
 	//
 	// Add a new post to thread.

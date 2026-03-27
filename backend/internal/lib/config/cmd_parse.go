@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path"
 	"strconv"
 
 	toml "github.com/pelletier/go-toml/v2"
@@ -27,6 +28,8 @@ type CmdConfig struct {
 	ServerBaseURL         *string // "http://foo.com", "http://foo.com:8080"
 	ServerPermittedOrigin *string // CORS origin: "http://test.com" or "http://site.me:8080"
 	ServerJwtSecret       *string
+	ServerWorkDir         *string
+	ServerUploadDir       *string
 }
 
 // CmdParse parses command-line arguments and returns a CmdConfig struct.
@@ -40,11 +43,15 @@ func CmdParse() *CmdConfig {
 
 	serverHost := flag.String("server-host", "", "http server host")
 	serverPort := flag.Int("server-port", 0, "http server port")
-	serverBaseURL := flag.String("server-baseurl", "", "http server base URL (e.g. \"https://site.com\", \"http://site.com:8080\")")
+	serverBaseURL := flag.String("server-baseurl", "",
+		"http server base URL (e.g. \"https://site.com\", \"http://site.com:8080\")")
 	serverPermittedOrigin := flag.String(
 		"server-permitted-origin", "",
 		"http server permitted extra single origin (e.g. \"http://localhost:3000\" or \"http://site.com\")")
 	serverJwtSecret := flag.String("server-jwt-secret", "", "http server jwt secret")
+	serverWorkDir := flag.String("server-work-dir", "", "http server work directory (default current dir)")
+	serverUploadDir := flag.String("server-upload-dir", "",
+		"http server upload directory (default work dir + /upload)")
 
 	flag.Parse()
 
@@ -62,6 +69,8 @@ func CmdParse() *CmdConfig {
 		ServerBaseURL:         serverBaseURL,
 		ServerPermittedOrigin: serverPermittedOrigin,
 		ServerJwtSecret:       serverJwtSecret,
+		ServerWorkDir:         serverWorkDir,
+		ServerUploadDir:       serverUploadDir,
 	}
 }
 
@@ -109,6 +118,8 @@ type ServerConfig struct {
 	BaseURL         string
 	PermittedOrigin string `toml:"permitted_origin"`
 	JwtSecret       string `toml:"jwt_secret"`
+	WorkDir         string `toml:"work_dir"`
+	UploadDir       string `toml:"upload_dir"`
 }
 
 func (srv *ServerConfig) check(cmd *CmdConfig) error {
@@ -119,6 +130,24 @@ func (srv *ServerConfig) check(cmd *CmdConfig) error {
 	srv.PermittedOrigin = mergeCmdEnvCurrentDefaultString(
 		cmd.ServerPermittedOrigin, "FORUM_SERVER_PERMITTED_ORIGIN", srv.PermittedOrigin, "")
 	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWT_SECRET", srv.JwtSecret, "")
+
+	defaultWorkDir, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed get current working directory: %v", err)
+	}
+	srv.WorkDir = mergeCmdEnvCurrentDefaultString(
+		cmd.ServerWorkDir, "FORUM_SERVER_WORK_DIR", srv.WorkDir, defaultWorkDir)
+	fmt.Printf("%s - cwd\n%s - future work dir \n", defaultWorkDir, srv.WorkDir)
+	if !path.IsAbs(srv.WorkDir) {
+		absoluteWorkDir := path.Join(defaultWorkDir, srv.WorkDir)
+		fmt.Printf("server work dir not absolute (%s)\nmaking it absolute %s\n",
+			srv.WorkDir, absoluteWorkDir)
+		srv.WorkDir = absoluteWorkDir
+	}
+
+	srv.UploadDir = mergeCmdEnvCurrentDefaultString(
+		cmd.ServerUploadDir, "FORUM_SERVER_UPLOAD_DIR", srv.UploadDir, "upload")
+	fmt.Printf("upload dir %s\n", srv.UploadDir)
 
 	if srv.Port <= 0 {
 		return fmt.Errorf("server port is zero or negative")

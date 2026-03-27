@@ -40,6 +40,24 @@ func (UnimplementedHandler) AuthRefresh(ctx context.Context) (r AuthRefreshRes, 
 	return r, ht.ErrNotImplemented
 }
 
+// MediaGet implements mediaGet operation.
+//
+// Get media file by name.
+//
+// GET /storage/media/{fileName}
+func (UnimplementedHandler) MediaGet(ctx context.Context, params MediaGetParams) (r MediaGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// MediaUpload implements mediaUpload operation.
+//
+// Upload media file.
+//
+// POST /api/media
+func (UnimplementedHandler) MediaUpload(ctx context.Context, req *MediaUploadRequestMultipart) (r MediaUploadRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // ThreadAddPost implements threadAddPost operation.
 //
 // Add a new post to thread.
