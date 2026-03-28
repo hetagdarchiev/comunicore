@@ -13,6 +13,8 @@ import (
 	"net/http"
 	"os"
 	"path"
+
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 )
 
 type MediaRepo struct {
@@ -57,6 +59,7 @@ func NewBufferWriter(buf []byte) io.Writer {
 
 // MediaUpload saves the uploaded file and returns a unique identifier for it.
 func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, error) {
+	op := "MediaRepo.MediaUpload"
 	dstFile, err := os.CreateTemp(r.uploadDir, "tmp-*")
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -103,7 +106,8 @@ func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, 
 	fileRenamed = true
 	err = os.Chmod(newFileName, 0644)
 	if err != nil {
-		return "", fmt.Errorf("failed to change file permissions: %w", err)
+		return "", apperror.NewUnspecifiedError("failed to change file permissions").
+			WithCause(err).InOperation(op)
 	}
 
 	return fileName, nil
