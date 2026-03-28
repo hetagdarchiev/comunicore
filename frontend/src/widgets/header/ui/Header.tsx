@@ -20,11 +20,6 @@ export function Header() {
     setIsMounted(true); // Заигнорил линтер, так как это единственный способ решить проблему гидратации
   }, []);
 
-  console.log('🎨 [Header] Рендер. Статус:', {
-    isLoading,
-    isAuthenticated,
-  });
-
   const renderProfile = () => {
     if (!isMounted) return <div className='w-40' />; // Заглушка для гидратации
 
