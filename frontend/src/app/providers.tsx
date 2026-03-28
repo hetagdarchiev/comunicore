@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+import '@/shared/api/setup';
+
+export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
