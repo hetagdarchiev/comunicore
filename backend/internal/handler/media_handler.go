@@ -26,6 +26,6 @@ func (m *MediaHandler) MediaUpload(
 		return &api.MediaUploadResponse{}, err
 	}
 	return &api.MediaUploadResponse{
-		FileComment: req.FileComment,
-		URL:         fileURL}, nil
+		FileName: req.Content.Name,
+		URL:      fileURL}, nil
 }

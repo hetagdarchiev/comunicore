@@ -690,24 +690,21 @@ components:
     MediaUploadRequest:
       type: object
       properties:
-        fileComment:
-          type: string
         content:
           type: string
           format: binary
-      required: [ fileComment, content ]
+      required: [ content ]
       example:
-        fileComment: "КДПВ с котиком"
         content: (binary file content)
     MediaUploadResponse:
       type: object
       properties:
-        fileComment:
+        fileName:
           type: string
         url:
           type: string
           format: uri
-      required: [url, fileComment]
+      required: [url, fileName]
     # errors
     ErrorStringMessage:
       description: |
