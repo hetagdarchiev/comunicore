@@ -33,13 +33,12 @@ func testMediaUploadOk(t *testing.T, baseURL string, accessToken string) {
 		fmt.Printf("cwd %s\n", cwd)
 		res := auth.POST("/api/media").WithMultipart().
 			WithFile("content", "./img/cat_and_snake.png").
-			WithFormField("fileComment", "avatar").
 			Expect().
 			Status(http.StatusOK)
 
 		response := res.JSON().Object()
-		response.Keys().ContainsOnly("fileComment", "url")
-		response.Value("fileComment").String().IsEqual("avatar")
+		response.Keys().ContainsOnly("fileName", "url")
+		response.Value("fileName").String().IsEqual("cat_and_snake.png")
 		response.Value("url").String().NotEmpty()
 	})
 }

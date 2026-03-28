@@ -101,7 +101,8 @@ func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, 
 	fileName = fileName + extList[0]
 	newFileName := path.Join(r.uploadDir, fileName)
 	if err := os.Rename(dstFile.Name(), newFileName); err != nil {
-		return "", fmt.Errorf("failed to rename uploaded file: %w", err)
+		return "", apperror.NewUnspecifiedError("failed to rename uploaded file").
+			WithCause(err).InOperation(op)
 	}
 	fileRenamed = true
 	err = os.Chmod(newFileName, 0644)

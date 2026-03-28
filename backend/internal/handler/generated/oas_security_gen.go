@@ -63,7 +63,6 @@ func GetRolesForCookieAuth(operation string) []string {
 
 // operationRolesJwtAuth is a private map storing roles per operation.
 var operationRolesJwtAuth = map[string][]string{
-	MediaGetOperation:      []string{},
 	MediaUploadOperation:   []string{},
 	ThreadAddPostOperation: []string{},
 	ThreadCreateOperation:  []string{},

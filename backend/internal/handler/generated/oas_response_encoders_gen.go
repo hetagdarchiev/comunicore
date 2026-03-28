@@ -197,7 +197,7 @@ func encodeMediaUploadResponse(response MediaUploadRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *ErrorStringMessage:
+	case *MediaUploadUnauthorized:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
 
@@ -209,7 +209,7 @@ func encodeMediaUploadResponse(response MediaUploadRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *MediaUploadInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
