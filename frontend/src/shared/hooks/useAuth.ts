@@ -11,18 +11,10 @@ export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  // 1. Извлекаем токен
-  const token = useMemo(() => {
-    if (typeof window === 'undefined') return null;
-    const t = localStorage.getItem('accessToken');
-    console.log(
-      '🔑 [useAuth] Проверка токена в Storage:',
-      t ? 'Найдено' : 'Пусто',
-    );
-    return t;
-  }, []);
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
 
-  // 2. Запрос данных профиля
+  // Запрос данных профиля
   const {
     data: user,
     isLoading,
@@ -30,17 +22,13 @@ export function useAuth() {
     error,
   } = useQuery({
     ...userMeOptions(),
-    enabled: !!token, // Запрос не уйдет, если нет токена
+    enabled: !!token,
     retry: false,
     staleTime: 1000 * 60 * 5, // 5 минут не переспрашивать сервер
   });
 
-  // Логируем результат запроса профиля
-  if (user) console.log('👤 [useAuth] Данные пользователя получены:', user);
-  if (isError) console.error('❌ [useAuth] Ошибка загрузки профиля:', error);
-
+  // Выход из профиля
   const logout = () => {
-    console.log('🚪 [useAuth] Выход из системы...');
     localStorage.removeItem('accessToken');
     queryClient.clear();
     router.push('/login');
@@ -51,7 +39,8 @@ export function useAuth() {
     user,
     isAuthenticated: !!user,
     isLoading: !!token && isLoading,
-    isReady: typeof window !== 'undefined',
+    isError,
+    error,
     logout,
   };
 }

@@ -9,18 +9,24 @@ import { useAuth } from '@/shared/hooks/useAuth';
 
 import { Buttons } from './buttons';
 import { NavList } from './navList';
+import { useEffect, useState } from 'react';
 
 export function Header() {
-  const { user, isAuthenticated, isLoading, isReady, logout } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMounted(true); // Заигнорил линтер, так как это единственный способ решить проблему гидратации
+  }, []);
 
   console.log('🎨 [Header] Рендер. Статус:', {
-    isReady,
     isLoading,
     isAuthenticated,
   });
 
-  const renderAuthContent = () => {
-    if (!isReady) return <div className='w-40' />; // Заглушка для гидратации
+  const renderProfile = () => {
+    if (!isMounted) return <div className='w-40' />; // Заглушка для гидратации
 
     if (isLoading) {
       return <span className='text-sm text-gray-400'>Загрузка профиля...</span>;
@@ -49,7 +55,7 @@ export function Header() {
           />
         </Link>
         <SearchForm />
-        {renderAuthContent()}
+        {renderProfile()}
       </div>
     </header>
   );
