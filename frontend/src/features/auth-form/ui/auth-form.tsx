@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 
 import { type LoginSchema, loginSchema } from '../model/login-schema';
+import { ErrorStringMessage, JwtToken } from '@/shared/api/generated';
 
 export function AuthForm() {
   const router = useRouter();
@@ -29,13 +30,13 @@ export function AuthForm() {
 
   const { mutate, isPending } = useMutation({
     ...authLoginMutation(),
-    onSuccess: (data) => {
+    onSuccess: (data: JwtToken) => {
       localStorage.setItem('accessToken', data.accessToken);
       router.push('/');
       router.refresh();
     },
-    onError: (err: any) => {
-      setServerError(err?.message || 'Ошибка авторизации');
+    onError: (error: ErrorStringMessage) => {
+      setServerError(error.message || 'Ошибка авторизации');
     },
   });
 

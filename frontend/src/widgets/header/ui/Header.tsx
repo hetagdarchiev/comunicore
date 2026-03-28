@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -9,7 +10,6 @@ import { useAuth } from '@/shared/hooks/useAuth';
 
 import { Buttons } from './buttons';
 import { NavList } from './navList';
-import { useEffect, useState } from 'react';
 
 export function Header() {
   const { isAuthenticated, isLoading } = useAuth();
