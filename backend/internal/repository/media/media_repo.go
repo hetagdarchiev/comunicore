@@ -9,12 +9,12 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
-	"mime"
-	"net/http"
 	"os"
 	"path"
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
+
+	"github.com/hetagdarchiev/comunicore/backend/internal/lib/filetype"
 )
 
 type MediaRepo struct {
@@ -93,12 +93,9 @@ func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, 
 	base64.RawURLEncoding.Encode(dst, hashValue)
 	fileName := string(dst)
 
-	fileMimeType := http.DetectContentType(mimeBuffer)
-	extList, err := mime.ExtensionsByType(fileMimeType)
-	if err != nil || len(extList) == 0 {
-		return "", fmt.Errorf("failed to get file extensions: %w", err)
-	}
-	fileName = fileName + extList[0]
+	fileExtention := filetype.GetFileExtension(mimeBuffer)
+	fileName += fileExtention
+
 	newFileName := path.Join(r.uploadDir, fileName)
 	if err := os.Rename(dstFile.Name(), newFileName); err != nil {
 		return "", apperror.NewUnspecifiedError("failed to rename uploaded file").
