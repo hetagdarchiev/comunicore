@@ -10,7 +10,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 
-import { Sorting } from './sorting';
+import { Sorting } from './components/sorting';
 
 type Thread = {
   id: number;
