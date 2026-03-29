@@ -20,12 +20,6 @@ type Handler interface {
 	//
 	// POST /api/auth/logout
 	AuthLogout(ctx context.Context) error
-	// AuthRefresh implements authRefresh operation.
-	//
-	// Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
-	//
-	// POST /api/auth/refresh
-	AuthRefresh(ctx context.Context) (AuthRefreshRes, error)
 	// MediaGet implements mediaGet operation.
 	//
 	// Get media file by name.

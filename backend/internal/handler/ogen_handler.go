@@ -13,11 +13,13 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/rs/cors"
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
 	"github.com/hetagdarchiev/comunicore/backend/internal/lib/config"
+	urlencode "github.com/hetagdarchiev/comunicore/backend/internal/lib/urlEncode"
 	"github.com/ogen-go/ogen/ogenerrors"
 
 	authRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/auth"
@@ -27,7 +29,6 @@ import (
 	userRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/user"
 
 	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
-	jwtService "github.com/hetagdarchiev/comunicore/backend/internal/service/jwt"
 	mediaService "github.com/hetagdarchiev/comunicore/backend/internal/service/media"
 	threadsService "github.com/hetagdarchiev/comunicore/backend/internal/service/threads"
 	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
@@ -58,12 +59,12 @@ func NewOgenHandler(
 }
 
 type securityHandler struct {
-	jwtService *jwtService.JwtAuthorizator
+	authRepo *authRepo.AuthRepo
 }
 
-func NewSecurityHandler(jwtService *jwtService.JwtAuthorizator) *securityHandler {
+func NewSecurityHandler(authRepo *authRepo.AuthRepo) *securityHandler {
 	return &securityHandler{
-		jwtService: jwtService,
+		authRepo: authRepo,
 	}
 }
 
@@ -76,42 +77,30 @@ func (h *securityHandler) HandleCookieAuth(
 	if global == nil {
 		return ctx, apperror.NewAuthenticationError(op, nil, "context not found")
 	}
-	claims, err := h.jwtService.ValidateToken(t.APIKey)
+	sessionID, err := urlencode.Decode(t.APIKey)
 	if err != nil {
-		log.Printf("JWT refresh token validation error: %v\n", err)
-		return ctx, apperror.NewAuthenticationError(op, err, "invalid Cookie JWT token")
+		log.Printf("Failed decode session id from cookie: %v\n", err)
+		return ctx, apperror.NewAuthenticationError(op, err, "invalid Cookie session id")
 	}
-	fmt.Printf("op %s, Cookie auth valid, claims: %+v\n", op, claims)
-	global.RefreshToken = t.APIKey
-	global.RefreshTokenIsSet = true
-	if !global.UserIDIsSet {
-		global.UserID = int(claims.UserID)
-		global.UserIDIsSet = true
+	if sessionID == nil || len(sessionID) == 0 {
+		log.Printf("Empty session id in cookie\n")
+		return ctx, apperror.NewAuthenticationError(op, nil, "empty Cookie session id")
 	}
-
-	return ctx, nil
-}
-func (h *securityHandler) HandleJwtAuth(
-	ctx context.Context, operationName api.OperationName, t api.JwtAuth) (context.Context, error) {
-
-	op := "securityHandler.HandleJwtAuth"
-	fmt.Printf("JWT Auth with operation name %s and token %s\n", operationName, t.Token)
-
-	global := GlobalContextFromContext(ctx)
-	if global == nil {
-		return ctx, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-	}
-	claims, err := h.jwtService.ValidateToken(t.Token)
+	sessionUUID, err := uuid.FromBytes(sessionID)
 	if err != nil {
-		log.Printf("JWT access token validation error: %v\n", err)
-		return ctx, apperror.NewAuthenticationError(op, err, "invalid JWT token")
+		log.Printf("Failed to parse session id from cookie: %v\n", err)
+		return ctx, apperror.NewAuthenticationError(op, err, "invalid Cookie session id format")
 	}
-	global.AccessToken = t.Token
-	global.AccessTokenIsSet = true
-	if !global.UserIDIsSet {
-		global.UserID = int(claims.UserID)
-		global.UserIDIsSet = true
+	fmt.Printf("op %s, Cookie auth valid, sessionID: %+v\n", op, sessionID)
+	global.SessionID = sessionUUID
+	userID, err := h.authRepo.GetUserIDBySessionID(ctx, sessionUUID)
+	if err != nil {
+		log.Printf("Failed to get user ID by session ID: %v\n", err)
+		return ctx, apperror.NewAuthenticationError(op, err, "failed to get user ID")
 	}
+	global.UserID = userID
+	global.UserIDIsSet = true
+
 	return ctx, nil
 }
 
@@ -157,14 +146,12 @@ func (h *errorHandler) handler(ctx context.Context, w http.ResponseWriter, r *ht
 	_, _ = io.WriteString(w, http.StatusText(code))
 }
 func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
-	jwtS := jwtService.NewJwtService(config.Server.JwtSecret)
-
 	mediaR, err := mediaRepo.NewMediaRepo(config.Server.UploadDir)
 	if err != nil {
 		fmt.Printf("Failed to create media repo: %v\n", err)
 		return
 	}
-	authR, err := authRepo.NewAuthRepo(config.Database.DSN(), jwtS)
+	authR, err := authRepo.NewAuthRepo(config.Database.DSN())
 	if err != nil {
 		fmt.Printf("Failed to create auth repo: %v\n", err)
 		return
@@ -183,19 +170,19 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 		panic(err)
 	}
 
-	authS := authService.NewAuthService(authR)
+	authS := authService.NewAuthService(authR, userR)
 	userS := userService.NewUserService(userR, authR)
 	mediaS := mediaService.NewMediaService(config.Server.BaseURL, mediaR)
 
 	threadsS := threadsService.NewThreadsService(threadR, postR, userR)
 
 	authH := NewAuthHandler(authS)
-	userH := NewUserHandler(userS, jwtS)
+	userH := NewUserHandler(userS)
 	threadsH := NewThreadsHandler(threadsS)
 	mediaH := NewMediaHandler(mediaS)
 
 	ogenHandler := NewOgenHandler(authH, userH, threadsH, mediaH)
-	secHandler := NewSecurityHandler(jwtS)
+	secHandler := NewSecurityHandler(authR)
 
 	errHandler := &errorHandler{}
 	srv, err := api.NewServer(ogenHandler, secHandler, api.WithErrorHandler(errHandler.handler))
@@ -261,14 +248,6 @@ func (h *OgenHandler) AuthLogin(ctx context.Context, req *api.AuthLoginRequest) 
 }
 func (h *OgenHandler) AuthLogout(ctx context.Context) error {
 	return h.authHandler.AuthLogout(ctx)
-}
-func (h *OgenHandler) AuthRefresh(ctx context.Context) (api.AuthRefreshRes, error) {
-	res, err := h.authHandler.AuthRefresh(ctx)
-	if err != nil {
-		log.Printf("AuthRefresh error: %v\n", err)
-		return nil, err
-	}
-	return res, err
 }
 func (h *OgenHandler) MediaUpload(ctx context.Context, req *api.MediaUploadRequestMultipart) (api.MediaUploadRes, error) {
 	return h.mediaHandler.MediaUpload(ctx, req)

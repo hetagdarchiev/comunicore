@@ -225,119 +225,6 @@ func (s *Server) handleAuthLogoutRequest(args [0]string, argsEscaped bool, w htt
 	}
 }
 
-// handleAuthRefreshRequest handles authRefresh operation.
-//
-// Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
-//
-// POST /api/auth/refresh
-func (s *Server) handleAuthRefreshRequest(args [0]string, argsEscaped bool, w http.ResponseWriter, r *http.Request) {
-	statusWriter := &codeRecorder{ResponseWriter: w}
-	w = statusWriter
-	ctx := r.Context()
-
-	var (
-		err          error
-		opErrContext = ogenerrors.OperationContext{
-			Name: AuthRefreshOperation,
-			ID:   "authRefresh",
-		}
-	)
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-			sctx, ok, err := s.securityCookieAuth(ctx, AuthRefreshOperation, r)
-			if err != nil {
-				err = &ogenerrors.SecurityError{
-					OperationContext: opErrContext,
-					Security:         "CookieAuth",
-					Err:              err,
-				}
-				defer recordError("Security:CookieAuth", err)
-				s.cfg.ErrorHandler(ctx, w, r, err)
-				return
-			}
-			if ok {
-				satisfied[0] |= 1 << 0
-				ctx = sctx
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			err = &ogenerrors.SecurityError{
-				OperationContext: opErrContext,
-				Err:              ogenerrors.ErrSecurityRequirementIsNotSatisfied,
-			}
-			defer recordError("Security", err)
-			s.cfg.ErrorHandler(ctx, w, r, err)
-			return
-		}
-	}
-
-	var rawBody []byte
-
-	var response AuthRefreshRes
-	if m := s.cfg.Middleware; m != nil {
-		mreq := middleware.Request{
-			Context:          ctx,
-			OperationName:    AuthRefreshOperation,
-			OperationSummary: "Refresh JWT token",
-			OperationID:      "authRefresh",
-			Body:             nil,
-			RawBody:          rawBody,
-			Params:           middleware.Parameters{},
-			Raw:              r,
-		}
-
-		type (
-			Request  = struct{}
-			Params   = struct{}
-			Response = AuthRefreshRes
-		)
-		response, err = middleware.HookMiddleware[
-			Request,
-			Params,
-			Response,
-		](
-			m,
-			mreq,
-			nil,
-			func(ctx context.Context, request Request, params Params) (response Response, err error) {
-				response, err = s.h.AuthRefresh(ctx)
-				return response, err
-			},
-		)
-	} else {
-		response, err = s.h.AuthRefresh(ctx)
-	}
-	if err != nil {
-		defer recordError("Internal", err)
-		s.cfg.ErrorHandler(ctx, w, r, err)
-		return
-	}
-
-	if err := encodeAuthRefreshResponse(response, w); err != nil {
-		defer recordError("EncodeResponse", err)
-		if !errors.Is(err, ht.ErrInternalServerErrorResponse) {
-			s.cfg.ErrorHandler(ctx, w, r, err)
-		}
-		return
-	}
-}
-
 // handleMediaGetRequest handles mediaGet operation.
 //
 // Get media file by name.
@@ -443,14 +330,14 @@ func (s *Server) handleMediaUploadRequest(args [0]string, argsEscaped bool, w ht
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, MediaUploadOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, MediaUploadOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -571,14 +458,14 @@ func (s *Server) handleThreadAddPostRequest(args [1]string, argsEscaped bool, w 
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, ThreadAddPostOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, ThreadAddPostOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -714,14 +601,14 @@ func (s *Server) handleThreadCreateRequest(args [0]string, argsEscaped bool, w h
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, ThreadCreateOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, ThreadCreateOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -842,14 +729,14 @@ func (s *Server) handleThreadGetRequest(args [1]string, argsEscaped bool, w http
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, ThreadGetOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, ThreadGetOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -1008,14 +895,14 @@ func (s *Server) handleThreadsListRequest(args [0]string, argsEscaped bool, w ht
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, ThreadsListOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, ThreadsListOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -1232,14 +1119,14 @@ func (s *Server) handleUserDeleteRequest(args [1]string, argsEscaped bool, w htt
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, UserDeleteOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, UserDeleteOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -1360,14 +1247,14 @@ func (s *Server) handleUserGetRequest(args [1]string, argsEscaped bool, w http.R
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, UserGetOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, UserGetOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -1488,14 +1375,14 @@ func (s *Server) handleUserMeRequest(args [0]string, argsEscaped bool, w http.Re
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, UserMeOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, UserMeOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}
@@ -1601,14 +1488,14 @@ func (s *Server) handleUserUpdateRequest(args [1]string, argsEscaped bool, w htt
 		type bitset = [1]uint8
 		var satisfied bitset
 		{
-			sctx, ok, err := s.securityJwtAuth(ctx, UserUpdateOperation, r)
+			sctx, ok, err := s.securityCookieAuth(ctx, UserUpdateOperation, r)
 			if err != nil {
 				err = &ogenerrors.SecurityError{
 					OperationContext: opErrContext,
-					Security:         "JwtAuth",
+					Security:         "CookieAuth",
 					Err:              err,
 				}
-				defer recordError("Security:JwtAuth", err)
+				defer recordError("Security:CookieAuth", err)
 				s.cfg.ErrorHandler(ctx, w, r, err)
 				return
 			}

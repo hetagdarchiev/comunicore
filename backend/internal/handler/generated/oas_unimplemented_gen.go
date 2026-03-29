@@ -31,15 +31,6 @@ func (UnimplementedHandler) AuthLogout(ctx context.Context) error {
 	return ht.ErrNotImplemented
 }
 
-// AuthRefresh implements authRefresh operation.
-//
-// Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
-//
-// POST /api/auth/refresh
-func (UnimplementedHandler) AuthRefresh(ctx context.Context) (r AuthRefreshRes, _ error) {
-	return r, ht.ErrNotImplemented
-}
-
 // MediaGet implements mediaGet operation.
 //
 // Get media file by name.
