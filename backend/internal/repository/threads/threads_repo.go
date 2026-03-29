@@ -63,6 +63,13 @@ func (r *ThreadsRepo) PageByPageID(ctx context.Context, page, limit int) (model.
 			CreatedAt:  row.CreatedAt.Time,
 		})
 	}
+	if len(threads) == 0 {
+		return model.ThreadListRepo{
+			TotalCountEstimated: 0,
+			HaveNext:            false,
+			HavePrev:            false,
+		}, nil
+	}
 	res, err := r.threadListInfo(ctx, threads[len(threads)-1].ID, threads[0].ID)
 	if err != nil {
 		return model.ThreadListRepo{}, err
