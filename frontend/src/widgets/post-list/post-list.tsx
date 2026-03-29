@@ -12,23 +12,24 @@ import {
 
 import { Sorting } from './sorting';
 
-type Post = {
-  post_id: number;
-  description: string;
-  isLiked: boolean;
-  stats: {
-    likes: number;
-  };
+type Thread = {
+  id: number;
+  title: string;
+  content: string;
+  author_id: number;
+  author_name: string;
+  posts_count: number;
+  created_at: string;
 };
 
 type Response = {
-  items: Post[];
+  threads: Thread[];
+  have_next: boolean;
 };
 
 export function PostList() {
   const queryClient = useQueryClient();
   const postCount = 4;
-  const adress = '/res.json';
 
   const {
     data,
@@ -39,20 +40,24 @@ export function PostList() {
     isFetchingNextPage,
   } = useInfiniteQuery<Response>({
     queryKey: ['threads'],
-    initialPageParam: 0,
+    initialPageParam: 1,
     queryFn: async ({ pageParam }) => {
       const res = await fetch(
-        `${adress}?limit=${postCount}&offset=${pageParam}`,
+        `https://comunicore.mooo.com/api/threads?limit=${postCount}&page=${pageParam}`,
+        {
+          headers: {
+            Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+          },
+        },
       );
+
       if (!res.ok) throw new Error('Ошибка сети');
       return res.json();
     },
+
     getNextPageParam: (lastPage, allPages) => {
-      if (lastPage.items.length < postCount) return undefined;
-
-      if (allPages.length >= 5) return undefined;
-
-      return allPages.length * postCount;
+      if (!lastPage.have_next) return undefined;
+      return allPages.length + 1;
     },
   });
 
@@ -82,11 +87,11 @@ export function PostList() {
   );
 
   const { mutate: handleLike } = useMutation({
-    mutationFn: async (postId: number) => {
-      console.log(`Лайк отправлен на сервер для поста: ${postId}`);
+    mutationFn: async (threadId: number) => {
+      console.log(`Лайк отправлен на сервер для треда: ${threadId}`);
     },
 
-    onMutate: async (postId) => {
+    onMutate: async (threadId) => {
       await queryClient.cancelQueries({ queryKey: ['threads'] });
 
       const previousData = queryClient.getQueryData(['threads']);
@@ -98,19 +103,13 @@ export function PostList() {
           ...old,
           pages: old.pages.map((page: Response) => ({
             ...page,
-            items: page.items.map((post) =>
-              post.post_id === postId
+            threads: page.threads.map((thread) =>
+              thread.id === threadId
                 ? {
-                    ...post,
-                    isLiked: !post.isLiked,
-                    stats: {
-                      ...post.stats,
-                      likes: post.isLiked
-                        ? post.stats.likes - 1
-                        : post.stats.likes + 1,
-                    },
+                    ...thread,
+                    // тут можно добавить логику лайков если появится в API
                   }
-                : post,
+                : thread,
             ),
           })),
         };
@@ -127,38 +126,39 @@ export function PostList() {
 
   const threads =
     data?.pages
-      .flatMap((page) => page.items)
+      .flatMap((page) => page.threads)
       .filter(
-        (post, index, self) =>
-          index === self.findIndex((p) => p.post_id === post.post_id),
+        (thread, index, self) =>
+          index === self.findIndex((t) => t.id === thread.id),
       ) || [];
 
   return (
     <div>
       <Sorting />
+
       <div className='custom-scrollbar flex h-screen w-full flex-col gap-4 overflow-y-auto py-4 pr-2 pb-32'>
-        {threads.map((post, index) => {
+        {threads.map((thread, index) => {
           if (threads.length === index + 1) {
             return (
-              <div ref={lastElementRef} key={post.post_id}>
-                <PostCard {...post} onLike={() => handleLike(post.post_id)}>
-                  {post.description}
+              <div ref={lastElementRef} key={thread.id}>
+                <PostCard {...thread} onLike={() => handleLike(thread.id)}>
+                  {thread.content}
                 </PostCard>
               </div>
             );
           }
+
           return (
             <PostCard
-              key={post.post_id}
-              {...post}
-              onLike={() => handleLike(post.post_id)}
+              key={thread.id}
+              {...thread}
+              onLike={() => handleLike(thread.id)}
             >
-              {post.description}
+              {thread.content}
             </PostCard>
           );
         })}
 
-        {/* фикс дергания loader */}
         <div className='h-6 text-center'>
           {isFetchingNextPage && 'Загрузка ещё...'}
         </div>
