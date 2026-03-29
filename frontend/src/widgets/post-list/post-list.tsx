@@ -46,7 +46,7 @@ export function PostList() {
         `https://comunicore.mooo.com/api/threads?limit=${postCount}&page=${pageParam}`,
         {
           headers: {
-            Authorization: `Bearer YOUR_ACCESS_TOKEN`,
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjQzLCJpc3MiOiJmb3J1bSIsImV4cCI6MTc3NDc4MzU0MiwianRpIjoiQVowNVBENjNjWHU1eHNkKzBZcW9jQSJ9.uGWRGSnAfVZasfbkmRzThMjA9IJ6Xx6Rpa2Av9OAS5E`,
           },
         },
       );

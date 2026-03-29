@@ -22,7 +22,7 @@ export function ClockIcon({
         d='M6 3V6L8 7'
         stroke={color}
         strokeLinecap='round'
-        stroke-linejoin='round'
+        strokeLinejoin='round'
       />
     </svg>
   );
