@@ -781,6 +781,44 @@ func (s *MediaGetUnauthorized) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
+// Encode encodes MediaUploadInternalServerError as json.
+func (s *MediaUploadInternalServerError) Encode(e *jx.Encoder) {
+	unwrapped := (*ErrorStringMessage)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes MediaUploadInternalServerError from json.
+func (s *MediaUploadInternalServerError) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode MediaUploadInternalServerError to nil")
+	}
+	var unwrapped ErrorStringMessage
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = MediaUploadInternalServerError(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *MediaUploadInternalServerError) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *MediaUploadInternalServerError) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
 // Encode implements json.Marshaler.
 func (s *MediaUploadResponse) Encode(e *jx.Encoder) {
 	e.ObjStart()
@@ -791,8 +829,8 @@ func (s *MediaUploadResponse) Encode(e *jx.Encoder) {
 // encodeFields encodes fields.
 func (s *MediaUploadResponse) encodeFields(e *jx.Encoder) {
 	{
-		e.FieldStart("fileComment")
-		e.Str(s.FileComment)
+		e.FieldStart("fileName")
+		e.Str(s.FileName)
 	}
 	{
 		e.FieldStart("url")
@@ -801,7 +839,7 @@ func (s *MediaUploadResponse) encodeFields(e *jx.Encoder) {
 }
 
 var jsonFieldsNameOfMediaUploadResponse = [2]string{
-	0: "fileComment",
+	0: "fileName",
 	1: "url",
 }
 
@@ -814,17 +852,17 @@ func (s *MediaUploadResponse) Decode(d *jx.Decoder) error {
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
-		case "fileComment":
+		case "fileName":
 			requiredBitSet[0] |= 1 << 0
 			if err := func() error {
 				v, err := d.Str()
-				s.FileComment = string(v)
+				s.FileName = string(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"fileComment\"")
+				return errors.Wrap(err, "decode field \"fileName\"")
 			}
 		case "url":
 			requiredBitSet[0] |= 1 << 1
@@ -890,6 +928,44 @@ func (s *MediaUploadResponse) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *MediaUploadResponse) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes MediaUploadUnauthorized as json.
+func (s *MediaUploadUnauthorized) Encode(e *jx.Encoder) {
+	unwrapped := (*ErrorStringMessage)(s)
+
+	unwrapped.Encode(e)
+}
+
+// Decode decodes MediaUploadUnauthorized from json.
+func (s *MediaUploadUnauthorized) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode MediaUploadUnauthorized to nil")
+	}
+	var unwrapped ErrorStringMessage
+	if err := func() error {
+		if err := unwrapped.Decode(d); err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = MediaUploadUnauthorized(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *MediaUploadUnauthorized) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *MediaUploadUnauthorized) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

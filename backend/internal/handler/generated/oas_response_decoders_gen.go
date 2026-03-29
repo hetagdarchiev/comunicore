@@ -550,7 +550,7 @@ func decodeMediaUploadResponse(resp *http.Response) (res MediaUploadRes, _ error
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response ErrorStringMessage
+			var response MediaUploadUnauthorized
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -594,7 +594,7 @@ func decodeMediaUploadResponse(resp *http.Response) (res MediaUploadRes, _ error
 			}
 			d := jx.DecodeBytes(buf)
 
-			var response AuthLoginInternalServerErrorApplicationJSON
+			var response MediaUploadInternalServerError
 			if err := func() error {
 				if err := response.Decode(d); err != nil {
 					return err
@@ -610,6 +610,15 @@ func decodeMediaUploadResponse(resp *http.Response) (res MediaUploadRes, _ error
 					Err:         err,
 				}
 				return res, err
+			}
+			// Validate response.
+			if err := func() error {
+				if err := response.Validate(); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return res, errors.Wrap(err, "validate")
 			}
 			return &response, nil
 		default:
