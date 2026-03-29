@@ -91,7 +91,7 @@ func (h *securityHandler) HandleCookieAuth(
 		log.Printf("Failed to parse session id from cookie: %v\n", err)
 		return ctx, apperror.NewAuthenticationError(op, err, "invalid Cookie session id format")
 	}
-	fmt.Printf("op %s, Cookie auth valid, sessionID: %+v\n", op, sessionID)
+	fmt.Printf("op %s, Cookie auth valid\n", op)
 	global.SessionID = sessionUUID
 	userID, err := h.authRepo.GetUserIDBySessionID(ctx, sessionUUID)
 	if err != nil {
