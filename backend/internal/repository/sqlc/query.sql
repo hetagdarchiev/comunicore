@@ -14,15 +14,15 @@ INSERT INTO auth_passwords (user_id, login, password_hash) VALUES ($1, $2, $3);
 -- name: AuthUpdatePassword :exec
 UPDATE auth_passwords SET password_hash = $2 WHERE user_id = $1;
 -- name: AuthCreateSession :exec
-INSERT INTO sessions (jwt_id, user_id) VALUES ($1, $2);
+INSERT INTO sessions (session_id, user_id) VALUES ($1, $2);
 -- name: AuthGetUserAndPasswordHash :one
 SELECT user_id, password_hash FROM auth_passwords WHERE login = $1;
 -- name: AuthDeleteSession :exec
-DELETE FROM sessions WHERE jwt_id = $1;
+DELETE FROM sessions WHERE session_id = $1;
 -- name: AuthDeleteAllUserSessions :exec
 DELETE FROM sessions WHERE user_id = $1;
--- name: AuthUpdateSession :execrows
-UPDATE sessions SET jwt_id = $1 WHERE user_id = $2 AND jwt_id = $3;
+-- name: AuthGetUserIDBySessionID :one
+SELECT user_id FROM sessions WHERE session_id = $1;
 
 -- name: PostCreate :one
 INSERT INTO posts (thread_id, user_id, content) VALUES ($1, $2, $3)

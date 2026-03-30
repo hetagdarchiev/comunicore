@@ -15,8 +15,6 @@ import (
 type SecurityHandler interface {
 	// HandleCookieAuth handles cookieAuth security.
 	HandleCookieAuth(ctx context.Context, operationName OperationName, t CookieAuth) (context.Context, error)
-	// HandleJwtAuth handles jwtAuth security.
-	HandleJwtAuth(ctx context.Context, operationName OperationName, t JwtAuth) (context.Context, error)
 }
 
 func findAuthorization(h http.Header, prefix string) (string, bool) {
@@ -36,8 +34,16 @@ func findAuthorization(h http.Header, prefix string) (string, bool) {
 
 // operationRolesCookieAuth is a private map storing roles per operation.
 var operationRolesCookieAuth = map[string][]string{
-	AuthLogoutOperation:  []string{},
-	AuthRefreshOperation: []string{},
+	AuthLogoutOperation:    []string{},
+	MediaUploadOperation:   []string{},
+	ThreadAddPostOperation: []string{},
+	ThreadCreateOperation:  []string{},
+	ThreadGetOperation:     []string{},
+	ThreadsListOperation:   []string{},
+	UserDeleteOperation:    []string{},
+	UserGetOperation:       []string{},
+	UserMeOperation:        []string{},
+	UserUpdateOperation:    []string{},
 }
 
 // GetRolesForCookieAuth returns the required roles for the given operation.
@@ -61,43 +67,9 @@ func GetRolesForCookieAuth(operation string) []string {
 	return result
 }
 
-// operationRolesJwtAuth is a private map storing roles per operation.
-var operationRolesJwtAuth = map[string][]string{
-	MediaUploadOperation:   []string{},
-	ThreadAddPostOperation: []string{},
-	ThreadCreateOperation:  []string{},
-	ThreadGetOperation:     []string{},
-	ThreadsListOperation:   []string{},
-	UserDeleteOperation:    []string{},
-	UserGetOperation:       []string{},
-	UserMeOperation:        []string{},
-	UserUpdateOperation:    []string{},
-}
-
-// GetRolesForJwtAuth returns the required roles for the given operation.
-//
-// This is useful for authorization scenarios where you need to know which roles
-// are required for an operation.
-//
-// Example:
-//
-//	requiredRoles := GetRolesForJwtAuth(AddPetOperation)
-//
-// Returns nil if the operation has no role requirements or if the operation is unknown.
-func GetRolesForJwtAuth(operation string) []string {
-	roles, ok := operationRolesJwtAuth[operation]
-	if !ok {
-		return nil
-	}
-	// Return a copy to prevent external modification
-	result := make([]string, len(roles))
-	copy(result, roles)
-	return result
-}
-
 func (s *Server) securityCookieAuth(ctx context.Context, operationName OperationName, req *http.Request) (context.Context, bool, error) {
 	var t CookieAuth
-	const parameterName = "refreshToken"
+	const parameterName = "sid"
 	var value string
 	switch cookie, err := req.Cookie(parameterName); {
 	case err == nil: // if NO error
@@ -118,29 +90,10 @@ func (s *Server) securityCookieAuth(ctx context.Context, operationName Operation
 	return rctx, true, err
 }
 
-func (s *Server) securityJwtAuth(ctx context.Context, operationName OperationName, req *http.Request) (context.Context, bool, error) {
-	var t JwtAuth
-	token, ok := findAuthorization(req.Header, "Bearer")
-	if !ok {
-		return ctx, false, nil
-	}
-	t.Token = token
-	t.Roles = operationRolesJwtAuth[operationName]
-	rctx, err := s.sec.HandleJwtAuth(ctx, operationName, t)
-	if errors.Is(err, ogenerrors.ErrSkipServerSecurity) {
-		return nil, false, nil
-	} else if err != nil {
-		return nil, false, err
-	}
-	return rctx, true, err
-}
-
 // SecuritySource is provider of security values (tokens, passwords, etc.).
 type SecuritySource interface {
 	// CookieAuth provides cookieAuth security value.
 	CookieAuth(ctx context.Context, operationName OperationName) (CookieAuth, error)
-	// JwtAuth provides jwtAuth security value.
-	JwtAuth(ctx context.Context, operationName OperationName) (JwtAuth, error)
 }
 
 func (s *Client) securityCookieAuth(ctx context.Context, operationName OperationName, req *http.Request) error {
@@ -149,16 +102,8 @@ func (s *Client) securityCookieAuth(ctx context.Context, operationName Operation
 		return errors.Wrap(err, "security source \"CookieAuth\"")
 	}
 	req.AddCookie(&http.Cookie{
-		Name:  "refreshToken",
+		Name:  "sid",
 		Value: t.APIKey,
 	})
-	return nil
-}
-func (s *Client) securityJwtAuth(ctx context.Context, operationName OperationName, req *http.Request) error {
-	t, err := s.sec.JwtAuth(ctx, operationName)
-	if err != nil {
-		return errors.Wrap(err, "security source \"JwtAuth\"")
-	}
-	req.Header.Set("Authorization", "Bearer "+t.Token)
 	return nil
 }

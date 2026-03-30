@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS auth_passwords (
     password_hash TEXT NOT NULL
 );
 CREATE TABLE IF NOT EXISTS sessions (
-    jwt_id UUID PRIMARY KEY,
+    session_id UUID PRIMARY KEY,
     user_id INTEGER NOT NULL
 );
 CREATE TABLE IF NOT EXISTS threads (

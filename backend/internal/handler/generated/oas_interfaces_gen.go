@@ -5,10 +5,6 @@ type AuthLoginRes interface {
 	authLoginRes()
 }
 
-type AuthRefreshRes interface {
-	authRefreshRes()
-}
-
 type MediaGetRes interface {
 	mediaGetRes()
 }

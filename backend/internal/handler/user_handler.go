@@ -12,17 +12,15 @@ import (
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 
 	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
-	"github.com/hetagdarchiev/comunicore/backend/internal/service/jwt"
 	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
 )
 
 type UserHandler struct {
 	userService *userService.UserService
-	jwtService  *jwt.JwtAuthorizator
 }
 
-func NewUserHandler(userService *userService.UserService, jwtService *jwt.JwtAuthorizator) *UserHandler {
-	return &UserHandler{userService: userService, jwtService: jwtService}
+func NewUserHandler(userService *userService.UserService) *UserHandler {
+	return &UserHandler{userService: userService}
 }
 
 func (u *UserHandler) UserGet(ctx context.Context, params forumApi.UserGetParams) (forumApi.UserGetRes, error) {

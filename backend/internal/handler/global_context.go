@@ -5,6 +5,8 @@ package handler
 import (
 	"context"
 	"net/http"
+
+	"github.com/google/uuid"
 )
 
 // context keys (use unexported types to prevent collisions)
@@ -14,12 +16,9 @@ type GlobalContext struct {
 	Request        *http.Request
 	ResponseWriter http.ResponseWriter
 
-	RefreshToken      string
-	AccessToken       string
-	UserID            int
-	RefreshTokenIsSet bool
-	AccessTokenIsSet  bool
-	UserIDIsSet       bool
+	SessionID   uuid.UUID
+	UserID      int
+	UserIDIsSet bool
 }
 
 // WithGlobalContext is a middleware that stores GlobalContext in the request context.

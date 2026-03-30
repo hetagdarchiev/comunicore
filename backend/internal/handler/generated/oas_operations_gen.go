@@ -8,7 +8,6 @@ type OperationName = string
 const (
 	AuthLoginOperation     OperationName = "AuthLogin"
 	AuthLogoutOperation    OperationName = "AuthLogout"
-	AuthRefreshOperation   OperationName = "AuthRefresh"
 	MediaGetOperation      OperationName = "MediaGet"
 	MediaUploadOperation   OperationName = "MediaUpload"
 	ThreadAddPostOperation OperationName = "ThreadAddPost"
