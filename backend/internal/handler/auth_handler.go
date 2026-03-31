@@ -60,6 +60,8 @@ func setCookie(w http.ResponseWriter, sessionID string, expires time.Time) {
 		Value:    sessionID,
 		Expires:  expires,
 		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 	}
 	http.SetCookie(w, cookie)
 }
@@ -69,6 +71,8 @@ func deleteCookie(w http.ResponseWriter, refreshToken string) {
 		Value:    refreshToken,
 		MaxAge:   -1,
 		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 	}
 	http.SetCookie(w, cookie)
 }
