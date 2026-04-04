@@ -12,10 +12,8 @@ import { Buttons } from './buttons';
 import { NavList } from './navList';
 
 export function Header() {
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const [isMounted, setIsMounted] = useState(false);
-
-  console.log('User data from hook useAuth:', user);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect

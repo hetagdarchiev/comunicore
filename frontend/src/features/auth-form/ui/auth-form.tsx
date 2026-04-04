@@ -17,7 +17,7 @@ import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { type LoginSchema, loginSchema } from '../model/login-schema';
+import { type LoginSchema, validationSchema } from '../model/validation-schema';
 
 export function AuthForm() {
   const router = useRouter();
@@ -29,7 +29,7 @@ export function AuthForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchema>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(validationSchema),
   });
 
   const { mutate, isPending } = useMutation({
