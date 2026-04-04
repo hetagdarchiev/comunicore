@@ -58,6 +58,7 @@ func setCookie(w http.ResponseWriter, sessionID string, expires time.Time) {
 	cookie := &http.Cookie{
 		Name:     "sid",
 		Value:    sessionID,
+		Path:     "/",
 		Expires:  expires,
 		HttpOnly: true,
 		Secure:   true,
