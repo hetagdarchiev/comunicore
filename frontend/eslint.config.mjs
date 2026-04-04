@@ -45,9 +45,6 @@ const eslintConfig = defineConfig([
 
       // Forbids direct import of the global store
       'fsd/no-global-store-imports': 'error',
-
-      // Enforces import order based on FSD layers
-      'fsd/ordered-imports': 'warn',
     },
   },
   {
@@ -119,6 +116,13 @@ const eslintConfig = defineConfig([
     files: ['*.{js,mjs,ts}'],
     rules: {
       'import/no-default-export': 'off',
+    },
+  },
+  {
+    files: ['src/**/*.gen.{js,mjs,ts}'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/ban-ts-comment': 'warn',
     },
   },
 ]);

@@ -3,17 +3,18 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 
-import { userCreateMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
-import type {
-  UserCreateError,
-  UserCreateRequest,
-} from '@/shared/api/generated/types.gen';
+import {
+  authLoginMutation,
+  userCreateMutation,
+} from '@/shared/api/generated/@tanstack/react-query.gen';
+import type { UserCreateRequest } from '@/shared/api/generated/types.gen';
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
 import userIcon from '@/shared/assets/icons/form/user.svg';
 import { getErrorMessage } from '@/shared/lib/helpers';
 import { Button } from '@/shared/ui/Button';
 import { Checkbox } from '@/shared/ui/Checkbox';
+import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
@@ -31,8 +32,13 @@ export function RegistrationForm() {
     onSuccess: () => {
       reset();
     },
-    onError: (error: UserCreateError) => {
-      alert(getErrorMessage(error));
+  });
+
+  const loginUser = useMutation({
+    ...authLoginMutation(),
+    onSuccess: (data) => {
+      localStorage.setItem('accessToken', data.accessToken);
+      router.back();
     },
   });
 
@@ -40,20 +46,29 @@ export function RegistrationForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<TRegistrationForm>({
     resolver: zodResolver(validationSchema),
-    mode: 'onSubmit',
+    mode: 'onChange',
   });
 
   const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
-    const body: UserCreateRequest = {
+    const newUser: UserCreateRequest = {
       name: data.login,
       email: data.email,
       password: data.password,
     };
-    await registration.mutateAsync({ body });
-    router.push(`/verification?email=${encodeURIComponent(data.email)}`);
+
+    try {
+      await registration.mutateAsync({ body: newUser });
+
+      await loginUser.mutateAsync({
+        body: { login: data.email, password: data.password },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    // router.push(`/verification?email=${encodeURIComponent(data.email)}`);
   };
 
   return (
@@ -87,14 +102,12 @@ export function RegistrationForm() {
         {...register('policy')}
       />
 
-      <Button type='submit' disabled={registration.isPending}>
+      <Button type='submit' disabled={registration.isPending || !isValid}>
         {registration.isPending ? 'Загрузка...' : 'Зарегистрироваться'}
       </Button>
 
       {registration.isError && (
-        <p className='text-center text-sm text-red-500'>
-          {getErrorMessage(registration.error)}
-        </p>
+        <ErrorMessage error={getErrorMessage(registration.error)} />
       )}
     </form>
   );

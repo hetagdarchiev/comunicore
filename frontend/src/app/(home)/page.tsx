@@ -1,10 +1,13 @@
 'use client';
 
+import Link from 'next/link';
+
 import { PostCard } from '@/entities/post';
 
 export default function Home() {
   return (
-    <main className=''>
+    <main>
+      <Link href={'/editor'}>Text editor</Link>
       <PostCard
         author_name={'James'}
         avatarUrl={'images/123.jpg'}

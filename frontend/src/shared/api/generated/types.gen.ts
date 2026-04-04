@@ -83,6 +83,16 @@ export type ThreadCreatePostRequest = {
   content: string;
 };
 
+export type MediaUploadRequest = {
+  fileComment: string;
+  content: Blob | File;
+};
+
+export type MediaUploadResponse = {
+  fileComment: string;
+  url: string;
+};
+
 /**
  * Error with just string message, without code or other data. For simple errors,
  * when we don't need to send any additional data, just a message for log.
@@ -468,3 +478,75 @@ export type ThreadAddPostResponses = {
 
 export type ThreadAddPostResponse =
   ThreadAddPostResponses[keyof ThreadAddPostResponses];
+
+export type MediaUploadData = {
+  body: MediaUploadRequest;
+  path?: never;
+  query?: never;
+  url: '/api/media';
+};
+
+export type MediaUploadErrors = {
+  /**
+   * Client is not authenticated
+   */
+  401: ErrorStringMessage;
+  /**
+   * Internal Server Error
+   */
+  500: ErrorStringMessage;
+};
+
+export type MediaUploadError = MediaUploadErrors[keyof MediaUploadErrors];
+
+export type MediaUploadResponses = {
+  /**
+   * Uploaded file URL
+   */
+  200: MediaUploadResponse;
+};
+
+export type MediaUploadResponse2 =
+  MediaUploadResponses[keyof MediaUploadResponses];
+
+export type MediaGetData = {
+  body?: never;
+  path: {
+    /**
+     * File name
+     */
+    fileName: string;
+  };
+  query?: never;
+  url: '/storage/media/{fileName}';
+};
+
+export type MediaGetErrors = {
+  /**
+   * Bad Request
+   */
+  400: ErrorStringMessage;
+  /**
+   * Client is not authenticated
+   */
+  401: ErrorStringMessage;
+  /**
+   * File not found
+   */
+  404: ErrorStringMessage;
+  /**
+   * Error in request with string description (for log, not for user).
+   */
+  500: string;
+};
+
+export type MediaGetError = MediaGetErrors[keyof MediaGetErrors];
+
+export type MediaGetResponses = {
+  /**
+   * OK
+   */
+  200: Blob | File;
+};
+
+export type MediaGetResponse = MediaGetResponses[keyof MediaGetResponses];

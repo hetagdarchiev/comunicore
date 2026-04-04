@@ -2,9 +2,11 @@ import { forwardRef, InputHTMLAttributes } from 'react';
 import { FieldError } from 'react-hook-form';
 import Image from 'next/image';
 
+import { ErrorMessage } from '../ErrorMessage';
+
 interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon: string;
-  error?: FieldError | undefined;
+  error?: FieldError;
 }
 
 export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
@@ -24,11 +26,7 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
           {...rest}
         />
       </label>
-      {error && (
-        <span className='animate-in fade-in slide-in-from-top-1 text-xs text-red-500 duration-200'>
-          {error.message}
-        </span>
-      )}
+      {error?.message && <ErrorMessage error={error.message} />}
     </div>
   );
 });

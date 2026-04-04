@@ -7,7 +7,7 @@ export const getErrorMessage = (error: UserCreateError): string => {
   }
 
   if (error && typeof error === 'object') {
-    return (error as any).detail || 'Ошибка валидации';
+    return error.code || 'Ошибка валидации';
   }
 
   return 'Неизвестная ошибка';
