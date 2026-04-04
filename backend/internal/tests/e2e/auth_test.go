@@ -63,7 +63,7 @@ func TestAuthLoginFailure(t *testing.T) {
 	}
 }
 func testAuthLoginOk(t *testing.T, baseURL string, user ForumUser) *http.Cookie {
-	var cookie *http.Cookie
+	var httpCookie *http.Cookie
 	t.Run("Test AuthLogin OK", func(t *testing.T) {
 		exp := expectCreate(t, baseURL)
 
@@ -75,16 +75,17 @@ func testAuthLoginOk(t *testing.T, baseURL string, user ForumUser) *http.Cookie 
 			Expect().
 			Status(http.StatusOK)
 
-		res.Cookie(sessionCookieName).Value().NotEmpty()
-		cookie = res.Cookie(sessionCookieName).Raw()
-		require.True(t, cookie.HttpOnly)
-		require.Empty(t, cookie.Path)
-		require.NotEqual(t, time.Time{}, cookie.Expires) // Expires should be set
+		cookie := res.Cookie(sessionCookieName)
+		cookie.Path().IsEqual("/")
+
+		httpCookie = res.Cookie(sessionCookieName).Raw()
+		require.True(t, httpCookie.HttpOnly)
+		require.NotEqual(t, time.Time{}, httpCookie.Expires) // Expires should be set
 
 		res.JSON().Object().Keys().ContainsOnly("id", "name", "email")
 	})
 
-	return cookie
+	return httpCookie
 }
 func testAuthLogoutOk(t *testing.T, baseURL string, sessionCookie *http.Cookie) {
 	t.Run("Test Auth Logout OK", func(t *testing.T) {
