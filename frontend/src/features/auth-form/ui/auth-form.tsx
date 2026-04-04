@@ -5,19 +5,23 @@ import { useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-import { authLoginMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
+import { ErrorStringMessage } from '@/shared/api/generated';
+import {
+  authLoginMutation,
+  userMeOptions,
+} from '@/shared/api/generated/@tanstack/react-query.gen';
 import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
 import { Button } from '@/shared/ui/Button';
 import { Input } from '@/shared/ui/Input';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { type LoginSchema, loginSchema } from '../model/login-schema';
-import { ErrorStringMessage, JwtToken } from '@/shared/api/generated';
 
 export function AuthForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [serverError, setServerError] = useState<string | null>(null);
 
   const {
@@ -30,10 +34,9 @@ export function AuthForm() {
 
   const { mutate, isPending } = useMutation({
     ...authLoginMutation(),
-    onSuccess: (data: JwtToken) => {
-      localStorage.setItem('accessToken', data.accessToken);
+    onSuccess: (userData) => {
+      queryClient.setQueryData(userMeOptions().queryKey, userData);
       router.push('/');
-      router.refresh();
     },
     onError: (error: ErrorStringMessage) => {
       setServerError(error.message || 'Ошибка авторизации');

@@ -12,8 +12,10 @@ import { Buttons } from './buttons';
 import { NavList } from './navList';
 
 export function Header() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const [isMounted, setIsMounted] = useState(false);
+
+  console.log('User data from hook useAuth:', user);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -24,7 +26,7 @@ export function Header() {
     if (!isMounted) return <div className='w-40' />; // Заглушка для гидратации
 
     if (isLoading) {
-      return <span className='text-sm text-gray-400'>Загрузка профиля...</span>;
+      return <span className='text-sm text-gray-400'>Загрузка...</span>;
     }
 
     if (isAuthenticated) {

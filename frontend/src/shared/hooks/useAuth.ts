@@ -2,44 +2,49 @@
 
 import { useRouter } from 'next/navigation';
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { userMeOptions } from '../api/generated/@tanstack/react-query.gen';
+import {
+  authLogoutMutation,
+  userMeOptions,
+} from '../api/generated/@tanstack/react-query.gen';
 
 export function useAuth() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-
-  // Запрос данных профиля
   const {
     data: user,
     isLoading,
     isError,
-    error,
   } = useQuery({
     ...userMeOptions(),
-    enabled: !!token,
     retry: false,
-    staleTime: 1000 * 60 * 5, // 5 минут не переспрашивать сервер
+    staleTime: 1000 * 60 * 5,
   });
 
-  // Выход из профиля
+  const { mutate: mutateLogout } = useMutation({
+    ...authLogoutMutation(),
+    onSuccess: () => {
+      queryClient.clear();
+      router.push('/login');
+      router.refresh();
+    },
+    onError: (error) => {
+      console.error('Ошибка при выходе:', error);
+      queryClient.clear();
+      router.push('/login');
+    },
+  });
+
   const logout = () => {
-    localStorage.removeItem('accessToken');
-    queryClient.clear();
-    router.push('/login');
-    router.refresh();
+    mutateLogout({});
   };
 
   return {
     user,
-    isAuthenticated: !!user,
-    isLoading: !!token && isLoading,
-    isError,
-    error,
+    isAuthenticated: !!user && !isError,
+    isLoading,
     logout,
   };
 }
