@@ -1,4 +1,6 @@
-import { Thread } from '../model/types/thread.types';import { PostCard } from '@/entities/post';
+import { PostCard } from '@/entities/post';
+
+import { Thread } from '../model/types/thread.types';
 
 type Props = {
   threads: Thread[];
