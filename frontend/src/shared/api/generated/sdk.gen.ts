@@ -13,9 +13,6 @@ import type {
   AuthLoginResponses,
   AuthLogoutData,
   AuthLogoutResponses,
-  AuthRefreshData,
-  AuthRefreshErrors,
-  AuthRefreshResponses,
   MediaGetData,
   MediaGetErrors,
   MediaGetResponses,
@@ -92,7 +89,13 @@ export const userMe = <ThrowOnError extends boolean = false>(
   options?: Options<UserMeData, ThrowOnError>,
 ) =>
   (options?.client ?? client).get<UserMeResponses, UserMeErrors, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/user/me',
     ...options,
   });
@@ -105,7 +108,13 @@ export const userDelete = <ThrowOnError extends boolean = false>(
 ) =>
   (options.client ?? client).delete<UserDeleteResponses, unknown, ThrowOnError>(
     {
-      security: [{ scheme: 'bearer', type: 'http' }],
+      security: [
+        {
+          in: 'cookie',
+          name: 'sid',
+          type: 'apiKey',
+        },
+      ],
       url: '/api/user/{userId}',
       ...options,
     },
@@ -119,7 +128,13 @@ export const userGet = <ThrowOnError extends boolean = false>(
 ) =>
   (options.client ?? client).get<UserGetResponses, UserGetErrors, ThrowOnError>(
     {
-      security: [{ scheme: 'bearer', type: 'http' }],
+      security: [
+        {
+          in: 'cookie',
+          name: 'sid',
+          type: 'apiKey',
+        },
+      ],
       url: '/api/user/{userId}',
       ...options,
     },
@@ -132,7 +147,13 @@ export const userUpdate = <ThrowOnError extends boolean = false>(
   options: Options<UserUpdateData, ThrowOnError>,
 ) =>
   (options.client ?? client).post<UserUpdateResponses, unknown, ThrowOnError>({
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/user/{userId}',
     ...options,
     headers: {
@@ -164,31 +185,6 @@ export const authLogin = <ThrowOnError extends boolean = false>(
   });
 
 /**
- * Refresh JWT token
- *
- * Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
- *
- */
-export const authRefresh = <ThrowOnError extends boolean = false>(
-  options?: Options<AuthRefreshData, ThrowOnError>,
-) =>
-  (options?.client ?? client).post<
-    AuthRefreshResponses,
-    AuthRefreshErrors,
-    ThrowOnError
-  >({
-    security: [
-      {
-        in: 'cookie',
-        name: 'refreshToken',
-        type: 'apiKey',
-      },
-    ],
-    url: '/api/auth/refresh',
-    ...options,
-  });
-
-/**
  * User logout
  */
 export const authLogout = <ThrowOnError extends boolean = false>(
@@ -198,7 +194,7 @@ export const authLogout = <ThrowOnError extends boolean = false>(
     security: [
       {
         in: 'cookie',
-        name: 'refreshToken',
+        name: 'sid',
         type: 'apiKey',
       },
     ],
@@ -239,7 +235,13 @@ export const threadsList = <ThrowOnError extends boolean = false>(
     ThreadsListErrors,
     ThrowOnError
   >({
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/threads',
     ...options,
   });
@@ -255,7 +257,13 @@ export const threadCreate = <ThrowOnError extends boolean = false>(
     ThreadCreateErrors,
     ThrowOnError
   >({
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/threads',
     ...options,
     headers: {
@@ -275,7 +283,13 @@ export const threadGet = <ThrowOnError extends boolean = false>(
     ThreadGetErrors,
     ThrowOnError
   >({
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/threads/{threadId}',
     ...options,
   });
@@ -291,7 +305,13 @@ export const threadAddPost = <ThrowOnError extends boolean = false>(
     ThreadAddPostErrors,
     ThrowOnError
   >({
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/threads/{threadId}/posts',
     ...options,
     headers: {
@@ -312,7 +332,13 @@ export const mediaUpload = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     ...formDataBodySerializer,
-    security: [{ scheme: 'bearer', type: 'http' }],
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
     url: '/api/media',
     ...options,
     headers: {

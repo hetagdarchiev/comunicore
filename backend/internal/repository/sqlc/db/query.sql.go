@@ -27,16 +27,16 @@ func (q *Queries) AuthCreate(ctx context.Context, arg AuthCreateParams) error {
 }
 
 const authCreateSession = `-- name: AuthCreateSession :exec
-INSERT INTO sessions (jwt_id, user_id) VALUES ($1, $2)
+INSERT INTO sessions (session_id, user_id) VALUES ($1, $2)
 `
 
 type AuthCreateSessionParams struct {
-	JwtID  pgtype.UUID
-	UserID int32
+	SessionID pgtype.UUID
+	UserID    int32
 }
 
 func (q *Queries) AuthCreateSession(ctx context.Context, arg AuthCreateSessionParams) error {
-	_, err := q.db.Exec(ctx, authCreateSession, arg.JwtID, arg.UserID)
+	_, err := q.db.Exec(ctx, authCreateSession, arg.SessionID, arg.UserID)
 	return err
 }
 
@@ -50,11 +50,11 @@ func (q *Queries) AuthDeleteAllUserSessions(ctx context.Context, userID int32) e
 }
 
 const authDeleteSession = `-- name: AuthDeleteSession :exec
-DELETE FROM sessions WHERE jwt_id = $1
+DELETE FROM sessions WHERE session_id = $1
 `
 
-func (q *Queries) AuthDeleteSession(ctx context.Context, jwtID pgtype.UUID) error {
-	_, err := q.db.Exec(ctx, authDeleteSession, jwtID)
+func (q *Queries) AuthDeleteSession(ctx context.Context, sessionID pgtype.UUID) error {
+	_, err := q.db.Exec(ctx, authDeleteSession, sessionID)
 	return err
 }
 
@@ -74,6 +74,17 @@ func (q *Queries) AuthGetUserAndPasswordHash(ctx context.Context, login string) 
 	return i, err
 }
 
+const authGetUserIDBySessionID = `-- name: AuthGetUserIDBySessionID :one
+SELECT user_id FROM sessions WHERE session_id = $1
+`
+
+func (q *Queries) AuthGetUserIDBySessionID(ctx context.Context, sessionID pgtype.UUID) (int32, error) {
+	row := q.db.QueryRow(ctx, authGetUserIDBySessionID, sessionID)
+	var user_id int32
+	err := row.Scan(&user_id)
+	return user_id, err
+}
+
 const authUpdatePassword = `-- name: AuthUpdatePassword :exec
 UPDATE auth_passwords SET password_hash = $2 WHERE user_id = $1
 `
@@ -86,24 +97,6 @@ type AuthUpdatePasswordParams struct {
 func (q *Queries) AuthUpdatePassword(ctx context.Context, arg AuthUpdatePasswordParams) error {
 	_, err := q.db.Exec(ctx, authUpdatePassword, arg.UserID, arg.PasswordHash)
 	return err
-}
-
-const authUpdateSession = `-- name: AuthUpdateSession :execrows
-UPDATE sessions SET jwt_id = $1 WHERE user_id = $2 AND jwt_id = $3
-`
-
-type AuthUpdateSessionParams struct {
-	JwtID   pgtype.UUID
-	UserID  int32
-	JwtID_2 pgtype.UUID
-}
-
-func (q *Queries) AuthUpdateSession(ctx context.Context, arg AuthUpdateSessionParams) (int64, error) {
-	result, err := q.db.Exec(ctx, authUpdateSession, arg.JwtID, arg.UserID, arg.JwtID_2)
-	if err != nil {
-		return 0, err
-	}
-	return result.RowsAffected(), nil
 }
 
 const postCreate = `-- name: PostCreate :one

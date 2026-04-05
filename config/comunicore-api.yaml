@@ -41,8 +41,6 @@ paths:
     get:
       operationId: userMe
       summary: Get current user information
-      security:
-        - jwtAuth: []
       responses:
         '200':
           description: OK
@@ -137,7 +135,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/JwtToken'
+                $ref: '#/components/schemas/UserCreateResponse'
         '400':
           description: Bad request error
           content:
@@ -154,35 +152,10 @@ paths:
                   - $ref: '#/components/schemas/ErrorStringMessage'
         '500':
           $ref: '#/components/responses/ErrorStringDescription'
-  /api/auth/refresh:
-    post:
-      operationId: authRefresh
-      summary: Refresh JWT token
-      description: |
-        Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
-      security:
-        - cookieAuth: []
-      responses:
-        '200':
-          description: JWT token for authentication
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/JwtToken'
-        "401":
-          description: Client is not authenticated
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorStringMessage'
-        "500":
-          $ref: '#/components/responses/ErrorStringDescription'
   /api/auth/logout:
     post:
       operationId: authLogout
       summary: User logout
-      security:
-        - cookieAuth: []
       responses:
         '204':
           description: No Content
@@ -397,14 +370,10 @@ paths:
           $ref: '#/components/responses/ErrorStringDescription'
 components:
   securitySchemes:
-    jwtAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    cookieAuth: # for JWT refresh token
+    cookieAuth:
       type: apiKey
       in: cookie
-      name: refreshToken
+      name: sid
   responses:
     ErrorStringDescription:
       description: Error in request with string description (for log, not for user).
@@ -413,19 +382,6 @@ components:
           schema:
             type: string
   schemas:
-    JwtToken:
-      type: object
-      properties:
-        refreshToken:
-          type: string
-        accessToken:
-          type: string
-      required:
-        - refreshToken
-        - accessToken
-      example:
-        refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlzcyI6ImZvcnVtIiwiZXhwIjoxNzcyNjU5MDgxLCJqdGkiOiJBWnk2bTRoamUvSytkRkVmS25QTEtnIn0.UmYW5WZIZ4CaqmsycXXzhjmOqY2G-IM3DncogTA7uno"
-        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlzcyI6ImZvcnVtIiwiZXhwIjoxNzcyNjU5MDgxLCJqdGkiOiJBWnk2bTRoamUvSytkRkVmS25QTEtnIn0.UmYW5WZIZ4CaqmsycXXzhjmOqY2G-IM3DncogTA7uno"
     UserCreateRequest:
       type: object
       properties:
@@ -690,24 +646,21 @@ components:
     MediaUploadRequest:
       type: object
       properties:
-        fileComment:
-          type: string
         content:
           type: string
           format: binary
-      required: [ fileComment, content ]
+      required: [ content ]
       example:
-        fileComment: "КДПВ с котиком"
         content: (binary file content)
     MediaUploadResponse:
       type: object
       properties:
-        fileComment:
+        fileName:
           type: string
         url:
           type: string
           format: uri
-      required: [url, fileComment]
+      required: [url, fileName]
     # errors
     ErrorStringMessage:
       description: |
@@ -744,4 +697,4 @@ components:
         - code
         - params
 security:
-  - jwtAuth: []
+  - cookieAuth: []

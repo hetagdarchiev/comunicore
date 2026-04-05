@@ -4,11 +4,6 @@ export type ClientOptions = {
   baseUrl: 'https://comunicore.mooo.com/' | (string & {});
 };
 
-export type JwtToken = {
-  refreshToken: string;
-  accessToken: string;
-};
-
 export type UserCreateRequest = {
   name: string;
   email: string;
@@ -282,40 +277,10 @@ export type AuthLoginResponses = {
   /**
    * JWT token for authentication
    */
-  200: JwtToken;
+  200: UserCreateResponse;
 };
 
 export type AuthLoginResponse = AuthLoginResponses[keyof AuthLoginResponses];
-
-export type AuthRefreshData = {
-  body?: never;
-  path?: never;
-  query?: never;
-  url: '/api/auth/refresh';
-};
-
-export type AuthRefreshErrors = {
-  /**
-   * Client is not authenticated
-   */
-  401: ErrorStringMessage;
-  /**
-   * Error in request with string description (for log, not for user).
-   */
-  500: string;
-};
-
-export type AuthRefreshError = AuthRefreshErrors[keyof AuthRefreshErrors];
-
-export type AuthRefreshResponses = {
-  /**
-   * JWT token for authentication
-   */
-  200: JwtToken;
-};
-
-export type AuthRefreshResponse =
-  AuthRefreshResponses[keyof AuthRefreshResponses];
 
 export type AuthLogoutData = {
   body?: never;

@@ -153,6 +153,22 @@ func (s *MediaGetUnauthorized) Validate() error {
 	return nil
 }
 
+func (s *MediaUploadInternalServerError) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *MediaUploadUnauthorized) Validate() error {
+	alias := (*ErrorStringMessage)(s)
+	if err := alias.Validate(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func (s *ThreadListResponse) Validate() error {
 	if s == nil {
 		return validate.ErrNilPointer

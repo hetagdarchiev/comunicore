@@ -33,12 +33,6 @@ type Invoker interface {
 	//
 	// POST /api/auth/logout
 	AuthLogout(ctx context.Context) error
-	// AuthRefresh invokes authRefresh operation.
-	//
-	// Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
-	//
-	// POST /api/auth/refresh
-	AuthRefresh(ctx context.Context) (AuthRefreshRes, error)
 	// MediaGet invokes mediaGet operation.
 	//
 	// Get media file by name.
@@ -296,76 +290,6 @@ func (c *Client) sendAuthLogout(ctx context.Context) (res *AuthLogoutNoContent, 
 	return result, nil
 }
 
-// AuthRefresh invokes authRefresh operation.
-//
-// Update access and refresh tokens, send to user. The refresh token also stored in a cookie.
-//
-// POST /api/auth/refresh
-func (c *Client) AuthRefresh(ctx context.Context) (AuthRefreshRes, error) {
-	res, err := c.sendAuthRefresh(ctx)
-	return res, err
-}
-
-func (c *Client) sendAuthRefresh(ctx context.Context) (res AuthRefreshRes, err error) {
-
-	u := uri.Clone(c.requestURL(ctx))
-	var pathParts [1]string
-	pathParts[0] = "/api/auth/refresh"
-	uri.AddPathParts(u, pathParts[:]...)
-
-	r, err := ht.NewRequest(ctx, "POST", u)
-	if err != nil {
-		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-
-			switch err := c.securityCookieAuth(ctx, AuthRefreshOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"CookieAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
-	}
-
-	resp, err := c.cfg.Client.Do(r)
-	if err != nil {
-		return res, errors.Wrap(err, "do request")
-	}
-	body := resp.Body
-	defer body.Close()
-
-	result, err := decodeAuthRefreshResponse(resp)
-	if err != nil {
-		return res, errors.Wrap(err, "decode response")
-	}
-
-	return result, nil
-}
-
 // MediaGet invokes mediaGet operation.
 //
 // Get media file by name.
@@ -404,39 +328,6 @@ func (c *Client) sendMediaGet(ctx context.Context, params MediaGetParams) (res M
 	r, err := ht.NewRequest(ctx, "GET", u)
 	if err != nil {
 		return res, errors.Wrap(err, "create request")
-	}
-
-	{
-		type bitset = [1]uint8
-		var satisfied bitset
-		{
-
-			switch err := c.securityJwtAuth(ctx, MediaGetOperation, r); {
-			case err == nil: // if NO error
-				satisfied[0] |= 1 << 0
-			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
-				// Skip this security.
-			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
-			}
-		}
-
-		if ok := func() bool {
-		nextRequirement:
-			for _, requirement := range []bitset{
-				{0b00000001},
-			} {
-				for i, mask := range requirement {
-					if satisfied[i]&mask != mask {
-						continue nextRequirement
-					}
-				}
-				return true
-			}
-			return false
-		}(); !ok {
-			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
-		}
 	}
 
 	resp, err := c.cfg.Client.Do(r)
@@ -484,13 +375,13 @@ func (c *Client) sendMediaUpload(ctx context.Context, request *MediaUploadReques
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, MediaUploadOperation, r); {
+			switch err := c.securityCookieAuth(ctx, MediaUploadOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -576,13 +467,13 @@ func (c *Client) sendThreadAddPost(ctx context.Context, request *ThreadCreatePos
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, ThreadAddPostOperation, r); {
+			switch err := c.securityCookieAuth(ctx, ThreadAddPostOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -649,13 +540,13 @@ func (c *Client) sendThreadCreate(ctx context.Context, request *ThreadCreateRequ
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, ThreadCreateOperation, r); {
+			switch err := c.securityCookieAuth(ctx, ThreadCreateOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -737,13 +628,13 @@ func (c *Client) sendThreadGet(ctx context.Context, params ThreadGetParams) (res
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, ThreadGetOperation, r); {
+			switch err := c.securityCookieAuth(ctx, ThreadGetOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -916,13 +807,13 @@ func (c *Client) sendThreadsList(ctx context.Context, params ThreadsListParams) 
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, ThreadsListOperation, r); {
+			switch err := c.securityCookieAuth(ctx, ThreadsListOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -1044,13 +935,13 @@ func (c *Client) sendUserDelete(ctx context.Context, params UserDeleteParams) (r
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, UserDeleteOperation, r); {
+			switch err := c.securityCookieAuth(ctx, UserDeleteOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -1132,13 +1023,13 @@ func (c *Client) sendUserGet(ctx context.Context, params UserGetParams) (res Use
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, UserGetOperation, r); {
+			switch err := c.securityCookieAuth(ctx, UserGetOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -1202,13 +1093,13 @@ func (c *Client) sendUserMe(ctx context.Context) (res UserMeRes, err error) {
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, UserMeOperation, r); {
+			switch err := c.securityCookieAuth(ctx, UserMeOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 
@@ -1293,13 +1184,13 @@ func (c *Client) sendUserUpdate(ctx context.Context, request *UserUpdateRequest,
 		var satisfied bitset
 		{
 
-			switch err := c.securityJwtAuth(ctx, UserUpdateOperation, r); {
+			switch err := c.securityCookieAuth(ctx, UserUpdateOperation, r); {
 			case err == nil: // if NO error
 				satisfied[0] |= 1 << 0
 			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
 				// Skip this security.
 			default:
-				return res, errors.Wrap(err, "security \"JwtAuth\"")
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
 			}
 		}
 

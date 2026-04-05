@@ -12,7 +12,7 @@ import (
 
 func encodeAuthLoginResponse(response AuthLoginRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
-	case *JwtToken:
+	case *UserCreateResponse:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(200)
 
@@ -69,49 +69,6 @@ func encodeAuthLogoutResponse(response *AuthLogoutNoContent, w http.ResponseWrit
 	w.WriteHeader(204)
 
 	return nil
-}
-
-func encodeAuthRefreshResponse(response AuthRefreshRes, w http.ResponseWriter) error {
-	switch response := response.(type) {
-	case *JwtToken:
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(200)
-
-		e := new(jx.Encoder)
-		response.Encode(e)
-		if _, err := e.WriteTo(w); err != nil {
-			return errors.Wrap(err, "write")
-		}
-
-		return nil
-
-	case *ErrorStringMessage:
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(401)
-
-		e := new(jx.Encoder)
-		response.Encode(e)
-		if _, err := e.WriteTo(w); err != nil {
-			return errors.Wrap(err, "write")
-		}
-
-		return nil
-
-	case *AuthLoginInternalServerErrorApplicationJSON:
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
-		w.WriteHeader(500)
-
-		e := new(jx.Encoder)
-		response.Encode(e)
-		if _, err := e.WriteTo(w); err != nil {
-			return errors.Wrap(err, "write")
-		}
-
-		return nil
-
-	default:
-		return errors.Errorf("unexpected response type: %T", response)
-	}
 }
 
 func encodeMediaGetResponse(response MediaGetRes, w http.ResponseWriter) error {
@@ -197,7 +154,7 @@ func encodeMediaUploadResponse(response MediaUploadRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *ErrorStringMessage:
+	case *MediaUploadUnauthorized:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(401)
 
@@ -209,7 +166,7 @@ func encodeMediaUploadResponse(response MediaUploadRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *MediaUploadInternalServerError:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 

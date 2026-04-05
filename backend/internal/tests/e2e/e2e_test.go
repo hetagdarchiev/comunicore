@@ -5,7 +5,6 @@ package e2e
 
 import (
 	"context"
-	"log"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -14,8 +13,7 @@ import (
 type globalAppConfig struct {
 	ConfigPath string
 
-	URL       string
-	JwtSecret string
+	URL string
 
 	DbHost     string
 	DbPort     int
@@ -30,8 +28,6 @@ var (
 		// server params to override config file values
 		ConfigPath: "../../../config/server-config.toml",
 
-		JwtSecret: "superSecret",
-
 		DbHost:     "",
 		DbPort:     0,
 		DbName:     "test",
@@ -42,13 +38,12 @@ var (
 )
 
 const (
-	userCreatePath  = "/api/user"
-	userMePath      = "/api/user/me"
-	userGetPath     = "/api/user/{id}"
-	userUpdatePath  = "/api/user/{id}"
-	authLoginPath   = "/api/auth/login"
-	authLogoutPath  = "/api/auth/logout"
-	authRefreshPath = "/api/auth/refresh"
+	userCreatePath = "/api/user"
+	userMePath     = "/api/user/me"
+	userGetPath    = "/api/user/{id}"
+	userUpdatePath = "/api/user/{id}"
+	authLoginPath  = "/api/auth/login"
+	authLogoutPath = "/api/auth/logout"
 )
 
 func TestMain(m *testing.M) { // for global setup and teardown
@@ -70,28 +65,24 @@ func TestUserAndAuth(t *testing.T) {
 	t.Logf("Created user: %+v", user)
 	testUserCreateAgainFailure(t, globalConfig.URL, user)
 	// userLogin
-	_, refreshTokenCookie1 := testAuthLoginOk(t, globalConfig.URL, user)
+	sessionCookie1 := testAuthLoginOk(t, globalConfig.URL, user)
 	// testAuthLoginFailure(t, globalConfig.URL, user)
-	// userRefresh
-	jwtTokens, refreshTokenCookie2 := testAuthRefreshOk(t, globalConfig.URL, refreshTokenCookie1)
-	log.Printf("refresh tokens 1 and 2 %p %p\n", refreshTokenCookie1, refreshTokenCookie2)
-	require.NotEqual(t, refreshTokenCookie1.Value, refreshTokenCookie2.Value)
 	// userMe
-	userMe := testUserMeOk(t, globalConfig.URL, jwtTokens.AccessToken)
+	userMe := testUserMeOk(t, globalConfig.URL, sessionCookie1)
 	require.Equal(t, user.ID, userMe.ID)
 	require.Equal(t, user.Name, userMe.Name)
 	require.Equal(t, user.Email, userMe.Email)
 	// userGet
-	getByIdUser := testUserGetOk(t, globalConfig.URL, jwtTokens.AccessToken, user.ID)
+	getByIdUser := testUserGetOk(t, globalConfig.URL, sessionCookie1, user.ID)
 	require.Equal(t, user.ID, getByIdUser.ID)
 	require.Equal(t, user.Name, getByIdUser.Name)
 	require.Equal(t, user.Email, getByIdUser.Email)
 	// userUpdate
-	updayedUser := testUserUpdateOk(t, globalConfig.URL, jwtTokens.AccessToken, user.ID)
+	updayedUser := testUserUpdateOk(t, globalConfig.URL, sessionCookie1, user.ID)
 	require.Equal(t, user.ID, updayedUser.ID)
 	require.NotEqual(t, user.Name, updayedUser.Name)
 	require.NotEqual(t, user.Email, updayedUser.Email)
 	// userLogout
-	testAuthLogoutOk(t, globalConfig.URL, refreshTokenCookie2)
+	testAuthLogoutOk(t, globalConfig.URL, sessionCookie1)
 	// TODO: check user logged out
 }

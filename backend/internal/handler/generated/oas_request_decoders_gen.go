@@ -11,10 +11,8 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/ogenerrors"
-	"github.com/ogen-go/ogen/uri"
 	"github.com/ogen-go/ogen/validate"
 )
 
@@ -140,34 +138,6 @@ func (s *Server) decodeMediaUploadRequest(r *http.Request) (
 		_ = form
 
 		var request MediaUploadRequestMultipart
-		q := uri.NewQueryDecoder(form)
-		{
-			cfg := uri.QueryParameterDecodingConfig{
-				Name:    "fileComment",
-				Style:   uri.QueryStyleForm,
-				Explode: true,
-			}
-			if err := q.HasParam(cfg); err == nil {
-				if err := q.DecodeParam(cfg, func(d uri.Decoder) error {
-					val, err := d.DecodeValue()
-					if err != nil {
-						return err
-					}
-
-					c, err := conv.ToString(val)
-					if err != nil {
-						return err
-					}
-
-					request.FileComment = c
-					return nil
-				}); err != nil {
-					return req, rawBody, close, errors.Wrap(err, "decode \"fileComment\"")
-				}
-			} else {
-				return req, rawBody, close, errors.Wrap(err, "query")
-			}
-		}
 		{
 			if err := func() error {
 				files, ok := r.MultipartForm.File["content"]

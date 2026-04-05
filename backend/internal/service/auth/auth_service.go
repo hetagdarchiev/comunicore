@@ -5,40 +5,43 @@ package auth
 
 import (
 	"context"
+
+	"github.com/google/uuid"
+	"github.com/hetagdarchiev/comunicore/backend/internal/service/model"
 )
 
 type AuthRepo interface {
 	// AuthCreate(ctx context.Context, user_id int64, login, password string) error
 	// AuthUpdatePassword(ctx context.Context, user_id int64, password string) error
-	Login(ctx context.Context, login, password string) (access, refresh string, err error)
-	Refresh(ctx context.Context, refreshToken string) (newAccess, newRefresh string, err error)
-	Logout(ctx context.Context, refreshToken string) error
+	Login(ctx context.Context, login, password string) (userID int, sessionID uuid.UUID, err error)
+	Logout(ctx context.Context, sessionUUID uuid.UUID) error
+}
+type UserRepo interface {
+	Get(ctx context.Context, userId int) (model.User, error)
 }
 
 type AuthService struct {
 	authRepo AuthRepo
+	userRepo UserRepo
 }
 
-func NewAuthService(authRepo AuthRepo) *AuthService {
-	return &AuthService{authRepo: authRepo}
+func NewAuthService(authRepo AuthRepo, userRepo UserRepo) *AuthService {
+	return &AuthService{authRepo: authRepo, userRepo: userRepo}
 }
 
-func (r *AuthService) Login(ctx context.Context, login, password string) (access, refresh string, err error) {
-	access, refresh, err = r.authRepo.Login(ctx, login, password)
+func (r *AuthService) Login(ctx context.Context, login, password string) (model.User, uuid.UUID, error) {
+	userID, sessionUUID, err := r.authRepo.Login(ctx, login, password)
 	if err != nil {
-		return "", "", err
+		return model.User{}, uuid.UUID{}, err
 	}
 
-	return access, refresh, nil
-}
-func (r *AuthService) Refresh(ctx context.Context, refreshToken string) (newAccess, newRefresh string, err error) {
-	newAccess, newRefresh, err = r.authRepo.Refresh(ctx, refreshToken)
+	user, err := r.userRepo.Get(ctx, userID)
 	if err != nil {
-		return "", "", err
+		return model.User{}, uuid.UUID{}, err
 	}
 
-	return newAccess, newRefresh, nil
+	return user, sessionUUID, nil
 }
-func (r *AuthService) Logout(ctx context.Context, refreshToken string) error {
-	return r.authRepo.Logout(ctx, refreshToken)
+func (r *AuthService) Logout(ctx context.Context, sessionUUID uuid.UUID) error {
+	return r.authRepo.Logout(ctx, sessionUUID)
 }

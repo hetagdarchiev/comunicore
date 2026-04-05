@@ -10,7 +10,6 @@ import (
 
 	"github.com/go-faster/errors"
 	"github.com/go-faster/jx"
-	"github.com/ogen-go/ogen/conv"
 	ht "github.com/ogen-go/ogen/http"
 	"github.com/ogen-go/ogen/uri"
 )
@@ -37,19 +36,6 @@ func encodeMediaUploadRequest(
 	request := req
 
 	q := uri.NewFormEncoder(map[string]string{})
-	{
-		// Encode "fileComment" form field.
-		cfg := uri.QueryParameterEncodingConfig{
-			Name:    "fileComment",
-			Style:   uri.QueryStyleForm,
-			Explode: true,
-		}
-		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
-			return e.EncodeValue(conv.StringToString(request.FileComment))
-		}); err != nil {
-			return errors.Wrap(err, "encode query")
-		}
-	}
 	body, boundary := ht.CreateMultipartBody(func(w *multipart.Writer) error {
 		if err := request.Content.WriteMultipart("content", w); err != nil {
 			return errors.Wrap(err, "write \"content\"")
