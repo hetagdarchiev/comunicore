@@ -1,5 +1,5 @@
-import favoritesIcon from '@/shared/assets/icons/nav-menu/gray-star.svg';
-import LinkIcon from '@/shared/assets/icons/nav-menu/link-icon.svg';
+import favoritesIcon from '@/assets/icons/sidebar-nav/gray-star.svg';
+import LinkIcon from '@/assets/icons/sidebar-nav/link-icon.svg';
 
 import { AccCatergory } from '../acc-category.interface';
 

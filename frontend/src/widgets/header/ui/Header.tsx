@@ -1,15 +1,41 @@
+'use client';
+
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { SearchForm } from '@/features/search-form';
 import logo from '@/shared/assets/images/logo.svg';
+import { useAuth } from '@/shared/hooks/useAuth';
 
 import { Buttons } from './buttons';
 import { NavList } from './navList';
 
-const isAuth = false;
-
 export function Header() {
+  const [isMounted, setIsMounted] = useState(false);
+  const { isAuthenticated, isLoading, logout } = useAuth();
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMounted(true); // Заигнорил линтер, так как это единственный способ решить проблему гидратации
+  }, []);
+
+  const renderProfile = () => {
+    if (!isMounted) return <div className='w-40' />;
+
+    if (isLoading) {
+      return (
+        <span className='w-40 text-center text-sm text-gray-400'>
+          Загрузка...
+        </span>
+      );
+    }
+
+    if (isAuthenticated) return <NavList logoutHandler={logout} />;
+
+    return <Buttons />;
+  };
+
   return (
     <header className='bg-white'>
       <div className='mx-auto flex max-w-360 items-center justify-between gap-x-5 px-17.5 py-6.25'>
@@ -26,7 +52,7 @@ export function Header() {
           />
         </Link>
         <SearchForm />
-        {isAuth ? <NavList /> : <Buttons />}
+        {renderProfile()}
       </div>
     </header>
   );

@@ -1,14 +1,14 @@
-// Функция для безопасного получения сообщения об ошибке
 import type { UserCreateError } from '../../api/generated';
 
+// Функция для безопасного получения сообщения об ошибке
 export const getErrorMessage = (error: UserCreateError): string => {
-  if (typeof error === 'string') {
+  if (error && typeof error === 'string') {
     return error;
   }
 
-  if (error && typeof error === 'object') {
-    return (error as any).detail || 'Ошибка валидации';
+  if (error && typeof error === 'object' && error.code) {
+    return error.code;
   }
 
-  return 'Неизвестная ошибка';
+  return 'Неизвестная ошибка от сервера';
 };

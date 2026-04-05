@@ -3,8 +3,17 @@ import * as z from 'zod';
 const minPasswordLength = 8;
 
 export const validationSchema = z.object({
-  login: z.string().min(1, 'Введите логин'),
-  email: z.email('Неверный формат почты'),
+  name: z
+    .string()
+    .trim()
+    .min(1, { message: 'Введите имя' })
+    .max(50, { message: 'Имя слишком длинное' }),
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .min(1, { message: 'Введите почту' })
+    .email({ message: 'Неверный формат почты' }),
   password: z
     .string()
     .min(
