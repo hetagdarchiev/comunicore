@@ -5,10 +5,9 @@ package media
 
 import (
 	"context"
+	"fmt"
 	"io"
 	"net/url"
-
-	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 )
 
 type MediaRepo interface {
@@ -25,18 +24,17 @@ func NewMediaService(mediaBaseUrl string, mediaRepo MediaRepo) *MediaService {
 }
 
 func (r *MediaService) MediaUpload(ctx context.Context, reader io.Reader) (url.URL, error) {
-	op := "MediaService.MediaUpload"
 	fileHash, err := r.mediaRepo.MediaUpload(ctx, reader)
 	if err != nil {
-		return url.URL{}, apperror.NewUnspecifiedError("failed to upload media").InOperation(op).WithCause(err)
+		return url.URL{}, fmt.Errorf("failed to upload media")
 	}
-	fileURLstring, err := url.JoinPath(r.mediaBaseUrl, fileHash)
+	fileURLstring, err := url.JoinPath(r.mediaBaseUrl, "media", fileHash)
 	if err != nil {
-		return url.URL{}, apperror.NewUnspecifiedError("failed to construct media URL").InOperation(op).WithCause(err)
+		return url.URL{}, fmt.Errorf("failed to construct media URL")
 	}
 	fileURL, err := url.Parse(fileURLstring)
 	if err != nil {
-		return url.URL{}, apperror.NewUnspecifiedError("failed to construct media URL").InOperation(op).WithCause(err)
+		return url.URL{}, fmt.Errorf("failed to construct media URL")
 	}
 	return *fileURL, nil
 }
