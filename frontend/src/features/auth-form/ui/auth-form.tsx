@@ -30,6 +30,8 @@ export function AuthForm() {
     formState: { errors },
   } = useForm<LoginSchema>({
     resolver: zodResolver(validationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
   });
 
   const { mutate, isPending } = useMutation({
@@ -39,7 +41,7 @@ export function AuthForm() {
       router.push('/');
     },
     onError: (error: ErrorStringMessage) => {
-      setServerError(error.message || 'Ошибка авторизации');
+      setServerError(error.message || 'Неизвестная ошибка пришла с сервера');
     },
   });
 
