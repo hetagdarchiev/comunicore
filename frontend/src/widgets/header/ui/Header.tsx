@@ -13,7 +13,7 @@ import { NavList } from './navList';
 
 export function Header() {
   const [isMounted, setIsMounted] = useState(false);
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, logout } = useAuth();
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -21,15 +21,17 @@ export function Header() {
   }, []);
 
   const renderProfile = () => {
-    if (!isMounted) return <div className='w-40' />; // Заглушка для гидратации
+    if (!isMounted) return <div className='w-40' />;
 
     if (isLoading) {
-      return <span className='text-sm text-gray-400'>Загрузка...</span>;
+      return (
+        <span className='w-40 text-center text-sm text-gray-400'>
+          Загрузка...
+        </span>
+      );
     }
 
-    if (isAuthenticated) {
-      return <NavList />;
-    }
+    if (isAuthenticated) return <NavList logoutHandler={logout} />;
 
     return <Buttons />;
   };
