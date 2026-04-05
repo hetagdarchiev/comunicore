@@ -677,6 +677,7 @@ components:
       example:
         message: "Some error description for log"
       required:
+        - code
         - message
     ErrorNotUnique:
       description: Error in some of listed parameters, one or more is not unique.

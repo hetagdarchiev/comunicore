@@ -1,5 +1,7 @@
 -- name: UserGet :one
 SELECT id, name, email FROM users WHERE id = $1;
+-- name: UserGetByNameOrEmail :many
+SELECT id, name, email FROM users WHERE name = $1 OR email = $2;
 -- name: UserGetNameById :one
 SELECT name FROM users WHERE id = $1;
 -- name: UserCreate :one

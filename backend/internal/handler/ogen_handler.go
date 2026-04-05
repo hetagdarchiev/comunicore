@@ -108,7 +108,7 @@ type errorHandler struct{}
 
 func sendErrorStringMessage(w http.ResponseWriter, httpCode int, err error, errMessage string) {
 	e := api.ErrorStringMessage{
-		Code:    api.NewOptErrorStringMessageCode(api.ErrorStringMessageCodeErrorStringMessage),
+		Code:    api.ErrorStringMessageCodeErrorStringMessage,
 		Message: errMessage,
 	}
 	w.Header().Set("Content-Type", "application/json")

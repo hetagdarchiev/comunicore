@@ -97,15 +97,8 @@ func (s *ErrorStringMessage) Validate() error {
 
 	var failures []validate.FieldError
 	if err := func() error {
-		if value, ok := s.Code.Get(); ok {
-			if err := func() error {
-				if err := value.Validate(); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return err
-			}
+		if err := s.Code.Validate(); err != nil {
+			return err
 		}
 		return nil
 	}(); err != nil {
