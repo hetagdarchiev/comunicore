@@ -5,12 +5,9 @@ client.setConfig({
   credentials: 'include',
 });
 
-client.interceptors.request.use((request) => {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-
-  if (token && !request.url.includes('/api/auth')) {
-    request.headers.set('Authorization', `Bearer ${token}`);
+client.interceptors.response.use((response) => {
+  if (response.status === 401) {
+    console.warn('Сессия истекла или отсутствует');
   }
-  return request;
+  return response;
 });

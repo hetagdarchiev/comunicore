@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-import faqIcon from '@/shared/assets/icons/faq-icon.svg';
-import favoritesIcon from '@/shared/assets/icons/favorites-icon.svg';
-import notificationsIcon from '@/shared/assets/icons/notifications-icon.svg';
-import profileIcon from '@/shared/assets/icons/profile-icon.svg';
+import faqIcon from '@/assets/icons/user-nav/faq.svg';
+import favoritesIcon from '@/assets/icons/user-nav/favorites.svg';
+import logoutIcon from '@/assets/icons/user-nav/logout.svg';
+import notificationsIcon from '@/assets/icons/user-nav/notifications.svg';
+import profileIcon from '@/assets/icons/user-nav/profile.svg';
 
 const navigations = [
   {
@@ -29,7 +30,11 @@ const navigations = [
   },
 ];
 
-export function NavList() {
+interface Props {
+  logoutHandler: () => void;
+}
+
+export function NavList({ logoutHandler }: Props) {
   return (
     <nav>
       <ul className='flex items-center gap-x-5'>
@@ -46,6 +51,9 @@ export function NavList() {
             </Link>
           </li>
         ))}
+        <button type='button' onClick={logoutHandler}>
+          <Image src={logoutIcon} alt='Log out' />
+        </button>
       </ul>
     </nav>
   );

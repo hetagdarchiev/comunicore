@@ -31,9 +31,7 @@ export function RegistrationForm() {
     onSuccess: () => {
       reset();
     },
-    onError: (error: UserCreateError) => {
-      alert(getErrorMessage(error));
-    },
+    onError: (error: UserCreateError) => getErrorMessage(error),
   });
 
   const {
@@ -48,7 +46,7 @@ export function RegistrationForm() {
 
   const onSubmit: SubmitHandler<TRegistrationForm> = async (data) => {
     const body: UserCreateRequest = {
-      name: data.login,
+      name: data.name,
       email: data.email,
       password: data.password,
     };
@@ -63,20 +61,20 @@ export function RegistrationForm() {
     >
       <Input
         icon={userIcon}
-        placeholder='Login'
-        error={errors.login}
-        {...register('login')}
+        placeholder='Имя'
+        error={errors.name}
+        {...register('name')}
       />
       <Input
         icon={mailIcon}
-        placeholder='Email'
+        placeholder='Почта'
         error={errors.email}
         {...register('email')}
       />
       <Input
         icon={lockIcon}
         type='password'
-        placeholder='Password'
+        placeholder='Пароль'
         error={errors.password}
         {...register('password')}
       />

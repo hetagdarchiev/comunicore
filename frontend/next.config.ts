@@ -2,14 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   output: 'export',
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'https://comunicore.mooo.com*',
-      },
-    ];
-  },
+  reactStrictMode: false,
 };
 
 export default nextConfig;
