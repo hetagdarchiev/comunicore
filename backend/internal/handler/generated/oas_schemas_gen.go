@@ -18,7 +18,6 @@ func (*AuthLoginBadRequest) authLoginRes() {}
 type AuthLoginInternalServerErrorApplicationJSON string
 
 func (*AuthLoginInternalServerErrorApplicationJSON) authLoginRes()   {}
-func (*AuthLoginInternalServerErrorApplicationJSON) authRefreshRes() {}
 func (*AuthLoginInternalServerErrorApplicationJSON) mediaGetRes()    {}
 func (*AuthLoginInternalServerErrorApplicationJSON) threadsListRes() {}
 func (*AuthLoginInternalServerErrorApplicationJSON) userCreateRes()  {}
@@ -171,7 +170,6 @@ func (s *ErrorStringMessage) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*ErrorStringMessage) authRefreshRes() {}
 func (*ErrorStringMessage) threadsListRes() {}
 func (*ErrorStringMessage) userMeRes()      {}
 
@@ -208,60 +206,6 @@ func (s *ErrorStringMessageCode) UnmarshalText(data []byte) error {
 		return errors.Errorf("invalid value: %q", data)
 	}
 }
-
-type JwtAuth struct {
-	Token string
-	Roles []string
-}
-
-// GetToken returns the value of Token.
-func (s *JwtAuth) GetToken() string {
-	return s.Token
-}
-
-// GetRoles returns the value of Roles.
-func (s *JwtAuth) GetRoles() []string {
-	return s.Roles
-}
-
-// SetToken sets the value of Token.
-func (s *JwtAuth) SetToken(val string) {
-	s.Token = val
-}
-
-// SetRoles sets the value of Roles.
-func (s *JwtAuth) SetRoles(val []string) {
-	s.Roles = val
-}
-
-// Ref: #/components/schemas/JwtToken
-type JwtToken struct {
-	RefreshToken string `json:"refreshToken"`
-	AccessToken  string `json:"accessToken"`
-}
-
-// GetRefreshToken returns the value of RefreshToken.
-func (s *JwtToken) GetRefreshToken() string {
-	return s.RefreshToken
-}
-
-// GetAccessToken returns the value of AccessToken.
-func (s *JwtToken) GetAccessToken() string {
-	return s.AccessToken
-}
-
-// SetRefreshToken sets the value of RefreshToken.
-func (s *JwtToken) SetRefreshToken(val string) {
-	s.RefreshToken = val
-}
-
-// SetAccessToken sets the value of AccessToken.
-func (s *JwtToken) SetAccessToken(val string) {
-	s.AccessToken = val
-}
-
-func (*JwtToken) authLoginRes()   {}
-func (*JwtToken) authRefreshRes() {}
 
 type MediaGetBadRequest ErrorStringMessage
 
@@ -931,6 +875,7 @@ func (s *UserCreateResponse) SetEmail(val string) {
 	s.Email = val
 }
 
+func (*UserCreateResponse) authLoginRes()  {}
 func (*UserCreateResponse) userCreateRes() {}
 func (*UserCreateResponse) userGetRes()    {}
 func (*UserCreateResponse) userMeRes()     {}

@@ -24,8 +24,8 @@ type Post struct {
 }
 
 type Session struct {
-	JwtID  pgtype.UUID
-	UserID int32
+	SessionID pgtype.UUID
+	UserID    int32
 }
 
 type Thread struct {

@@ -56,7 +56,6 @@ func postgresStart(ctx context.Context) (stop func()) {
 func testServerStart() *httptest.Server {
 	cmdConfig := config.CmdParse()
 	cmdConfig.Config = &globalConfig.ConfigPath // fix config path for tests
-	cmdConfig.ServerJwtSecret = &globalConfig.JwtSecret
 	cmdConfig.DatabaseHost = &globalConfig.DbHost
 	cmdConfig.DatabasePort = &globalConfig.DbPort
 	cmdConfig.DatabaseName = &globalConfig.DbName

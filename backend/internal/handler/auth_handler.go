@@ -5,12 +5,12 @@ package handler
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	urlencode "github.com/hetagdarchiev/comunicore/backend/internal/lib/urlEncode"
 	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
 )
 
@@ -23,70 +23,57 @@ func NewAuthHandler(authService *authService.AuthService) *AuthHandler {
 }
 
 func (u *AuthHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequest) (forumApi.AuthLoginRes, error) {
-	access, refresh, err := u.authService.Login(ctx, req.Login, req.Password)
+	user, sessionUUID, err := u.authService.Login(ctx, req.Login, req.Password)
 	if err != nil {
 		return nil, err
 	}
 
 	globalCtx := GlobalContextFromContext(ctx)
-	setRefreshCookie(globalCtx.ResponseWriter, refresh, time.Now().Add(65*24*time.Hour-time.Minute))
+	sessionID := urlencode.Encode(sessionUUID[:])
+	setCookie(globalCtx.ResponseWriter, sessionID, time.Now().Add(65*24*time.Hour-time.Minute))
 
-	return &forumApi.JwtToken{
-		AccessToken:  access,
-		RefreshToken: refresh,
-	}, nil
-}
-func (u *AuthHandler) AuthRefresh(ctx context.Context) (forumApi.AuthRefreshRes, error) {
-	globalCtx := GlobalContextFromContext(ctx)
-	if globalCtx == nil || globalCtx.RefreshTokenIsSet == false || globalCtx.RefreshToken == "" {
-		log.Printf("global context %p, %+v\n", globalCtx, globalCtx)
-		return nil, fmt.Errorf("handler AuthRefresh invalid refresh token")
-	}
-	newAccess, newRefresh, err := u.authService.Refresh(ctx, globalCtx.RefreshToken)
-	if err != nil {
-		return nil, err
-	}
-
-	setRefreshCookie(globalCtx.ResponseWriter, newRefresh, time.Now().Add(65*24*time.Hour-time.Minute))
-
-	return &forumApi.JwtToken{
-		AccessToken:  newAccess,
-		RefreshToken: newRefresh,
+	return &forumApi.UserCreateResponse{
+		ID:    user.ID,
+		Name:  user.Name,
+		Email: user.Email,
 	}, nil
 }
 func (u *AuthHandler) AuthLogout(ctx context.Context) error {
 	globalCtx := GlobalContextFromContext(ctx)
-	refreshToken := globalCtx.RefreshToken
-	if refreshToken == "" {
-		return fmt.Errorf("refresh token is required in cookie refreshToken")
+	sessionUUID := globalCtx.SessionID
+	if sessionUUID == uuid.Nil {
+		return nil
 	}
 
-	if err := u.authService.Logout(ctx, refreshToken); err != nil {
+	if err := u.authService.Logout(ctx, sessionUUID); err != nil {
 		return err
 	}
 
-	deleteRefreshCookie(globalCtx.ResponseWriter, "")
+	deleteCookie(globalCtx.ResponseWriter, "")
 	globalCtx.ResponseWriter.Header().Set("Clear-Site-Data", "cookies")
 
 	return nil
 }
-func setRefreshCookie(w http.ResponseWriter, refreshToken string, expires time.Time) {
+func setCookie(w http.ResponseWriter, sessionID string, expires time.Time) {
 	cookie := &http.Cookie{
-		Name:     "refreshToken",
-		Value:    refreshToken,
+		Name:     "sid",
+		Value:    sessionID,
+		Path:     "/",
 		Expires:  expires,
 		HttpOnly: true,
-		Path:     "/api/auth", // FIXME: get from config
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 	}
 	http.SetCookie(w, cookie)
 }
-func deleteRefreshCookie(w http.ResponseWriter, refreshToken string) {
+func deleteCookie(w http.ResponseWriter, refreshToken string) {
 	cookie := &http.Cookie{
-		Name:     "refreshToken",
+		Name:     "sid",
 		Value:    refreshToken,
 		MaxAge:   -1,
 		HttpOnly: true,
-		Path:     "/api/auth", // FIXME: get from config
+		Secure:   true,
+		SameSite: http.SameSiteNoneMode,
 	}
 	http.SetCookie(w, cookie)
 }

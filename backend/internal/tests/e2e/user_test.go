@@ -114,13 +114,13 @@ func TestUserCreateBad(t *testing.T) {
 	}
 }
 
-func testUserUpdateOk(t *testing.T, baseURL string, accessToken string, userID int) ForumUser {
+func testUserUpdateOk(t *testing.T, baseURL string, cookie *http.Cookie, userID int) ForumUser {
 	user := ForumUser{}
 	t.Run("Test UserUpdate OK", func(t *testing.T) {
 		userIdStr := fmt.Sprintf("%d", userID)
 		exp := expectCreate(t, baseURL)
 		auth := exp.Builder(func(req *httpexpect.Request) {
-			req.WithHeader("Authorization", "Bearer "+accessToken)
+			req.WithCookie(sessionCookieName, cookie.Value)
 		})
 
 		res := auth.POST(userUpdatePath, userIdStr).
@@ -141,12 +141,12 @@ func testUserUpdateOk(t *testing.T, baseURL string, accessToken string, userID i
 
 	return user
 }
-func testUserMeOk(t *testing.T, baseURL string, accessToken string) ForumUser {
+func testUserMeOk(t *testing.T, baseURL string, cookie *http.Cookie) ForumUser {
 	var user ForumUser
 	t.Run("Test UserMe OK", func(t *testing.T) {
 		exp := expectCreate(t, baseURL)
 		auth := exp.Builder(func(req *httpexpect.Request) {
-			req.WithHeader("Authorization", "Bearer "+accessToken)
+			req.WithCookie(sessionCookieName, cookie.Value)
 		})
 
 		res := auth.GET(userMePath).
@@ -163,13 +163,13 @@ func testUserMeOk(t *testing.T, baseURL string, accessToken string) ForumUser {
 	return user
 }
 
-func testUserGetOk(t *testing.T, baseURL string, accessToken string, userID int) ForumUser {
+func testUserGetOk(t *testing.T, baseURL string, cookie *http.Cookie, userID int) ForumUser {
 	var user ForumUser
 	t.Run("Test UserGet OK", func(t *testing.T) {
 		userIdStr := fmt.Sprintf("%d", userID)
 		exp := expectCreate(t, baseURL)
 		auth := exp.Builder(func(req *httpexpect.Request) {
-			req.WithHeader("Authorization", "Bearer "+accessToken)
+			req.WithCookie(sessionCookieName, cookie.Value)
 		})
 
 		res := auth.GET(userGetPath, userIdStr).

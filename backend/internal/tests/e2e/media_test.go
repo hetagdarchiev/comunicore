@@ -16,15 +16,15 @@ import (
 
 func TestMediaUpload(t *testing.T) {
 	user := testUserCreateOk(t, globalConfig.URL)
-	jwtTokens, _ := testAuthLoginOk(t, globalConfig.URL, user)
-	testMediaUploadOk(t, globalConfig.URL, jwtTokens.AccessToken)
+	sessionCookie := testAuthLoginOk(t, globalConfig.URL, user)
+	testMediaUploadOk(t, globalConfig.URL, sessionCookie)
 }
 
-func testMediaUploadOk(t *testing.T, baseURL string, accessToken string) {
+func testMediaUploadOk(t *testing.T, baseURL string, sessionCookie *http.Cookie) {
 	t.Run("Test MediaUpload OK", func(t *testing.T) {
 		exp := expectCreate(t, baseURL)
 		auth := exp.Builder(func(req *httpexpect.Request) {
-			req.WithHeader("Authorization", "Bearer "+accessToken)
+			req.WithCookie(sessionCookieName, sessionCookie.Value)
 		})
 		cwd, err := os.Getwd()
 		if err != nil {

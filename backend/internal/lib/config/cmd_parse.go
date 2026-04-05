@@ -27,7 +27,6 @@ type CmdConfig struct {
 	ServerPort            *int
 	ServerBaseURL         *string // "http://foo.com", "http://foo.com:8080"
 	ServerPermittedOrigin *string // CORS origin: "http://test.com" or "http://site.me:8080"
-	ServerJwtSecret       *string
 	ServerWorkDir         *string
 	ServerUploadDir       *string
 }
@@ -48,7 +47,6 @@ func CmdParse() *CmdConfig {
 	serverPermittedOrigin := flag.String(
 		"server-permitted-origin", "",
 		"http server permitted extra single origin (e.g. \"http://localhost:3000\" or \"http://site.com\")")
-	serverJwtSecret := flag.String("server-jwt-secret", "", "http server jwt secret")
 	serverWorkDir := flag.String("server-work-dir", "", "http server work directory (default current dir)")
 	serverUploadDir := flag.String("server-upload-dir", "",
 		"http server upload directory (default work dir + /upload)")
@@ -68,7 +66,6 @@ func CmdParse() *CmdConfig {
 		ServerPort:            serverPort,
 		ServerBaseURL:         serverBaseURL,
 		ServerPermittedOrigin: serverPermittedOrigin,
-		ServerJwtSecret:       serverJwtSecret,
 		ServerWorkDir:         serverWorkDir,
 		ServerUploadDir:       serverUploadDir,
 	}
@@ -117,7 +114,6 @@ type ServerConfig struct {
 	Port            int
 	BaseURL         string
 	PermittedOrigin string `toml:"permitted_origin"`
-	JwtSecret       string `toml:"jwt_secret"`
 	WorkDir         string `toml:"work_dir"`
 	UploadDir       string `toml:"upload_dir"`
 }
@@ -129,7 +125,6 @@ func (srv *ServerConfig) check(cmd *CmdConfig) error {
 		cmd.ServerBaseURL, "FORUM_SERVER_BASEURL", srv.BaseURL, "http://localhost:8080")
 	srv.PermittedOrigin = mergeCmdEnvCurrentDefaultString(
 		cmd.ServerPermittedOrigin, "FORUM_SERVER_PERMITTED_ORIGIN", srv.PermittedOrigin, "")
-	srv.JwtSecret = mergeCmdEnvCurrentDefaultString(cmd.ServerJwtSecret, "FORUM_SERVER_JWT_SECRET", srv.JwtSecret, "")
 
 	defaultWorkDir, err := os.Getwd()
 	if err != nil {
@@ -157,9 +152,6 @@ func (srv *ServerConfig) check(cmd *CmdConfig) error {
 	}
 	if len(srv.BaseURL) == 0 { // TODO: check valid URL format
 		return fmt.Errorf("server base URL is empty")
-	}
-	if srv.JwtSecret == "" {
-		return fmt.Errorf("server jwt secret is empty")
 	}
 	return nil
 }
