@@ -31,9 +31,7 @@ export function RegistrationForm() {
     onSuccess: () => {
       reset();
     },
-    onError: (error: UserCreateError) => {
-      alert(getErrorMessage(error));
-    },
+    onError: (error: UserCreateError) => getErrorMessage(error),
   });
 
   const {
