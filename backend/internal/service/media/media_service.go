@@ -28,7 +28,7 @@ func (r *MediaService) MediaUpload(ctx context.Context, reader io.Reader) (url.U
 	if err != nil {
 		return url.URL{}, fmt.Errorf("failed to upload media")
 	}
-	fileURLstring, err := url.JoinPath(r.mediaBaseUrl, fileHash)
+	fileURLstring, err := url.JoinPath(r.mediaBaseUrl, "media", fileHash)
 	if err != nil {
 		return url.URL{}, fmt.Errorf("failed to construct media URL")
 	}
