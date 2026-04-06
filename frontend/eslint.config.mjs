@@ -118,11 +118,13 @@ const eslintConfig = defineConfig([
       'import/no-default-export': 'off',
     },
   },
+
+  // Исключение для сгенерированых типов OpenApi
   {
     files: ['src/**/*.gen.{js,mjs,ts}'],
     rules: {
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
 ]);

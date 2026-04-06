@@ -4,6 +4,7 @@ import { Ctx } from '../../types/ctx.types';
 import { MdTools, ToolsName } from '../../types/mdTools.types';
 
 import { MdEditor } from './MdEditor';
+
 export class MdEditorKeyBoard extends MdEditor {
   static orderListHandler(event: KeyboardEvent, ctx: Ctx): boolean {
     const { getValues, setValue, textarea } = ctx;

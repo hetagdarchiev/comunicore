@@ -1,8 +1,9 @@
 'use client';
 
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { RefObject, useRef } from 'react';
 import clsx from 'clsx';
 
+import { useModal } from '@/shared/hooks/useModal';
 import { BurgerMenu } from '@/shared/ui/BurgerMenu';
 
 import { toolsGroup } from '../../../model/tools';
@@ -23,28 +24,11 @@ const TOOL_BAR_ID = 'tool-bar';
 
 export function Toolbar(props: Props) {
   const { mode, getValues, setValue, markdownFieldRef } = props;
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toolbarRef = useRef<HTMLUListElement | null>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        toolbarRef.current &&
-        !toolbarRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isOpen]);
+  const burgerMenuRef = useRef<HTMLButtonElement>(null);
+  const toolBarRef = useRef<HTMLUListElement>(null);
+  const { modalOpen, setModalOpen } = useModal(toolBarRef, burgerMenuRef, {
+    autoClose: false,
+  });
 
   return (
     <div
@@ -55,16 +39,17 @@ export function Toolbar(props: Props) {
     >
       <BurgerMenu
         controls={TOOL_BAR_ID}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        isOpen={modalOpen}
+        ref={burgerMenuRef}
+        setIsOpen={setModalOpen}
         className='lg:hidden'
       />
       <ul
         id={TOOL_BAR_ID}
-        ref={toolbarRef}
+        ref={toolBarRef}
         className={clsx(
           'absolute top-6 right-4 z-10 flex w-30 flex-col overflow-hidden rounded-lg bg-neutral-600 shadow-lg transition-all duration-200 ease-out',
-          !isOpen && 'pointer-events-none origin-top scale-y-0 opacity-0',
+          !modalOpen && 'pointer-events-none origin-top scale-y-0 opacity-0',
           'lg:pointer-events-auto lg:static lg:top-0 lg:right-0 lg:w-full lg:scale-100 lg:flex-row lg:justify-end lg:overflow-auto lg:rounded-none lg:bg-transparent lg:py-0 lg:opacity-100 lg:shadow-none',
         )}
       >
