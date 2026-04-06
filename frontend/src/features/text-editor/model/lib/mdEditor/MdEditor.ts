@@ -32,6 +32,8 @@ export class MdEditor {
 
       url: ({ text, start, end }) => this.urlHandler(text, start, end),
 
+      image: ({ text, start, end }) => this.imageHandler(text, start, end),
+
       wrap: ({ text, start, end, wrapper }) =>
         this.toggleWrap(text, start, end, wrapper),
     };
@@ -51,10 +53,13 @@ export class MdEditor {
 
   static apply(ctx: Ctx, result: ReturnNewValues) {
     if (!ctx.textarea) return;
-    const textarea = ctx.textarea;
+    const { setValue, textarea } = ctx;
     const scrollTop = textarea.scrollTop;
 
     ctx.setValue('markdown', result.newText);
+    const newText = result.newText;
+
+    setValue('markdown', newText);
 
     requestAnimationFrame(() => {
       textarea.focus();
@@ -97,6 +102,51 @@ export class MdEditor {
       newText: text.slice(0, lineStart) + wrapper + ' ' + text.slice(lineStart),
       newStart: start + wrapper.length + 1,
       newEnd: end + wrapper.length + 1,
+    };
+  }
+
+  static imageHandler(
+    text: string,
+    start: number,
+    end: number,
+  ): ReturnNewValues {
+    const link = this.findLinkBounds(text, start);
+    const isImage = link && text[link.start - 1] === '!';
+
+    if (isImage && link) {
+      const linkText = text.slice(link.textStart, link.textEnd);
+      return {
+        newText:
+          text.slice(0, link.start - 1) + linkText + text.slice(link.end),
+        newStart: link.start - 1,
+        newEnd: link.start - 1 + linkText.length,
+      };
+    }
+
+    // И добавляем "!" перед открывающей скобкой
+    // result.newStart обычно указывает на позицию внутри скобок или после них,
+    // поэтому нам нужно найти начало вставки.
+
+    // Но проще переписать логику добавления для image:
+    if (start !== end) {
+      const selected = text.slice(start, end);
+      return {
+        newText: text.slice(0, start) + `![${selected}]()` + text.slice(end),
+        newStart: start + selected.length + 4,
+        newEnd: start + selected.length + 4,
+      };
+    }
+
+    const {
+      word,
+      start: wStart,
+      end: wEnd,
+    } = this.getWordAtCursor(text, start);
+
+    return {
+      newText: text.slice(0, wStart) + `![${word}]()` + text.slice(wEnd),
+      newStart: wStart + word.length + 2, // Курсор в круглые скобки
+      newEnd: wStart + word.length + 2,
     };
   }
 

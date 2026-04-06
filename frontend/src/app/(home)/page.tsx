@@ -3,11 +3,15 @@
 import Link from 'next/link';
 
 import { PostCard } from '@/entities/post';
+import { useAuth } from '@/shared/hooks/useAuth';
 
 export default function Home() {
+  const { isAuthenticated } = useAuth();
   return (
     <main>
-      <Link href={'/editor'}>Text editor</Link>
+      <Link href={isAuthenticated ? '/editor' : '/registration'}>
+        Text editor
+      </Link>
       <PostCard
         author_name={'James'}
         avatarUrl={'images/123.jpg'}

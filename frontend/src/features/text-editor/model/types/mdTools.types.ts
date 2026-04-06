@@ -11,6 +11,7 @@ export type ToolsName =
   | 'Quote'
   | 'Link'
   | 'List'
+  | 'Image'
   | 'Order list';
 
 export interface MdTools {

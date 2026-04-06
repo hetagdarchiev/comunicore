@@ -5,8 +5,6 @@ import { ClipboardEvent, DragEvent, useState } from 'react';
 import { mediaUploadMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
 import { useMutation } from '@tanstack/react-query';
 
-const ACCESS_TOKEN_KEY = 'accessToken';
-
 export const useMedia = (
   onUploadSuccess?: (url: string, alt: string) => void,
 ) => {
@@ -17,17 +15,11 @@ export const useMedia = (
 
   const uploadFile = async (file: File) => {
     try {
-      const token =
-        typeof window !== 'undefined'
-          ? localStorage.getItem(ACCESS_TOKEN_KEY)
-          : null;
-
       const response = await uploadMedia({
         body: {
-          content: file as unknown as Blob,
+          content: file,
           fileComment: file.name || 'pasted-image',
         },
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
 
       if (response?.url && onUploadSuccess) {

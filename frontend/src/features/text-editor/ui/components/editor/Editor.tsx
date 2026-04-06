@@ -61,8 +61,6 @@ export function Editor({ form, markdownFieldRef }: Props) {
     markdownFieldRef.current = element;
   };
 
-  // Make dropDown actions in useDragHandler
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

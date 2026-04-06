@@ -1,5 +1,11 @@
 import { BsTypeBold, BsTypeItalic, BsTypeStrikethrough } from 'react-icons/bs';
-import { LuHeading, LuLink, LuSquareCode, LuTextQuote } from 'react-icons/lu';
+import {
+  LuHeading,
+  LuImage,
+  LuLink,
+  LuSquareCode,
+  LuTextQuote,
+} from 'react-icons/lu';
 
 import { MdEditor } from '../lib/mdEditor';
 import { MdTools } from '../types/mdTools.types';
@@ -39,5 +45,10 @@ export const baseTools: MdTools[] = [
     label: <LuLink />,
     title: 'Link',
     toolFn: (ctx) => MdEditor.runTool(ctx, { wrapper: '()[]', type: 'url' }),
+  },
+  {
+    label: <LuImage />,
+    title: 'Image',
+    toolFn: (ctx) => MdEditor.runTool(ctx, { wrapper: '![]()', type: 'image' }),
   },
 ];
