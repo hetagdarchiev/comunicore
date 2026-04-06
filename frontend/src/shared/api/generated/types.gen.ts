@@ -79,12 +79,11 @@ export type ThreadCreatePostRequest = {
 };
 
 export type MediaUploadRequest = {
-  fileComment: string;
   content: Blob | File;
 };
 
 export type MediaUploadResponse = {
-  fileComment: string;
+  fileName: string;
   url: string;
 };
 

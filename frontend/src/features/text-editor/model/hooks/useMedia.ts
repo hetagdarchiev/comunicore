@@ -16,14 +16,11 @@ export const useMedia = (
   const uploadFile = async (file: File) => {
     try {
       const response = await uploadMedia({
-        body: {
-          content: file,
-          fileComment: file.name || 'pasted-image',
-        },
+        body: { content: file },
       });
 
       if (response?.url && onUploadSuccess) {
-        onUploadSuccess(response.url, response.fileComment || 'image');
+        onUploadSuccess(response.url, response.fileName || 'image');
       }
       return response;
     } catch (error) {
