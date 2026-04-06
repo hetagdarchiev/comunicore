@@ -51,23 +51,41 @@ func (u *UserHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
 }
 func (u *UserHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRequest) (forumApi.UserCreateRes, error) {
 	user, err := u.userService.Create(ctx, req.Name, req.Email, req.Password)
-	if err != nil {
-		if _, ok := errors.AsType[*apperror.NotUniqueError](err); ok {
-			res := forumApi.NewErrorNotUniqueUserCreateBadRequest(
-				forumApi.ErrorNotUnique{
-					Code: forumApi.ErrorNotUniqueCode(forumApi.ErrorNotUniqueCodeErrorNotUnique),
-					Data: []string{"name", "email"},
-				})
-			return &res, nil
-		}
-		return nil, err
+	if err == nil {
+		return &forumApi.UserCreateResponse{
+			ID:    user.ID,
+			Name:  user.Name,
+			Email: user.Email,
+		}, nil
 	}
-	return &forumApi.UserCreateResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
-	}, nil
+	var nonUniqueFields []string
+	if _, ok := errors.AsType[*apperror.NameNotUniqueError](err); ok {
+		// res := forumApi.NewErrorNotUniqueUserCreateBadRequest(
+		nonUniqueFields = append(nonUniqueFields, "name")
+		// return &res, nil
+	}
+	if _, ok := errors.AsType[*apperror.EmailNotUniqueError](err); ok {
+		// res := forumApi.NewErrorNotUniqueUserCreateBadRequest(
+		nonUniqueFields = append(nonUniqueFields, "email")
+		// return &res, nil
+	}
+	if len(nonUniqueFields) > 0 {
+		res := forumApi.NewErrorNotUniqueUserCreateBadRequest(
+			forumApi.ErrorNotUnique{
+				Code: forumApi.ErrorNotUniqueCode(forumApi.ErrorNotUniqueCodeErrorNotUnique),
+				Data: nonUniqueFields,
+			})
+		return &res, nil
+	} else {
+		res := forumApi.NewErrorStringMessageUserCreateBadRequest(
+			forumApi.ErrorStringMessage{
+				Code:    forumApi.ErrorStringMessageCodeErrorStringMessage,
+				Message: "Unknown UserCreate error",
+			})
+		return &res, nil
+	}
 }
+
 func (u *UserHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponse, error) {
 	user, err := u.userService.Update(ctx, params.UserId, req.Name, req.Email)
 	if err != nil {

@@ -146,12 +146,12 @@ func (s *ErrorNotUniqueCode) UnmarshalText(data []byte) error {
 // when we don't need to send any additional data, just a message for log.
 // Ref: #/components/schemas/ErrorStringMessage
 type ErrorStringMessage struct {
-	Code    OptErrorStringMessageCode `json:"code"`
-	Message string                    `json:"message"`
+	Code    ErrorStringMessageCode `json:"code"`
+	Message string                 `json:"message"`
 }
 
 // GetCode returns the value of Code.
-func (s *ErrorStringMessage) GetCode() OptErrorStringMessageCode {
+func (s *ErrorStringMessage) GetCode() ErrorStringMessageCode {
 	return s.Code
 }
 
@@ -161,7 +161,7 @@ func (s *ErrorStringMessage) GetMessage() string {
 }
 
 // SetCode sets the value of Code.
-func (s *ErrorStringMessage) SetCode(val OptErrorStringMessageCode) {
+func (s *ErrorStringMessage) SetCode(val ErrorStringMessageCode) {
 	s.Code = val
 }
 
@@ -285,52 +285,6 @@ func (*MediaUploadResponse) mediaUploadRes() {}
 type MediaUploadUnauthorized ErrorStringMessage
 
 func (*MediaUploadUnauthorized) mediaUploadRes() {}
-
-// NewOptErrorStringMessageCode returns new OptErrorStringMessageCode with value set to v.
-func NewOptErrorStringMessageCode(v ErrorStringMessageCode) OptErrorStringMessageCode {
-	return OptErrorStringMessageCode{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptErrorStringMessageCode is optional ErrorStringMessageCode.
-type OptErrorStringMessageCode struct {
-	Value ErrorStringMessageCode
-	Set   bool
-}
-
-// IsSet returns true if OptErrorStringMessageCode was set.
-func (o OptErrorStringMessageCode) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptErrorStringMessageCode) Reset() {
-	var v ErrorStringMessageCode
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptErrorStringMessageCode) SetTo(v ErrorStringMessageCode) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptErrorStringMessageCode) Get() (v ErrorStringMessageCode, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptErrorStringMessageCode) Or(d ErrorStringMessageCode) ErrorStringMessageCode {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
 
 // NewOptInt returns new OptInt with value set to v.
 func NewOptInt(v int) OptInt {

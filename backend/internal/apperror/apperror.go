@@ -57,10 +57,6 @@ type NotFoundError struct {
 	Name string
 }
 
-type NotUniqueError struct {
-	BaseError
-}
-
 type ValidationError struct {
 	BaseError
 	Message string
@@ -84,21 +80,6 @@ func (e *NotFoundError) ErrorString() string {
 	return fmt.Sprintf("Op: %s\n%s with name %s not found", e.opName, e.Type, e.Name)
 }
 func (e *NotFoundError) Error() string {
-	return appErrorStringChain(e)
-}
-
-func NewErrNotUnique(op string, cause error, name ...string) appError {
-	return &NotUniqueError{
-		BaseError: BaseError{
-			opName: op,
-			cause:  cause,
-		},
-	}
-}
-func (e *NotUniqueError) ErrorString() string {
-	return fmt.Sprintf("Op: %s\nitem in not unique", e.opName)
-}
-func (e *NotUniqueError) Error() string {
 	return appErrorStringChain(e)
 }
 
