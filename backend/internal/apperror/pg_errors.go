@@ -11,10 +11,9 @@ import (
 
 // convert postgres error to app error or teturn original error
 func PgErrorToAppError(err error) error {
-	op := "apperror.PgErrorToAppError"
 	if pgErr, ok := err.(*pgconn.PgError); ok {
 		if pgErr.Code == "23505" { // unique_violation
-			return NewErrNotUnique(op, err)
+			return fmt.Errorf("error: %w\n caused by: %w", NewNotUniqueError(), err)
 		}
 		fmt.Printf("PostgreSQL unknown error code: %s, message: %s\n error struct %+v\n",
 			pgErr.Code, pgErr.Message, *pgErr)

@@ -413,6 +413,41 @@ func (q *Queries) UserGet(ctx context.Context, id int32) (UserGetRow, error) {
 	return i, err
 }
 
+const userGetByNameOrEmail = `-- name: UserGetByNameOrEmail :many
+SELECT id, name, email FROM users WHERE name = $1 OR email = $2
+`
+
+type UserGetByNameOrEmailParams struct {
+	Name  string
+	Email string
+}
+
+type UserGetByNameOrEmailRow struct {
+	ID    int32
+	Name  string
+	Email string
+}
+
+func (q *Queries) UserGetByNameOrEmail(ctx context.Context, arg UserGetByNameOrEmailParams) ([]UserGetByNameOrEmailRow, error) {
+	rows, err := q.db.Query(ctx, userGetByNameOrEmail, arg.Name, arg.Email)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UserGetByNameOrEmailRow
+	for rows.Next() {
+		var i UserGetByNameOrEmailRow
+		if err := rows.Scan(&i.ID, &i.Name, &i.Email); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const userGetNameById = `-- name: UserGetNameById :one
 SELECT name FROM users WHERE id = $1
 `

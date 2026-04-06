@@ -12,8 +12,6 @@ import (
 	"os"
 	"path"
 
-	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
-
 	"github.com/hetagdarchiev/comunicore/backend/internal/lib/filetype"
 )
 
@@ -59,7 +57,6 @@ func NewBufferWriter(buf []byte) io.Writer {
 
 // MediaUpload saves the uploaded file and returns a unique identifier for it.
 func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, error) {
-	op := "MediaRepo.MediaUpload"
 	dstFile, err := os.CreateTemp(r.uploadDir, "tmp-*")
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -98,14 +95,12 @@ func (r *MediaRepo) MediaUpload(ctx context.Context, reader io.Reader) (string, 
 
 	newFileName := path.Join(r.uploadDir, fileName)
 	if err := os.Rename(dstFile.Name(), newFileName); err != nil {
-		return "", apperror.NewUnspecifiedError("failed to rename uploaded file").
-			WithCause(err).InOperation(op)
+		return "", fmt.Errorf("failed to rename uploaded file")
 	}
 	fileRenamed = true
 	err = os.Chmod(newFileName, 0644)
 	if err != nil {
-		return "", apperror.NewUnspecifiedError("failed to change file permissions").
-			WithCause(err).InOperation(op)
+		return "", fmt.Errorf("failed to change file permissions")
 	}
 
 	return fileName, nil
