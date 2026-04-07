@@ -38,12 +38,13 @@ var (
 )
 
 const (
-	userCreatePath = "/api/user"
-	userMePath     = "/api/user/me"
-	userGetPath    = "/api/user/{id}"
-	userUpdatePath = "/api/user/{id}"
-	authLoginPath  = "/api/auth/login"
-	authLogoutPath = "/api/auth/logout"
+	userCreatePath   = "/api/user"
+	userMePath       = "/api/user/me"
+	userGetPath      = "/api/user/{id}"
+	userUpdatePath   = "/api/user/{id}"
+	authLoginPath    = "/api/auth/login"
+	authLogoutPath   = "/api/auth/logout"
+	threadCreatePath = "/api/threads"
 )
 
 func TestMain(m *testing.M) { // for global setup and teardown

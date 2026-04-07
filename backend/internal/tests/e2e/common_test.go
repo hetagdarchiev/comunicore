@@ -20,7 +20,6 @@ import (
 
 func postgresStart(ctx context.Context) (stop func()) {
 	postgresContainer, err := postgres.Run(ctx,
-		// "postgres:16-alpine",
 		"postgres:18",
 		postgres.WithInitScripts("../../repository/sqlc/schema.sql"),
 		postgres.WithDatabase(globalConfig.DbName),
