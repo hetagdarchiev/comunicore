@@ -6,7 +6,8 @@ package handler
 import (
 	"context"
 
-	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
+	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
 	"github.com/hetagdarchiev/comunicore/backend/internal/service/model"
 	threadsService "github.com/hetagdarchiev/comunicore/backend/internal/service/threads"
 )
@@ -21,8 +22,8 @@ func NewThreadsHandler(threadsService *threadsService.ThreadsService) *ThreadsHa
 
 func (h *ThreadsHandler) ThreadAddPost(
 	ctx context.Context,
-	req *forumApi.ThreadCreatePostRequest,
-	params forumApi.ThreadAddPostParams) (forumApi.ThreadAddPostRes, error) {
+	req *api.ThreadCreatePostRequest,
+	params api.ThreadAddPostParams) (api.ThreadAddPostRes, error) {
 
 	postCreate := model.PostCreate{
 		ThreadID: params.ThreadId,
@@ -36,7 +37,7 @@ func (h *ThreadsHandler) ThreadAddPost(
 		return nil, err
 	}
 
-	return &forumApi.ThreadPostItem{
+	return &api.ThreadPostItem{
 		ID:         post.ID,
 		AuthorID:   post.UserID,
 		AuthorName: post.UserName,
@@ -45,18 +46,25 @@ func (h *ThreadsHandler) ThreadAddPost(
 	}, nil
 }
 
-func (h *ThreadsHandler) ThreadCreate(ctx context.Context, req *forumApi.ThreadCreateRequest) (forumApi.ThreadCreateRes, error) {
+func (h *ThreadsHandler) ThreadCreate(
+	ctx context.Context, req *api.ThreadCreateRequest) (api.ThreadCreateRes, error) {
+
+	globalCtx := GlobalContextFromContext(ctx)
+	if globalCtx == nil || globalCtx.UserIDIsSet == false {
+		res := api.ThreadCreateInternalServerError("in handler.ThreadCreate() user ID is not set")
+		return &res, apperror.NewAuthenticationError("handler.ThreadCreate()", nil, "user ID is not set")
+	}
 	modelThreadCreate := model.ThreadCreate{
 		Title:   req.Title,
 		Content: req.Content,
-		UserID:  1, // FIXME: get user id from auth context
+		UserID:  globalCtx.UserID,
 	}
 
 	thread, err := h.threadsService.Create(ctx, modelThreadCreate)
 	if err != nil {
 		return nil, err
 	}
-	return &forumApi.ThreadListItem{
+	return &api.ThreadListItem{
 		ID:         thread.ID,
 		Title:      thread.Title,
 		Content:    thread.Content,
@@ -68,14 +76,14 @@ func (h *ThreadsHandler) ThreadCreate(ctx context.Context, req *forumApi.ThreadC
 }
 
 // get thread with all posts
-func (h *ThreadsHandler) ThreadGet(ctx context.Context, params forumApi.ThreadGetParams) (forumApi.ThreadGetRes, error) {
+func (h *ThreadsHandler) ThreadGet(ctx context.Context, params api.ThreadGetParams) (api.ThreadGetRes, error) {
 	threadWithPosts, err := h.threadsService.GetThreadWithPosts(ctx, params.ThreadId)
 	if err != nil {
 		return nil, err
 	}
-	var posts []forumApi.ThreadPostItem
+	var posts []api.ThreadPostItem
 	for _, post := range threadWithPosts.Posts {
-		posts = append(posts, forumApi.ThreadPostItem{
+		posts = append(posts, api.ThreadPostItem{
 			ID:         post.ID,
 			AuthorID:   post.UserID,
 			AuthorName: post.UserName,
@@ -83,7 +91,7 @@ func (h *ThreadsHandler) ThreadGet(ctx context.Context, params forumApi.ThreadGe
 			CreatedAt:  post.CreatedAt,
 		})
 	}
-	return &forumApi.ThreadWithPostsListResponse{
+	return &api.ThreadWithPostsListResponse{
 		ID:         threadWithPosts.ID,
 		AuthorID:   threadWithPosts.AuthorID,
 		AuthorName: threadWithPosts.AuthorName,
@@ -95,7 +103,7 @@ func (h *ThreadsHandler) ThreadGet(ctx context.Context, params forumApi.ThreadGe
 	}, nil
 }
 
-func (h *ThreadsHandler) ThreadsList(ctx context.Context, params forumApi.ThreadsListParams) (forumApi.ThreadsListRes, error) {
+func (h *ThreadsHandler) ThreadsList(ctx context.Context, params api.ThreadsListParams) (api.ThreadsListRes, error) {
 	var limit = 20
 	if params.Limit.IsSet() {
 		limit = params.Limit.Value
@@ -132,9 +140,9 @@ func (h *ThreadsHandler) ThreadsList(ctx context.Context, params forumApi.Thread
 		return nil, err
 	}
 GOT_THREAD_ID:
-	resThreads := make([]forumApi.ThreadListItem, len(threadList.Threads))
+	resThreads := make([]api.ThreadListItem, len(threadList.Threads))
 	for i, thread := range threadList.Threads {
-		resThreads[i] = forumApi.ThreadListItem{
+		resThreads[i] = api.ThreadListItem{
 			ID:         thread.ID,
 			Title:      thread.Title,
 			Content:    thread.Content,
@@ -144,7 +152,7 @@ GOT_THREAD_ID:
 			CreatedAt:  thread.CreatedAt,
 		}
 	}
-	return &forumApi.ThreadListResponse{
+	return &api.ThreadListResponse{
 		Threads:             resThreads,
 		TotalCountEstimated: threadList.TotalCountEstimated,
 		HavePrev:            threadList.HavePrev,
