@@ -46,22 +46,54 @@ func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 	return user
 }
 func testUserCreateAgainFailure(t *testing.T, baseURL string, user ForumUser) {
-	t.Run("Test UserCreate Again Failure", func(t *testing.T) {
-		exp := expectCreate(t, baseURL)
-
-		obj := exp.POST(userCreatePath).
-			WithJSON(map[string]any{
+	testsCases := []struct {
+		name         string
+		payload      map[string]any
+		expectedData []any
+	}{
+		{
+			name: "both name and email conflict",
+			payload: map[string]any{
 				"name":     user.Name,
 				"email":    user.Email,
 				"password": user.Password,
-			}).
-			Expect().
-			Status(http.StatusBadRequest).JSON().Object()
-		// {"code":"ErrorNotUnique","data":["name","email"]}
-		obj.Keys().ContainsOnly("code", "data")
-		obj.Value("code").IsEqual("ErrorNotUnique")
-		obj.Value("data").Array().ContainsOnly("name", "email")
-	})
+			},
+			expectedData: []any{"name", "email"},
+		},
+		{
+			name: "name conflict only",
+			payload: map[string]any{
+				"name":     user.Name,
+				"email":    tests.RandomString(10) + "@example.com",
+				"password": user.Password,
+			},
+			expectedData: []any{"name"},
+		},
+		{
+			name: "email conflict only",
+			payload: map[string]any{
+				"name":     tests.RandomString(8),
+				"email":    user.Email,
+				"password": user.Password,
+			},
+			expectedData: []any{"email"},
+		},
+	}
+
+	for _, tt := range testsCases {
+		t.Run("Test UserCreate Again Failure ("+tt.name+")", func(t *testing.T) {
+			exp := expectCreate(t, baseURL)
+
+			obj := exp.POST(userCreatePath).
+				WithJSON(tt.payload).
+				Expect().
+				Status(http.StatusBadRequest).JSON().Object()
+			// {"code":"ErrorNotUnique","data":["name","email"]}
+			obj.Keys().ContainsOnly("code", "data")
+			obj.Value("code").IsEqual("ErrorNotUnique")
+			obj.Value("data").Array().ContainsOnly(tt.expectedData...)
+		})
+	}
 }
 
 func TestUserCreateBad(t *testing.T) {

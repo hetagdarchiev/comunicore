@@ -1,6 +1,6 @@
-@import "tailwindcss";
-@import "./normalize.css";
-@import "./utils.css";
+@import 'tailwindcss';
+@import './normalize.css';
+@import './utils.css';
 
 :root {
   --background: #fff;
@@ -19,7 +19,6 @@
   --color-orange-f4: #f48023;
   --color-orange-c5: #c55c07;
   --color-light-fc: #fcf4ec;
-
   --color-post-card: var(--post-bg);
 }
 
@@ -31,8 +30,9 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      /*--background: #0a0a0a;*/
-      /*--foreground: #ededed;*/
+      /* --background: #0a0a0a; */
+
+      /* --foreground: #ededed; */
     }
   }
 
@@ -44,7 +44,7 @@
   body {
     display: flex;
     flex-direction: column;
-    font-family: "Roboto", sans-serif;
+    font-family: Roboto, sans-serif;
     color: var(--foreground);
     background: var(--background);
     -webkit-font-smoothing: antialiased;

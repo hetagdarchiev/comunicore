@@ -91,14 +91,6 @@
     scrollbar-gutter: stable;
   }
 
-  /**
-    Плавный скролл
-   */
-  html,
-  :has(:target) {
-    scroll-behavior: smooth;
-  }
-
   body {
     /**
       Пригодится в большинстве ситуаций

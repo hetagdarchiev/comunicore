@@ -4,12 +4,13 @@
 package auth
 
 import (
-	"crypto/rand"
 	"crypto/subtle"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"strings"
+
+	"github.com/hetagdarchiev/comunicore/backend/internal/lib/utils"
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 	"golang.org/x/crypto/argon2"
@@ -40,7 +41,7 @@ const (
 )
 
 func hashPassword(password string) string {
-	salt := randomBytes(32)
+	salt := utils.RandomBytes(32)
 
 	hash := argon2.IDKey([]byte(password), salt,
 		defaultParams.TimeCost, defaultParams.MemoryCost, defaultParams.Threads, DefaultKeyLength)
@@ -123,13 +124,6 @@ func authenticateUser(storedHash, password string) error {
 	}
 
 	return nil
-}
-
-func randomBytes(count int) []byte {
-	buf := make([]byte, count)
-	rand.Read(buf)
-
-	return buf
 }
 
 // package main_test
