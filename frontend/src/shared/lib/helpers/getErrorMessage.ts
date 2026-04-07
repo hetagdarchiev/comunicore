@@ -6,8 +6,8 @@ export const getErrorMessage = (error: UserCreateError): string => {
     return error;
   }
 
-  if (error && typeof error === 'object' && error.code) {
-    return error.code;
+  if (error && typeof error === 'object') {
+    return error.code || 'Ошибка валидации';
   }
 
   return 'Неизвестная ошибка от сервера';
