@@ -25,11 +25,15 @@ func (h *ThreadsHandler) ThreadAddPost(
 	req *api.ThreadCreatePostRequest,
 	params api.ThreadAddPostParams) (api.ThreadAddPostRes, error) {
 
+	globalCtx := GlobalContextFromContext(ctx)
+	if globalCtx == nil || globalCtx.UserIDIsSet == false {
+		res := api.ThreadAddPostInternalServerError("in handler.ThreadAddPost() user ID is not set")
+		return &res, apperror.NewAuthenticationError("handler.ThreadAddPost()", nil, "user ID is not set")
+	}
 	postCreate := model.PostCreate{
 		ThreadID: params.ThreadId,
-		// UserID:   params.UserID,
-		UserID:  1, // FIXME: get user id from auth context
-		Content: req.Content,
+		UserID:   globalCtx.UserID,
+		Content:  req.Content,
 	}
 
 	post, err := h.threadsService.AddPost(ctx, postCreate)
