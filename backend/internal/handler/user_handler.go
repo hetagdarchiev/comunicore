@@ -11,7 +11,7 @@ import (
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 
-	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
 	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
 )
 
@@ -23,25 +23,25 @@ func NewUserHandler(userService *userService.UserService) *UserHandler {
 	return &UserHandler{userService: userService}
 }
 
-func (u *UserHandler) UserGet(ctx context.Context, params forumApi.UserGetParams) (forumApi.UserGetRes, error) {
+func (u *UserHandler) UserGet(ctx context.Context, params api.UserGetParams) (api.UserGetRes, error) {
 	res, err := u.userGetById(ctx, params.UserId)
 	if err != nil {
-		return &forumApi.UserGetInternalServerError{}, err
+		return &api.UserGetInternalServerError{}, err
 	}
 	return res, err
 }
-func (u *UserHandler) userGetById(ctx context.Context, userId int) (*forumApi.UserCreateResponse, error) {
+func (u *UserHandler) userGetById(ctx context.Context, userId int) (*api.UserCreateResponse, error) {
 	user, err := u.userService.Get(ctx, userId)
 	if err != nil {
 		return nil, err
 	}
-	return &forumApi.UserCreateResponse{
+	return &api.UserCreateResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
 	}, nil
 }
-func (u *UserHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
+func (u *UserHandler) UserMe(ctx context.Context) (api.UserMeRes, error) {
 	globalCtx := GlobalContextFromContext(ctx)
 	if globalCtx == nil || globalCtx.UserIDIsSet == false || globalCtx.UserID <= 0 {
 		log.Printf("global context %p, %+v\n", globalCtx, globalCtx)
@@ -49,10 +49,10 @@ func (u *UserHandler) UserMe(ctx context.Context) (forumApi.UserMeRes, error) {
 	}
 	return u.userGetById(ctx, globalCtx.UserID)
 }
-func (u *UserHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRequest) (forumApi.UserCreateRes, error) {
+func (u *UserHandler) UserCreate(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
 	user, err := u.userService.Create(ctx, req.Name, req.Email, req.Password)
 	if err == nil {
-		return &forumApi.UserCreateResponse{
+		return &api.UserCreateResponse{
 			ID:    user.ID,
 			Name:  user.Name,
 			Email: user.Email,
@@ -70,28 +70,28 @@ func (u *UserHandler) UserCreate(ctx context.Context, req *forumApi.UserCreateRe
 		// return &res, nil
 	}
 	if len(nonUniqueFields) > 0 {
-		res := forumApi.NewErrorNotUniqueUserCreateBadRequest(
-			forumApi.ErrorNotUnique{
-				Code: forumApi.ErrorNotUniqueCode(forumApi.ErrorNotUniqueCodeErrorNotUnique),
+		res := api.NewErrorNotUniqueUserCreateBadRequest(
+			api.ErrorNotUnique{
+				Code: api.ErrorNotUniqueCode(api.ErrorNotUniqueCodeErrorNotUnique),
 				Data: nonUniqueFields,
 			})
 		return &res, nil
 	} else {
-		res := forumApi.NewErrorStringMessageUserCreateBadRequest(
-			forumApi.ErrorStringMessage{
-				Code:    forumApi.ErrorStringMessageCodeErrorStringMessage,
+		res := api.NewErrorStringMessageUserCreateBadRequest(
+			api.ErrorStringMessage{
+				Code:    api.ErrorStringMessageCodeErrorStringMessage,
 				Message: "Unknown UserCreate error",
 			})
 		return &res, nil
 	}
 }
 
-func (u *UserHandler) UserUpdate(ctx context.Context, req *forumApi.UserUpdateRequest, params forumApi.UserUpdateParams) (*forumApi.UserCreateResponse, error) {
+func (u *UserHandler) UserUpdate(ctx context.Context, req *api.UserUpdateRequest, params api.UserUpdateParams) (*api.UserCreateResponse, error) {
 	user, err := u.userService.Update(ctx, params.UserId, req.Name, req.Email)
 	if err != nil {
 		return nil, err
 	}
-	return &forumApi.UserCreateResponse{
+	return &api.UserCreateResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
