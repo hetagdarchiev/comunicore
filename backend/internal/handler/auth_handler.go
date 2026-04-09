@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	forumApi "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
+	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
 	urlencode "github.com/hetagdarchiev/comunicore/backend/internal/lib/urlEncode"
 	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
 )
@@ -22,7 +22,7 @@ func NewAuthHandler(authService *authService.AuthService) *AuthHandler {
 	return &AuthHandler{authService: authService}
 }
 
-func (u *AuthHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequest) (forumApi.AuthLoginRes, error) {
+func (u *AuthHandler) AuthLogin(ctx context.Context, req *api.AuthLoginRequest) (api.AuthLoginRes, error) {
 	user, sessionUUID, err := u.authService.Login(ctx, req.Login, req.Password)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func (u *AuthHandler) AuthLogin(ctx context.Context, req *forumApi.AuthLoginRequ
 	sessionID := urlencode.Encode(sessionUUID[:])
 	setCookie(globalCtx.ResponseWriter, sessionID, time.Now().Add(65*24*time.Hour-time.Minute))
 
-	return &forumApi.UserCreateResponse{
+	return &api.UserCreateResponse{
 		ID:    user.ID,
 		Name:  user.Name,
 		Email: user.Email,
