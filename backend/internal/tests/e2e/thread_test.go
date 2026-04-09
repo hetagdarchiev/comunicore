@@ -12,6 +12,20 @@ import (
 	"github.com/hetagdarchiev/comunicore/backend/internal/tests"
 )
 
+func TestThreadCreate(t *testing.T) {
+	user := testUserCreateOk(t, globalConfig.URL)
+	sessionCookie := testAuthLoginOk(t, globalConfig.URL, user)
+	thread := testThreadCreateOk(t, globalConfig.URL, sessionCookie)
+	post := testThreadPostCreateOk(t, globalConfig.URL, sessionCookie, thread.ID)
+	testThreadGet(t, globalConfig.URL, sessionCookie, thread, post)
+
+	user2 := testUserCreateOk(t, globalConfig.URL)
+	sessionCookie2 := testAuthLoginOk(t, globalConfig.URL, user2)
+	thread2 := testThreadCreateOk(t, globalConfig.URL, sessionCookie2)
+	post2 := testThreadPostCreateOk(t, globalConfig.URL, sessionCookie2, thread2.ID)
+	testThreadGet(t, globalConfig.URL, sessionCookie2, thread2, post2)
+}
+
 type ThreadItem struct {
 	ID         int       `json:"id"`
 	AuthorID   int       `json:"author_id"`
@@ -52,7 +66,8 @@ func testThreadCreateOk(t *testing.T, baseURL string, cookie *http.Cookie) Threa
 	return thread
 }
 
-func testThreadPostCreateOk(t *testing.T, baseURL string, cookie *http.Cookie, threadId int) {
+func testThreadPostCreateOk(t *testing.T, baseURL string, cookie *http.Cookie, threadId int) ThreadPostItem {
+	var post ThreadPostItem
 	t.Run("Test ThreadPostCreate OK", func(t *testing.T) {
 		exp := expectCreate(t, baseURL)
 		auth := exp.Builder(func(req *httpexpect.Request) {
@@ -74,12 +89,63 @@ func testThreadPostCreateOk(t *testing.T, baseURL string, cookie *http.Cookie, t
 		res.Value("author_name").String().NotEmpty()
 		res.Value("content").String().IsEqual(postContent)
 		res.Value("created_at").String().NotEmpty()
+
+		res.Decode(&post)
 	})
+
+	return post
 }
 
-func TestThreadCreate(t *testing.T) {
-	user := testUserCreateOk(t, globalConfig.URL)
-	sessionCookie := testAuthLoginOk(t, globalConfig.URL, user)
-	thread := testThreadCreateOk(t, globalConfig.URL, sessionCookie)
-	testThreadPostCreateOk(t, globalConfig.URL, sessionCookie, thread.ID)
+type ThreadPostItem struct {
+	ID         int       `json:"id"`
+	AuthorID   int       `json:"author_id"`
+	AuthorName string    `json:"author_name"`
+	Content    string    `json:"content"`
+	CreatedAt  time.Time `json:"created_at"`
+}
+type ThreadWithPosts struct {
+	Id         int              `json:"id"`
+	AuthorID   int              `json:"author_id"`
+	AuthorName string           `json:"author_name"`
+	Title      string           `json:"title"`
+	Content    string           `json:"content"`
+	PostsCount int              `json:"posts_count"`
+	CreatedAt  time.Time        `json:"created_at"`
+	Posts      []ThreadPostItem `json:"posts"`
+}
+
+func testThreadGet(t *testing.T, baseURL string,
+	cookie *http.Cookie, expectedThread ThreadItem, expectedPost ThreadPostItem) {
+
+	t.Run("Test ThreadGet OK", func(t *testing.T) {
+		exp := expectCreate(t, baseURL)
+		auth := exp.Builder(func(req *httpexpect.Request) {
+			req.WithCookie(sessionCookieName, cookie.Value)
+		})
+
+		res := auth.GET("/api/threads/{threadId}", expectedThread.ID).
+			Expect().
+			Status(http.StatusOK).JSON().Object()
+
+		res.Keys().ContainsOnly(
+			"id", "author_id", "author_name", "title", "content", "posts_count", "created_at", "posts")
+		res.Value("id").Number().IsEqual(expectedThread.ID)
+		res.Value("author_id").Number().IsEqual(expectedThread.AuthorID)
+		res.Value("author_name").String().IsEqual(expectedThread.AuthorName)
+		res.Value("title").String().IsEqual(expectedThread.Title)
+		res.Value("content").String().IsEqual(expectedThread.Content)
+		res.Value("posts_count").Number().IsEqual(1)
+		res.Value("created_at").String().NotEmpty()
+
+		posts := res.Value("posts").Array()
+		posts.Length().IsEqual(1)
+
+		post := posts.Value(0).Object()
+		post.Keys().ContainsOnly("id", "author_id", "author_name", "content", "created_at")
+		post.Value("id").Number().IsEqual(expectedPost.ID)
+		post.Value("author_id").Number().IsEqual(expectedPost.AuthorID)
+		post.Value("author_name").String().IsEqual(expectedPost.AuthorName)
+		post.Value("content").String().IsEqual(expectedPost.Content)
+		post.Value("created_at").String().NotEmpty()
+	})
 }
