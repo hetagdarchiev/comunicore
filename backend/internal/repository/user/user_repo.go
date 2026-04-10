@@ -32,9 +32,10 @@ func (r *UserRepo) Get(ctx context.Context, userId int) (model.User, error) {
 		err = apperror.PgErrorToAppError(err)
 	}
 	return model.User{
-		ID:    int(row.ID),
-		Name:  row.Name,
-		Email: row.Email,
+		ID:        int(row.ID),
+		Name:      row.Name,
+		Email:     row.Email,
+		AvatarURL: row.AvatarUrl.String,
 	}, err
 }
 func (r *UserRepo) GetNameById(ctx context.Context, userId int) (string, error) {
@@ -46,9 +47,10 @@ func (r *UserRepo) Create(ctx context.Context, name, email string) (model.User, 
 	row, err := r.queries.UserCreate(ctx, userDb.UserCreateParams{Name: name, Email: email})
 	if err == nil {
 		return model.User{
-			ID:    int(row.ID),
-			Name:  row.Name,
-			Email: row.Email,
+			ID:        int(row.ID),
+			Name:      row.Name,
+			Email:     row.Email,
+			AvatarURL: row.AvatarUrl.String,
 		}, err
 	}
 	// some db error, probubly unique constraint violation on name or email,
@@ -96,8 +98,9 @@ func (r *UserRepo) Create(ctx context.Context, name, email string) (model.User, 
 func (r *UserRepo) Update(ctx context.Context, userId int, name, email string) (model.User, error) {
 	row, err := r.queries.UserUpdate(ctx, userDb.UserUpdateParams{ID: int32(userId), Name: name, Email: email})
 	return model.User{
-		ID:    int(row.ID),
-		Name:  row.Name,
-		Email: row.Email,
+		ID:        int(row.ID),
+		Name:      row.Name,
+		Email:     row.Email,
+		AvatarURL: row.AvatarUrl.String,
 	}, err
 }

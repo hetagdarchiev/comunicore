@@ -794,9 +794,10 @@ func (s *UserCreateRequest) SetPassword(val string) {
 
 // Ref: #/components/schemas/UserCreateResponse
 type UserCreateResponse struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
+	ID        int     `json:"id"`
+	Name      string  `json:"name"`
+	Email     string  `json:"email"`
+	AvatarURL url.URL `json:"avatar_url"`
 }
 
 // GetID returns the value of ID.
@@ -814,6 +815,11 @@ func (s *UserCreateResponse) GetEmail() string {
 	return s.Email
 }
 
+// GetAvatarURL returns the value of AvatarURL.
+func (s *UserCreateResponse) GetAvatarURL() url.URL {
+	return s.AvatarURL
+}
+
 // SetID sets the value of ID.
 func (s *UserCreateResponse) SetID(val int) {
 	s.ID = val
@@ -827,6 +833,11 @@ func (s *UserCreateResponse) SetName(val string) {
 // SetEmail sets the value of Email.
 func (s *UserCreateResponse) SetEmail(val string) {
 	s.Email = val
+}
+
+// SetAvatarURL sets the value of AvatarURL.
+func (s *UserCreateResponse) SetAvatarURL(val url.URL) {
+	s.AvatarURL = val
 }
 
 func (*UserCreateResponse) authLoginRes()  {}

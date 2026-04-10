@@ -430,14 +430,19 @@ components:
         email:
           type: string
           format: email
+        avatar_url:
+          type: string
+          format: uri
       required:
         - id
         - name
         - email
+        - avatar_url
       example:
         id: 1
         name: "john_doe"
         email: "test@mail.ru"
+        avatar_url: "https://comunicore.mooo.com/storage/media/avatar1.png"
     UserUpdateRequest:
       type: object
       properties:
