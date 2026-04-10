@@ -42,6 +42,7 @@ type User struct {
 	ID        int32
 	Name      string
 	Email     string
+	AvatarUrl pgtype.Text
 	CreatedAt pgtype.Timestamptz
 	UpdatedAt pgtype.Timestamptz
 }

@@ -375,7 +375,7 @@ func (q *Queries) ThreadPagesBeforeThreadID(ctx context.Context, arg ThreadPages
 }
 
 const userCreate = `-- name: UserCreate :one
-INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email
+INSERT INTO users (name, email) VALUES ($1, $2) RETURNING id, name, email, avatar_url
 `
 
 type UserCreateParams struct {
@@ -384,37 +384,49 @@ type UserCreateParams struct {
 }
 
 type UserCreateRow struct {
-	ID    int32
-	Name  string
-	Email string
+	ID        int32
+	Name      string
+	Email     string
+	AvatarUrl pgtype.Text
 }
 
 func (q *Queries) UserCreate(ctx context.Context, arg UserCreateParams) (UserCreateRow, error) {
 	row := q.db.QueryRow(ctx, userCreate, arg.Name, arg.Email)
 	var i UserCreateRow
-	err := row.Scan(&i.ID, &i.Name, &i.Email)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.AvatarUrl,
+	)
 	return i, err
 }
 
 const userGet = `-- name: UserGet :one
-SELECT id, name, email FROM users WHERE id = $1
+SELECT id, name, email, avatar_url FROM users WHERE id = $1
 `
 
 type UserGetRow struct {
-	ID    int32
-	Name  string
-	Email string
+	ID        int32
+	Name      string
+	Email     string
+	AvatarUrl pgtype.Text
 }
 
 func (q *Queries) UserGet(ctx context.Context, id int32) (UserGetRow, error) {
 	row := q.db.QueryRow(ctx, userGet, id)
 	var i UserGetRow
-	err := row.Scan(&i.ID, &i.Name, &i.Email)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.AvatarUrl,
+	)
 	return i, err
 }
 
 const userGetByNameOrEmail = `-- name: UserGetByNameOrEmail :many
-SELECT id, name, email FROM users WHERE name = $1 OR email = $2
+SELECT name, email FROM users WHERE name = $1 OR email = $2
 `
 
 type UserGetByNameOrEmailParams struct {
@@ -423,7 +435,6 @@ type UserGetByNameOrEmailParams struct {
 }
 
 type UserGetByNameOrEmailRow struct {
-	ID    int32
 	Name  string
 	Email string
 }
@@ -437,7 +448,7 @@ func (q *Queries) UserGetByNameOrEmail(ctx context.Context, arg UserGetByNameOrE
 	var items []UserGetByNameOrEmailRow
 	for rows.Next() {
 		var i UserGetByNameOrEmailRow
-		if err := rows.Scan(&i.ID, &i.Name, &i.Email); err != nil {
+		if err := rows.Scan(&i.Name, &i.Email); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -462,7 +473,7 @@ func (q *Queries) UserGetNameById(ctx context.Context, id int32) (string, error)
 const userUpdate = `-- name: UserUpdate :one
 UPDATE users
 SET name = $1, email = $2
-WHERE id = $3 RETURNING id, name, email
+WHERE id = $3 RETURNING id, name, email, avatar_url
 `
 
 type UserUpdateParams struct {
@@ -472,14 +483,20 @@ type UserUpdateParams struct {
 }
 
 type UserUpdateRow struct {
-	ID    int32
-	Name  string
-	Email string
+	ID        int32
+	Name      string
+	Email     string
+	AvatarUrl pgtype.Text
 }
 
 func (q *Queries) UserUpdate(ctx context.Context, arg UserUpdateParams) (UserUpdateRow, error) {
 	row := q.db.QueryRow(ctx, userUpdate, arg.Name, arg.Email, arg.ID)
 	var i UserUpdateRow
-	err := row.Scan(&i.ID, &i.Name, &i.Email)
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.Email,
+		&i.AvatarUrl,
+	)
 	return i, err
 }

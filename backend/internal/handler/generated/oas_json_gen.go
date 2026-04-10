@@ -2313,12 +2313,17 @@ func (s *UserCreateResponse) encodeFields(e *jx.Encoder) {
 		e.FieldStart("email")
 		e.Str(s.Email)
 	}
+	{
+		e.FieldStart("avatar_url")
+		json.EncodeURI(e, s.AvatarURL)
+	}
 }
 
-var jsonFieldsNameOfUserCreateResponse = [3]string{
+var jsonFieldsNameOfUserCreateResponse = [4]string{
 	0: "id",
 	1: "name",
 	2: "email",
+	3: "avatar_url",
 }
 
 // Decode decodes UserCreateResponse from json.
@@ -2366,6 +2371,18 @@ func (s *UserCreateResponse) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"email\"")
 			}
+		case "avatar_url":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := json.DecodeURI(d)
+				s.AvatarURL = v
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"avatar_url\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -2376,7 +2393,7 @@ func (s *UserCreateResponse) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00000111,
+		0b00001111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.

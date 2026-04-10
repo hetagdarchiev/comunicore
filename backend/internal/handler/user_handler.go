@@ -8,9 +8,9 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/url"
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
-
 	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
 	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
 )
@@ -35,10 +35,15 @@ func (u *UserHandler) userGetById(ctx context.Context, userId int) (*api.UserCre
 	if err != nil {
 		return nil, err
 	}
+	avatarUrl, err := url.Parse(user.AvatarURL)
+	if err != nil {
+		return nil, err
+	}
 	return &api.UserCreateResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		AvatarURL: *avatarUrl,
 	}, nil
 }
 func (u *UserHandler) UserMe(ctx context.Context) (api.UserMeRes, error) {
@@ -52,10 +57,15 @@ func (u *UserHandler) UserMe(ctx context.Context) (api.UserMeRes, error) {
 func (u *UserHandler) UserCreate(ctx context.Context, req *api.UserCreateRequest) (api.UserCreateRes, error) {
 	user, err := u.userService.Create(ctx, req.Name, req.Email, req.Password)
 	if err == nil {
+		avatarUrl, err := url.Parse(user.AvatarURL)
+		if err != nil {
+			return nil, err
+		}
 		return &api.UserCreateResponse{
-			ID:    user.ID,
-			Name:  user.Name,
-			Email: user.Email,
+			ID:        user.ID,
+			Name:      user.Name,
+			Email:     user.Email,
+			AvatarURL: *avatarUrl,
 		}, nil
 	}
 	var nonUniqueFields []string
@@ -91,9 +101,14 @@ func (u *UserHandler) UserUpdate(ctx context.Context, req *api.UserUpdateRequest
 	if err != nil {
 		return nil, err
 	}
+	avatarUrl, err := url.Parse(user.AvatarURL)
+	if err != nil {
+		return nil, err
+	}
 	return &api.UserCreateResponse{
-		ID:    user.ID,
-		Name:  user.Name,
-		Email: user.Email,
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		AvatarURL: *avatarUrl,
 	}, nil
 }
