@@ -37,7 +37,7 @@ func (r *ThreadsRepo) Create(ctx context.Context, thread model.ThreadCreate) (mo
 		UserID:     int(row.UserID),
 		Title:      row.Title,
 		Content:    row.Content,
-		PostsCount: int(row.PostsCount),
+		PostsCount: 0,
 		CreatedAt:  row.CreatedAt.Time,
 	}, err
 }
