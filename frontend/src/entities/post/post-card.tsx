@@ -13,10 +13,10 @@ import { PostViews } from './ui/post-views';
 interface PostProps {
   author_name: string; //Имя автора поста
   avatarUrl: string; //Ссылка на картинку профиля
-  created_at: string; //Строка Создания поста
+  created_at: string; //Строка с датой создания поста
   title: string; //Заголовок поста
   children: ReactNode; //Основной текст поста.
-  tags: string[]; //Массив тегов
+  tags?: string[]; //Массив тегов
   author_id: number; //Уникальные числовые ID. Он нужен для формирования ссылок
   id: number; //Уникальные числовые ID. Он нужен для формирования ссылок
   isLiked: boolean; //Флаг (да/нет). Определяет, лайкнул ли текущий юзер этот пост.
