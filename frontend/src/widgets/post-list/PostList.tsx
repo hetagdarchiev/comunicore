@@ -1,6 +1,6 @@
 'use client';
 
-import { Sorting } from './components/sorting';
+// import { Sorting } from './components/sorting';
 import { useInfiniteScroll } from './model/hooks/useInfiniteScroll';
 import { useLikeThread } from './model/hooks/useLikeThread';
 import { useThreads } from './model/hooks/useThreads';
@@ -43,8 +43,7 @@ export function PostList() {
   }
   return (
     <div>
-      <Sorting />
-
+      {/* <Sorting /> */}
       <PostListView
         threads={threads}
         onLike={handleLike}
