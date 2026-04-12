@@ -12,7 +12,7 @@ import { PostViews } from './ui/post-views';
 
 interface PostProps {
   author_name: string; //Имя автора поста
-  avatarUrl: string; //Ссылка на картинку профиля
+  avatarUrl?: string; //Ссылка на картинку профиля
   created_at: string; //Строка с датой создания поста
   title: string; //Заголовок поста
   children: ReactNode; //Основной текст поста.
@@ -31,7 +31,7 @@ export const PostCard = ({
   title,
   children,
   tags,
-  isLiked,
+  isLiked = false,
   onLike,
   stats,
   author_id,
@@ -47,7 +47,7 @@ export const PostCard = ({
       >
         <div className='relative h-10 w-10'>
           <Image
-            src={avatarUrl}
+            src={avatarUrl || '/avatar.png'}
             alt={author_name}
             fill
             unoptimized

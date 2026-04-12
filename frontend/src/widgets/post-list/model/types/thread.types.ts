@@ -6,6 +6,13 @@ export type Thread = {
   author_name: string;
   posts_count: number;
   created_at: string;
+  isLiked: boolean;
+  stats: {
+    likes: number;
+    views: number;
+    comments: number;
+  };
+  avatarUrl?: string; // Если в PostCard используется аватар
 };
 
 export type ThreadsResponse = {
