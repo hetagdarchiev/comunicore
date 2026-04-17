@@ -1,10 +1,10 @@
 'use client';
 
 import { PostProps } from './model/types/post-card.types';
-import { PostCommentsLink } from './ui/post-comments-link';
+import { PostCommentsLink } from './ui/post-comments-link/post-comments-link';
 import { PostContent } from './ui/post-content/post-content';
 import { PostHeader } from './ui/post-header/post-header';
-import { PostLikeButton } from './ui/post-like-button';
+import { PostLikeButton } from './ui/post-like-button/post-like-button';
 import { PostTags } from './ui/post-tags/post-tags';
 import { PostViews } from './ui/post-views';
 
