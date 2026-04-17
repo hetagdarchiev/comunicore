@@ -1,28 +1,14 @@
 'use client';
 
-import { ReactNode } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
 import { formatDate } from '@/shared/lib/format-date';
 
+import { PostProps } from './model/types/post-card.types';
 import { PostCommentsLink } from './ui/post-comments-link';
 import { PostLikeButton } from './ui/post-like-button';
 import { PostViews } from './ui/post-views';
-
-interface PostProps {
-  author_name: string; //Имя автора поста
-  avatarUrl?: string; //Ссылка на картинку профиля
-  created_at: string; //Строка с датой создания поста
-  title: string; //Заголовок поста
-  children: ReactNode; //Основной текст поста.
-  tags?: string[]; //Массив тегов
-  author_id: number; //Уникальные числовые ID. Он нужен для формирования ссылок
-  id: number; //Уникальные числовые ID. Он нужен для формирования ссылок
-  isLiked: boolean; //Флаг (да/нет). Определяет, лайкнул ли текущий юзер этот пост.
-  onLike: () => void; //Функция-обработчик. Когда ты жмешь на кнопку лайка, PostCard вызывает эту функцию, которую ему передал «родитель»
-  stats: { views: number; comments: number; likes: number }; //Объект со статистикой
-}
 
 export const PostCard = ({
   author_name,
