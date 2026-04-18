@@ -43,7 +43,7 @@ func (h *ThreadsHandler) ThreadAddPost(
 
 	return &api.ThreadPostItem{
 		ID:         post.ID,
-		AuthorID:   post.UserID,
+		AuthorId:   post.UserID,
 		AuthorName: post.UserName,
 		Content:    post.Content,
 		CreatedAt:  post.CreatedAt,
@@ -72,7 +72,7 @@ func (h *ThreadsHandler) ThreadCreate(
 		ID:         thread.ID,
 		Title:      thread.Title,
 		Content:    thread.Content,
-		AuthorID:   thread.UserID,
+		AuthorId:   thread.UserID,
 		AuthorName: thread.UserName,
 		PostsCount: thread.PostsCount,
 		CreatedAt:  thread.CreatedAt,
@@ -89,7 +89,7 @@ func (h *ThreadsHandler) ThreadGet(ctx context.Context, params api.ThreadGetPara
 	for _, post := range threadWithPosts.Posts {
 		posts = append(posts, api.ThreadPostItem{
 			ID:         post.ID,
-			AuthorID:   post.UserID,
+			AuthorId:   post.UserID,
 			AuthorName: post.UserName,
 			Content:    post.Content,
 			CreatedAt:  post.CreatedAt,
@@ -97,7 +97,7 @@ func (h *ThreadsHandler) ThreadGet(ctx context.Context, params api.ThreadGetPara
 	}
 	return &api.ThreadWithPostsListResponse{
 		ID:         threadWithPosts.ID,
-		AuthorID:   threadWithPosts.AuthorID,
+		AuthorId:   threadWithPosts.AuthorID,
 		AuthorName: threadWithPosts.AuthorName,
 		Title:      threadWithPosts.Title,
 		Content:    threadWithPosts.Content,
@@ -150,7 +150,7 @@ GOT_THREAD_ID:
 			ID:         thread.ID,
 			Title:      thread.Title,
 			Content:    thread.Content,
-			AuthorID:   thread.AuthorID,
+			AuthorId:   thread.AuthorID,
 			AuthorName: thread.AuthorName,
 			PostsCount: thread.PostsCount,
 			CreatedAt:  thread.CreatedAt,

@@ -430,19 +430,19 @@ components:
         email:
           type: string
           format: email
-        avatar_url:
+        avatarUrl:
           type: string
           format: uri
       required:
         - id
         - name
         - email
-        - avatar_url
+        - avatarUrl
       example:
         id: 1
         name: "john_doe"
         email: "test@mail.ru"
-        avatar_url: "https://comunicore.mooo.com/storage/media/avatar1.png"
+        avatarUrl: "https://comunicore.mooo.com/storage/media/avatar1.png"
     UserUpdateRequest:
       type: object
       properties:
@@ -484,86 +484,86 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ThreadListItem'
-        total_count_estimated:
+        totalCountEstimated:
           type: integer
-        have_prev:
+        havePrev:
           type: boolean
-        have_next:
+        haveNext:
           type: boolean
       required:
         - threads
-        - total_count_estimated
-        - have_prev
-        - have_next
+        - totalCountEstimated
+        - havePrev
+        - haveNext
       example:
         threads:
           - id: 1
             title: "First thread"
             content: "This is the content of the first thread."
-            author_id: 42
-            author_name: "Petr Semenov"
-            posts_count: 5
-            created_at: "2024-01-01T12:00:00Z"
+            authorId: 42
+            authorName: "Petr Semenov"
+            postsCount: 5
+            createdAt: "2024-01-01T12:00:00Z"
           - id: 2
             title: "Second thread"
             content: "This is the content of the second thread."
-            author_id: 43
-            author_name: "Anna Ivanova"
-            posts_count: 3
-            created_at: "2024-01-02T15:30:00Z"
-        total_count_estimated: 100
-        have_prev: false
-        have_next: true
+            authorId: 43
+            authorName: "Anna Ivanova"
+            postsCount: 3
+            createdAt: "2024-01-02T15:30:00Z"
+        totalCountEstimated: 100
+        havePrev: false
+        haveNext: true
     ThreadListItem:
       type: object
       properties:
         id:
           type: integer
-        author_id:
+        authorId:
           type: integer
-        author_name:
+        authorName:
           type: string
         title:
           type: string
         content:
           type: string
-        posts_count:
+        postsCount:
           type: integer
-        created_at:
+        createdAt:
           type: string
           format: date-time
       required:
         - id
-        - author_id
-        - author_name
+        - authorId
+        - authorName
         - title
         - content
-        - posts_count
-        - created_at
+        - postsCount
+        - createdAt
       example:
         id: 1
         title: "First thread"
         content: "This is the content of the first thread."
-        author_id: 42
-        author_name: "Petr Semenov"
-        posts_count: 5
-        created_at: "2024-01-01T12:00:00Z"
+        authorId: 42
+        authorName: "Petr Semenov"
+        postsCount: 5
+        createdAt: "2024-01-01T12:00:00Z"
     ThreadWithPostsListResponse:
       type: object
       properties:
         id:
           type: integer
-        author_id:
+        authorId:
           type: integer
-        author_name:
+        authorName  :
           type: string
         title:
           type: string
         content:
           type: string
-        posts_count:
+        postsCount:
           type: integer
-        created_at:
+        createdAt:
           type: string
           format: date-time
         posts:
@@ -572,59 +572,59 @@ components:
             $ref: '#/components/schemas/ThreadPostItem'
       required:
         - id
-        - author_id
-        - author_name
+        - authorId
+        - authorName
         - title
         - content
-        - posts_count
-        - created_at
+        - postsCount
+        - createdAt
         - posts
       example:
         id: 1
         title: "First thread"
         content: "This is the content of the first thread."
-        author_id: 42
-        author_name: "Petr Semenov"
-        posts_count: 5
-        created_at: "2024-01-01T12:00:00Z"
+        authorId: 42
+        authorName: "Petr Semenov"
+        postsCount: 5
+        createdAt: "2024-01-01T12:00:00Z"
         posts:
           - id: 1
             content: "This is the content of the first post."
-            author_id: 42
-            author_name: "Petr Semenov"
-            created_at: "2024-01-01T12:00:00Z"
+            authorId: 42
+            authorName: "Petr Semenov"
+            createdAt: "2024-01-01T12:00:00Z"
           - id: 2
             content: "This is the content of the second post."
-            author_id: 43
-            author_name: "Anna Ivanova"
-            created_at: "2024-01-02T15:30:00Z"
+            authorId: 43
+            authorName: "Anna Ivanova"
+            createdAt: "2024-01-02T15:30:00Z"
     ThreadPostItem:
       type: object
       properties:
         id:
           type: integer
-        author_id:
+        authorId:
           type: integer
-        author_name:
+        authorName  :
           type: string
         content:
           type: string
-        created_at:
+        createdAt:
           type: string
           format: date-time
       required:
         - id
-        - author_id
-        - author_name
+        - authorId
+        - authorName
         - content
-        - created_at
+        - createdAt
       example:
         id: 1
         content: "Первый ответ в ветке."
-        author_id: 42
-        author_name: "Petr Semenov"
-        posts_count: 5
-        created_at: "2024-01-01T12:00:00Z"
+        authorId: 42
+        authorName: "Petr Semenov"
+        postsCount: 5
+        createdAt: "2024-01-01T12:00:00Z"
     ThreadCreateRequest:
       type: object
       properties:

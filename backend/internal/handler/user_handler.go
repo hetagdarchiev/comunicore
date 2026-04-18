@@ -43,7 +43,7 @@ func (u *UserHandler) userGetById(ctx context.Context, userId int) (*api.UserCre
 		ID:        user.ID,
 		Name:      user.Name,
 		Email:     user.Email,
-		AvatarURL: *avatarUrl,
+		AvatarUrl: *avatarUrl,
 	}, nil
 }
 func (u *UserHandler) UserMe(ctx context.Context) (api.UserMeRes, error) {
@@ -65,7 +65,7 @@ func (u *UserHandler) UserCreate(ctx context.Context, req *api.UserCreateRequest
 			ID:        user.ID,
 			Name:      user.Name,
 			Email:     user.Email,
-			AvatarURL: *avatarUrl,
+			AvatarUrl: *avatarUrl,
 		}, nil
 	}
 	var nonUniqueFields []string
@@ -109,6 +109,6 @@ func (u *UserHandler) UserUpdate(ctx context.Context, req *api.UserUpdateRequest
 		ID:        user.ID,
 		Name:      user.Name,
 		Email:     user.Email,
-		AvatarURL: *avatarUrl,
+		AvatarUrl: *avatarUrl,
 	}, nil
 }
