@@ -36,7 +36,7 @@ func testUserCreateOk(t *testing.T, baseURL string) ForumUser {
 			}).
 			Expect().
 			Status(http.StatusCreated).JSON().Object()
-		obj.Keys().ContainsOnly("id", "name", "email", "avatar_url")
+		obj.Keys().ContainsOnly("id", "name", "email", "avatarUrl")
 		obj.Value("id").Number().Gt(0)
 		obj.Value("name").IsEqual(user.Name)
 		obj.Value("email").IsEqual(user.Email)
@@ -164,7 +164,7 @@ func testUserUpdateOk(t *testing.T, baseURL string, cookie *http.Cookie, userID 
 			Expect().
 			Status(http.StatusOK).JSON().Object()
 
-		res.Keys().ContainsOnly("id", "name", "email", "avatar_url")
+		res.Keys().ContainsOnly("id", "name", "email", "avatarUrl")
 
 		user.ID = int(res.Value("id").Number().Raw())
 		user.Name = res.Value("name").String().Raw()
@@ -185,7 +185,7 @@ func testUserMeOk(t *testing.T, baseURL string, cookie *http.Cookie) ForumUser {
 			Expect().
 			Status(http.StatusOK).JSON().Object()
 
-		res.Keys().ContainsOnly("id", "name", "email", "avatar_url")
+		res.Keys().ContainsOnly("id", "name", "email", "avatarUrl")
 
 		user.ID = int(res.Value("id").Number().Raw())
 		user.Name = res.Value("name").String().Raw()
@@ -208,7 +208,7 @@ func testUserGetOk(t *testing.T, baseURL string, cookie *http.Cookie, userID int
 			Expect().
 			Status(http.StatusOK).JSON().Object()
 
-		res.Keys().ContainsOnly("id", "name", "email", "avatar_url")
+		res.Keys().ContainsOnly("id", "name", "email", "avatarUrl")
 
 		user.ID = int(res.Value("id").Number().Raw())
 		user.Name = res.Value("name").String().Raw()
