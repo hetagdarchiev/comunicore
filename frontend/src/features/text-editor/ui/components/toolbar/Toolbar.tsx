@@ -4,7 +4,7 @@ import { RefObject, useRef } from 'react';
 import clsx from 'clsx';
 
 import { useModal } from '@/shared/hooks/useModal';
-import { BurgerMenu } from '@/shared/ui/BurgerMenu';
+import { BurgerMenu } from '@/shared/ui/burger-menu';
 
 import { toolsGroup } from '../../../model/tools';
 import {

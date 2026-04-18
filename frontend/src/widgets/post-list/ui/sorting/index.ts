@@ -1,1 +1,0 @@
-export { Sorting } from './sorting';

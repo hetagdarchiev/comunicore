@@ -2,7 +2,7 @@ import { forwardRef, InputHTMLAttributes } from 'react';
 import { FieldError } from 'react-hook-form';
 import Image from 'next/image';
 
-import { ErrorMessage } from '../ErrorMessage';
+import { ErrorMessage } from '../error-message';
 
 interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   icon: string;

@@ -1,1 +1,1 @@
-export { TextEditor } from './ui/TextEditor';
+export { TextEditor } from './ui/textEditor';

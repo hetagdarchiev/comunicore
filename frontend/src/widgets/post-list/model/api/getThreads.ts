@@ -23,6 +23,6 @@ export async function getThreads(
 
   return {
     threads: data?.threads ?? [],
-    have_next: data?.have_next ?? false,
+    haveNext: data?.haveNext ?? false,
   };
 }

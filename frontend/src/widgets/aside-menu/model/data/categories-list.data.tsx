@@ -1,4 +1,5 @@
-import { Category } from '../categories.interface';
+import { AppRouter } from '@/shared/config/app-router';
+import { Category } from '../types/categories.interface';
 
 export const categories: Category[] = [
   {
@@ -55,7 +56,7 @@ export const categories: Category[] = [
         />
       </svg>
     ),
-    href: '/questions',
+    href: AppRouter.questions,
   },
   {
     title: 'Теги',
@@ -90,7 +91,7 @@ export const categories: Category[] = [
         </defs>
       </svg>
     ),
-    href: '/tags',
+    href: AppRouter.tags,
   },
   {
     title: 'Ранг',
@@ -125,6 +126,6 @@ export const categories: Category[] = [
         </defs>
       </svg>
     ),
-    href: '/award',
+    href: AppRouter.award,
   },
 ];

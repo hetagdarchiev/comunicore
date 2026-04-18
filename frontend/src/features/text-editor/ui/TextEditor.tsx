@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { Button } from '@/shared/ui/Button';
+import { Button } from '@/shared/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
@@ -13,10 +13,10 @@ import {
 } from '../model/schema/markdown.schema';
 import { EditorMode } from '../model/types/mode.types';
 
-import { Editor } from './components/editor';
-import { ModeSwitcher } from './components/mode-switcher';
-import { Preview } from './components/preview';
-import { Toolbar } from './components/toolbar';
+import { Editor } from './components/editor/editor';
+import { ModeSwitcher } from './components/mode-switcher/modeSwitcher';
+import { Preview } from './components/preview/preview';
+import { Toolbar } from './components/toolbar/toolbar';
 
 export function TextEditor() {
   const [mode, setActiveMode] = useState<EditorMode>('edit');

@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
 
-import { Button } from '@/shared/ui/Button';
+import { Button } from '@/shared/ui/button';
 
-type Props = {
-  email: string | null;
+const COUNTDOWN = 10;
+
+const TIMER_TITLES = {
+  timer: (seconds: number) =>
+    `Повторная отправка доступна через ${seconds} сек.`,
+  default: 'Отправьте еще раз если письмо не пришло',
 };
 
-const countdown = 10;
-
-export function VerificationForm(props: Props) {
+export function VerificationForm(props: { email: string | null }) {
   const { email } = props;
 
   const [secondsLeft, setSecondsLeft] = useState(0);
@@ -26,7 +28,7 @@ export function VerificationForm(props: Props) {
   const handleResend = async () => {
     console.log('Запрос на повторную отправку ссылки для:', email);
 
-    setSecondsLeft(countdown);
+    setSecondsLeft(COUNTDOWN);
   };
 
   return (
@@ -41,8 +43,8 @@ export function VerificationForm(props: Props) {
       )}
       <span className='text-gray-80 text-sm'>
         {secondsLeft > 0
-          ? `Повторная отправка доступна через ${secondsLeft} сек.`
-          : 'Отправьте еще раз если письмо не пришло'}
+          ? TIMER_TITLES.timer(secondsLeft)
+          : TIMER_TITLES.default}
       </span>
       <Button
         className='disabled:bg-gray-80 bg-black hover:bg-black disabled:cursor-not-allowed'

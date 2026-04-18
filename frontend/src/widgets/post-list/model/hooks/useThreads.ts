@@ -12,7 +12,7 @@ export function useThreads(limit: number) {
     queryFn: ({ pageParam }) => getThreads(pageParam, limit),
 
     getNextPageParam: (lastPage, allPages) => {
-      if (!lastPage.have_next) return undefined;
+      if (!lastPage.haveNext) return undefined;
       return allPages.length + 1;
     },
   });

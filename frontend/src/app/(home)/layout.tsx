@@ -1,5 +1,5 @@
-import { AsideMenu } from '@/widgets/aside-menu/ui';
-import { Header } from '@/widgets/header/ui';
+import { AsideMenu } from '@/widgets/aside-menu';
+import { Header } from '@/widgets/header';
 
 export default function HomeLayout({
   children,

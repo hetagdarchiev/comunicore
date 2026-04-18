@@ -2,7 +2,7 @@
 
 import { Suspense } from 'react';
 
-import { VerificationBody } from '@/widgets/VerificationBody';
+import { VerificationBody } from '@/widgets/verification-body';
 
 function Verification() {
   return (

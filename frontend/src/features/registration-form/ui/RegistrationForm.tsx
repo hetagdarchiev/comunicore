@@ -12,9 +12,9 @@ import lockIcon from '@/shared/assets/icons/form/lock.svg';
 import mailIcon from '@/shared/assets/icons/form/mail.svg';
 import userIcon from '@/shared/assets/icons/form/user.svg';
 import { getErrorMessage } from '@/shared/lib/helpers';
-import { Button } from '@/shared/ui/Button';
-import { Checkbox } from '@/shared/ui/Checkbox';
-import { Input } from '@/shared/ui/Input';
+import { Button } from '@/shared/ui/button';
+import { Checkbox } from '@/shared/ui/checkbox';
+import { Input } from '@/shared/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 

@@ -1,5 +1,5 @@
-import { AccordionsList } from './accordions-list';
-import { CategoriesList } from './categories-list';
+import { AccordionsList } from './components/accordions-list/accordionsList';
+import { CategoriesList } from './components/categories-list/categoriesList';
 
 export function AsideMenu() {
   return (

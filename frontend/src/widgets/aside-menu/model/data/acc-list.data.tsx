@@ -1,7 +1,8 @@
 import favoritesIcon from '@/assets/icons/sidebar-nav/gray-star.svg';
 import LinkIcon from '@/assets/icons/sidebar-nav/link-icon.svg';
 
-import { AccCatergory } from '../acc-category.interface';
+import { AccCatergory } from '../types/acc-category.interface';
+import { AppRouter } from '@/shared/config/app-router';
 
 export const accCategories: AccCatergory[] = [
   {
@@ -10,11 +11,11 @@ export const accCategories: AccCatergory[] = [
     subparagraphs: [
       {
         title: 'Правила форума',
-        href: '/rules',
+        href: AppRouter.rules,
       },
       {
         title: 'Правила сообществ',
-        href: '/rules/community',
+        href: AppRouter.community,
       },
     ],
   },

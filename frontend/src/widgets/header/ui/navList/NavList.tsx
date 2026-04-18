@@ -6,27 +6,28 @@ import favoritesIcon from '@/assets/icons/user-nav/favorites.svg';
 import logoutIcon from '@/assets/icons/user-nav/logout.svg';
 import notificationsIcon from '@/assets/icons/user-nav/notifications.svg';
 import profileIcon from '@/assets/icons/user-nav/profile.svg';
+import { AppRouter } from '@/shared/config/app-router';
 
 const navigations = [
   {
     name: 'Notifications',
     icon: notificationsIcon,
-    href: '/notifications',
+    href: AppRouter.notification,
   },
   {
     name: 'Profile',
     icon: profileIcon,
-    href: '/profile',
+    href: AppRouter.profile,
   },
   {
     name: 'FAQ',
     icon: faqIcon,
-    href: '/rules',
+    href: AppRouter.faq,
   },
   {
     name: 'Favorites',
     icon: favoritesIcon,
-    href: '/favorites',
+    href: AppRouter.favorites,
   },
 ];
 

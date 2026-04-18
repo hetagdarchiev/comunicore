@@ -67,6 +67,7 @@
     }
   }
 }
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -78,8 +79,8 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: #cbd5e1;
-  border-radius: 20px;
   border: 1px solid transparent;
+  border-radius: 20px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
@@ -87,6 +88,6 @@
 }
 
 .custom-scrollbar {
-  scrollbar-width: thin;
   scrollbar-color: #cbd5e1 transparent;
+  scrollbar-width: thin;
 }

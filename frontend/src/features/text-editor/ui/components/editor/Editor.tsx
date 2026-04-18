@@ -4,11 +4,11 @@ import { RefObject, useCallback } from 'react';
 import { SubmitHandler, UseFormReturn } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { MdEditor } from '../../..//model/lib/mdEditor/MdEditor';
 import { useEditorDraft } from '../../../model/hooks/useEditorDraft';
 import { useEditorKeyBoard } from '../../../model/hooks/useEditorKeyBoard';
 import { useMedia } from '../../../model/hooks/useMedia';
 import { renderHtml } from '../../../model/lib/markdown';
+import { MdEditor } from '../../../model/lib/mdEditor/MdEditor';
 import { MarkDownSchema } from '../../../model/schema/markdown.schema';
 
 interface Props {

@@ -1,1 +1,0 @@
-export { AsideMenu } from './AsideMenu';

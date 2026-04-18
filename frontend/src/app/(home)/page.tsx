@@ -4,14 +4,13 @@ import Link from 'next/link';
 
 import { useAuth } from '@/shared/hooks/useAuth';
 import { PostList } from '@/widgets/post-list';
+import { AppRouter } from '@/shared/config/app-router';
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
   return (
     <main className='grow'>
-      <Link href={isAuthenticated ? '/editor' : '/registration'}>
-        Text editor
-      </Link>
+      {isAuthenticated && <Link href={AppRouter.editor}>Text editor</Link>}
       <PostList />
     </main>
   );
