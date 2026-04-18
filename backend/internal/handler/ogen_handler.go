@@ -82,7 +82,7 @@ func (h *securityHandler) HandleCookieAuth(
 		log.Printf("Failed decode session id from cookie: %v\n", err)
 		return ctx, apperror.NewAuthenticationError(op, err, "invalid Cookie session id")
 	}
-	if sessionID == nil || len(sessionID) == 0 {
+	if len(sessionID) == 0 {
 		log.Printf("Empty session id in cookie\n")
 		return ctx, apperror.NewAuthenticationError(op, nil, "empty Cookie session id")
 	}
