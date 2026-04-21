@@ -5,7 +5,6 @@ import { useLikeThread } from './model/hooks/useLikeThread';
 import { useThreads } from './model/hooks/useThreads';
 import { PostListLoader } from './ui/PostListLoader';
 import { PostListView } from './ui/PostListView';
-// import { Sorting } from './ui/sorting';
 
 export function PostList() {
   const postCount = 4;
