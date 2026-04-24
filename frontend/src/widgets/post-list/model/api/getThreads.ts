@@ -19,10 +19,9 @@ export async function getThreads(
   }
 
   const data = await res.json();
-  console.log(data);
 
   return {
     threads: data?.threads ?? [],
-    have_next: data?.have_next ?? false,
+    haveNext: data?.haveNext ?? false,
   };
 }

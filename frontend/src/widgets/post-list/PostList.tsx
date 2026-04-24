@@ -42,7 +42,6 @@ export function PostList() {
   }
   return (
     <div>
-      {/* <Sorting /> */}
       <PostListView
         threads={threads}
         onLike={handleLike}
