@@ -1,9 +1,10 @@
 import Link from 'next/link';
+import {ReactNode} from "react";
 
 interface PostContentProps {
   id: string | number;
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const PostContent = ({ id, title, children }: PostContentProps) => (
