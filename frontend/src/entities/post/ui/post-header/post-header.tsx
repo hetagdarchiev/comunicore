@@ -35,7 +35,7 @@ export const PostHeader = ({
       <h3 className='mb-0.5 leading-none font-normal text-slate-900'>
         {author_name}
       </h3>
-      <p className='text-gray-80 text-xs'>{formatDate(new Date(created_at))}</p>
+      <p className='text-gray-80 text-xs'>{formatDate(created_at)}</p>
     </div>
   </Link>
 );
