@@ -31,6 +31,7 @@ export function CreateThreadForm({ children }: CreateThreadFormProps) {
         placeholder='Заголовок поста'
         maxLength={titleMaxLength}
         disabled={isPending}
+        className='mb-2.5 bg-white'
       />
       {localError && <ErrorMessage error={localError} />}
       {children}

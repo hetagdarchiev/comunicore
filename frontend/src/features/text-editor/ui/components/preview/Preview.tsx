@@ -2,7 +2,7 @@
 
 import { MouseEvent, useMemo } from 'react';
 
-import { renderHtml } from '../../../model/lib/markdown';
+import { renderHtml } from '@/shared/lib/markdown';
 
 import styles from './preview.module.css';
 
