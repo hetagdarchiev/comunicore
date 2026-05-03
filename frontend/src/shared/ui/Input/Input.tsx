@@ -18,7 +18,7 @@ export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
         className={`${className} bg-light-fc focus-within:ring-gray-80/30 flex h-full w-full max-w-125 items-center gap-x-2.5 rounded-sm px-5 py-3 transition-all duration-200 focus-within:ring-2 ${error ? 'border-red-500' : ''}`}
         htmlFor={rest.name}
       >
-        <Image src={icon} alt='' width={24} height={24} />
+        {icon && <Image src={icon} alt='' width={24} height={24} unoptimized />}
         <input
           className='text-gray-80 placeholder:text-gray-80 w-full bg-transparent text-[18px] outline-none'
           ref={ref}
