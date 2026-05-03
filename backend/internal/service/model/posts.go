@@ -21,11 +21,12 @@ type PostInfo struct {
 	CreatedAt time.Time
 }
 type PostListItem struct {
-	ID        int
-	UserID    int
-	UserName  string
-	Content   string
-	CreatedAt time.Time
+	ID              int
+	UserID          int
+	UserName        string
+	AuthorAvatarUrl string
+	Content         string
+	CreatedAt       time.Time
 }
 
 type PostCreate struct {

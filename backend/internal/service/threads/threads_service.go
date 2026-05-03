@@ -21,6 +21,7 @@ type PostsRepo interface {
 }
 type UserRepo interface {
 	GetNameById(ctx context.Context, userId int) (string, error)
+	Get(ctx context.Context, userId int) (model.User, error)
 }
 
 type ThreadsService struct {
@@ -82,31 +83,33 @@ func (s *ThreadsService) GetThreadWithPosts(ctx context.Context, threadId int) (
 	}
 	var postListItems []model.PostListItem
 	for _, post := range posts {
-		userName, err := s.userRepo.GetNameById(ctx, post.UserID)
+		userInfo, err := s.userRepo.Get(ctx, post.UserID)
 		if err != nil {
 			return model.ThreadWithPosts{}, err
 		}
 		postListItems = append(postListItems, model.PostListItem{
-			ID:        post.ID,
-			UserID:    post.UserID,
-			UserName:  userName,
-			Content:   post.Content,
-			CreatedAt: post.CreatedAt,
+			ID:              post.ID,
+			UserID:          post.UserID,
+			UserName:        userInfo.Name,
+			AuthorAvatarUrl: userInfo.AvatarURL,
+			Content:         post.Content,
+			CreatedAt:       post.CreatedAt,
 		})
 	}
-	userName, err := s.userRepo.GetNameById(ctx, threadInfo.UserID)
+	userInfo, err := s.userRepo.Get(ctx, threadInfo.UserID)
 	if err != nil {
 		return model.ThreadWithPosts{}, err
 	}
 	return model.ThreadWithPosts{
-		ID:         threadInfo.ID,
-		AuthorID:   threadInfo.UserID,
-		AuthorName: userName,
-		Title:      threadInfo.Title,
-		Content:    threadInfo.Content,
-		PostsCount: threadInfo.PostsCount,
-		CreatedAt:  threadInfo.CreatedAt,
-		Posts:      postListItems,
+		ID:              threadInfo.ID,
+		AuthorID:        threadInfo.UserID,
+		AuthorName:      userInfo.Name,
+		AuthorAvatarUrl: userInfo.AvatarURL,
+		Title:           threadInfo.Title,
+		Content:         threadInfo.Content,
+		PostsCount:      threadInfo.PostsCount,
+		CreatedAt:       threadInfo.CreatedAt,
+		Posts:           postListItems,
 	}, nil
 }
 func (s *ThreadsService) GetThreadListByPage(ctx context.Context, page, limit int) (model.ThreadListResponse, error) {
@@ -128,18 +131,19 @@ func (s *ThreadsService) convertThreadListRepoToResponse(
 
 	var threadList []model.ThreadInfoResponse
 	for _, thread := range threadListRepo.Threads {
-		userName, err := s.userRepo.GetNameById(ctx, thread.UserID)
+		userInfo, err := s.userRepo.Get(ctx, thread.UserID)
 		if err != nil {
 			return model.ThreadListResponse{}, err
 		}
 		threadList = append(threadList, model.ThreadInfoResponse{
-			ID:         thread.ID,
-			Title:      thread.Title,
-			Content:    thread.Content,
-			AuthorID:   thread.UserID,
-			AuthorName: userName,
-			PostsCount: thread.PostsCount,
-			CreatedAt:  thread.CreatedAt,
+			ID:              thread.ID,
+			Title:           thread.Title,
+			Content:         thread.Content,
+			AuthorID:        thread.UserID,
+			AuthorName:      userInfo.Name,
+			AuthorAvatarUrl: userInfo.AvatarURL,
+			PostsCount:      thread.PostsCount,
+			CreatedAt:       thread.CreatedAt,
 		})
 	}
 	return model.ThreadListResponse{
