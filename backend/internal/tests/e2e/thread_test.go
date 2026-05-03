@@ -27,13 +27,14 @@ func TestThreadCreate(t *testing.T) {
 }
 
 type ThreadItem struct {
-	ID         int       `json:"id"`
-	AuthorID   int       `json:"authorId"`
-	AuthorName string    `json:"authorName"`
-	Title      string    `json:"title"`
-	Content    string    `json:"content"`
-	PostsCount int       `json:"postsCount"`
-	CreatedAt  time.Time `json:"createdAt"`
+	ID              int       `json:"id"`
+	AuthorID        int       `json:"authorId"`
+	AuthorName      string    `json:"authorName"`
+	AuthorAvatarUrl string    `json:"authorAvatarUrl"`
+	Title           string    `json:"title"`
+	Content         string    `json:"content"`
+	PostsCount      int       `json:"postsCount"`
+	CreatedAt       time.Time `json:"createdAt"`
 }
 
 func testThreadCreateOk(t *testing.T, baseURL string, cookie *http.Cookie) ThreadItem {
@@ -52,10 +53,11 @@ func testThreadCreateOk(t *testing.T, baseURL string, cookie *http.Cookie) Threa
 			Expect().
 			Status(http.StatusCreated).JSON().Object()
 
-		res.Keys().ContainsOnly("id", "authorId", "authorName", "title", "content", "postsCount", "createdAt")
+		res.Keys().ContainsOnly("id", "authorId", "authorName", "authorAvatarUrl", "title", "content", "postsCount", "createdAt")
 		res.Value("id").Number().Gt(0)
 		res.Value("authorId").Number().Gt(0)
 		res.Value("authorName").String().NotEmpty()
+		// res.Value("authorAvatarUrl").String().NotEmpty()
 		res.Value("title").String().HasPrefix("Test Thread ")
 		res.Value("content").String().HasPrefix("This is a test thread content ")
 		res.Value("postsCount").Number().IsEqual(0)
@@ -83,10 +85,11 @@ func testThreadPostCreateOk(t *testing.T, baseURL string, cookie *http.Cookie, t
 			Expect().
 			Status(http.StatusCreated).JSON().Object()
 
-		res.Keys().ContainsOnly("id", "authorId", "authorName", "content", "createdAt")
+		res.Keys().ContainsOnly("id", "authorId", "authorName", "authorAvatarUrl", "content", "createdAt")
 		res.Value("id").Number().Gt(0)
 		res.Value("authorId").Number().Gt(0)
 		res.Value("authorName").String().NotEmpty()
+		// res.Value("authorAvatarUrl").String().NotEmpty()
 		res.Value("content").String().IsEqual(postContent)
 		res.Value("createdAt").String().NotEmpty()
 
@@ -97,21 +100,23 @@ func testThreadPostCreateOk(t *testing.T, baseURL string, cookie *http.Cookie, t
 }
 
 type ThreadPostItem struct {
-	ID         int       `json:"id"`
-	AuthorID   int       `json:"authorId"`
-	AuthorName string    `json:"authorName"`
-	Content    string    `json:"content"`
-	CreatedAt  time.Time `json:"createdAt"`
+	ID              int       `json:"id"`
+	AuthorID        int       `json:"authorId"`
+	AuthorName      string    `json:"authorName"`
+	AuthorAvatarUrl string    `json:"authorAvatarUrl"`
+	Content         string    `json:"content"`
+	CreatedAt       time.Time `json:"createdAt"`
 }
 type ThreadWithPosts struct {
-	Id         int              `json:"id"`
-	AuthorID   int              `json:"authorId"`
-	AuthorName string           `json:"authorName"`
-	Title      string           `json:"title"`
-	Content    string           `json:"content"`
-	PostsCount int              `json:"postsCount"`
-	CreatedAt  time.Time        `json:"createdAt"`
-	Posts      []ThreadPostItem `json:"posts"`
+	Id              int              `json:"id"`
+	AuthorID        int              `json:"authorId"`
+	AuthorName      string           `json:"authorName"`
+	AuthorAvatarUrl string           `json:"authorAvatarUrl"`
+	Title           string           `json:"title"`
+	Content         string           `json:"content"`
+	PostsCount      int              `json:"postsCount"`
+	CreatedAt       time.Time        `json:"createdAt"`
+	Posts           []ThreadPostItem `json:"posts"`
 }
 
 func testThreadGet(t *testing.T, baseURL string,
@@ -128,10 +133,11 @@ func testThreadGet(t *testing.T, baseURL string,
 			Status(http.StatusOK).JSON().Object()
 
 		res.Keys().ContainsOnly(
-			"id", "authorId", "authorName", "title", "content", "postsCount", "createdAt", "posts")
+			"id", "authorId", "authorName", "authorAvatarUrl", "title", "content", "postsCount", "createdAt", "posts")
 		res.Value("id").Number().IsEqual(expectedThread.ID)
 		res.Value("authorId").Number().IsEqual(expectedThread.AuthorID)
 		res.Value("authorName").String().IsEqual(expectedThread.AuthorName)
+		// res.Value("authorAvatarUrl").String().IsEqual(expectedThread.AuthorAvatarUrl)
 		res.Value("title").String().IsEqual(expectedThread.Title)
 		res.Value("content").String().IsEqual(expectedThread.Content)
 		res.Value("postsCount").Number().IsEqual(1)
@@ -141,10 +147,11 @@ func testThreadGet(t *testing.T, baseURL string,
 		posts.Length().IsEqual(1)
 
 		post := posts.Value(0).Object()
-		post.Keys().ContainsOnly("id", "authorId", "authorName", "content", "createdAt")
+		post.Keys().ContainsOnly("id", "authorId", "authorName", "authorAvatarUrl", "content", "createdAt")
 		post.Value("id").Number().IsEqual(expectedPost.ID)
 		post.Value("authorId").Number().IsEqual(expectedPost.AuthorID)
 		post.Value("authorName").String().IsEqual(expectedPost.AuthorName)
+		post.Value("authorAvatarUrl").String().IsEqual(expectedPost.AuthorAvatarUrl)
 		post.Value("content").String().IsEqual(expectedPost.Content)
 		post.Value("createdAt").String().NotEmpty()
 	})

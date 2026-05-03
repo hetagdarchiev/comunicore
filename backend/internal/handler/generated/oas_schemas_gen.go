@@ -399,13 +399,14 @@ func (*ThreadGetInternalServerError) threadGetRes() {}
 
 // Ref: #/components/schemas/ThreadListItem
 type ThreadListItem struct {
-	ID         int       `json:"id"`
-	AuthorId   int       `json:"authorId"`
-	AuthorName string    `json:"authorName"`
-	Title      string    `json:"title"`
-	Content    string    `json:"content"`
-	PostsCount int       `json:"postsCount"`
-	CreatedAt  time.Time `json:"createdAt"`
+	ID              int       `json:"id"`
+	AuthorId        int       `json:"authorId"`
+	AuthorName      string    `json:"authorName"`
+	AuthorAvatarUrl url.URL   `json:"authorAvatarUrl"`
+	Title           string    `json:"title"`
+	Content         string    `json:"content"`
+	PostsCount      int       `json:"postsCount"`
+	CreatedAt       time.Time `json:"createdAt"`
 }
 
 // GetID returns the value of ID.
@@ -421,6 +422,11 @@ func (s *ThreadListItem) GetAuthorId() int {
 // GetAuthorName returns the value of AuthorName.
 func (s *ThreadListItem) GetAuthorName() string {
 	return s.AuthorName
+}
+
+// GetAuthorAvatarUrl returns the value of AuthorAvatarUrl.
+func (s *ThreadListItem) GetAuthorAvatarUrl() url.URL {
+	return s.AuthorAvatarUrl
 }
 
 // GetTitle returns the value of Title.
@@ -456,6 +462,11 @@ func (s *ThreadListItem) SetAuthorId(val int) {
 // SetAuthorName sets the value of AuthorName.
 func (s *ThreadListItem) SetAuthorName(val string) {
 	s.AuthorName = val
+}
+
+// SetAuthorAvatarUrl sets the value of AuthorAvatarUrl.
+func (s *ThreadListItem) SetAuthorAvatarUrl(val url.URL) {
+	s.AuthorAvatarUrl = val
 }
 
 // SetTitle sets the value of Title.
@@ -532,11 +543,12 @@ func (*ThreadListResponse) threadsListRes() {}
 
 // Ref: #/components/schemas/ThreadPostItem
 type ThreadPostItem struct {
-	ID         int       `json:"id"`
-	AuthorId   int       `json:"authorId"`
-	AuthorName string    `json:"authorName"`
-	Content    string    `json:"content"`
-	CreatedAt  time.Time `json:"createdAt"`
+	ID              int       `json:"id"`
+	AuthorId        int       `json:"authorId"`
+	AuthorName      string    `json:"authorName"`
+	AuthorAvatarUrl url.URL   `json:"authorAvatarUrl"`
+	Content         string    `json:"content"`
+	CreatedAt       time.Time `json:"createdAt"`
 }
 
 // GetID returns the value of ID.
@@ -552,6 +564,11 @@ func (s *ThreadPostItem) GetAuthorId() int {
 // GetAuthorName returns the value of AuthorName.
 func (s *ThreadPostItem) GetAuthorName() string {
 	return s.AuthorName
+}
+
+// GetAuthorAvatarUrl returns the value of AuthorAvatarUrl.
+func (s *ThreadPostItem) GetAuthorAvatarUrl() url.URL {
+	return s.AuthorAvatarUrl
 }
 
 // GetContent returns the value of Content.
@@ -579,6 +596,11 @@ func (s *ThreadPostItem) SetAuthorName(val string) {
 	s.AuthorName = val
 }
 
+// SetAuthorAvatarUrl sets the value of AuthorAvatarUrl.
+func (s *ThreadPostItem) SetAuthorAvatarUrl(val url.URL) {
+	s.AuthorAvatarUrl = val
+}
+
 // SetContent sets the value of Content.
 func (s *ThreadPostItem) SetContent(val string) {
 	s.Content = val
@@ -593,14 +615,15 @@ func (*ThreadPostItem) threadAddPostRes() {}
 
 // Ref: #/components/schemas/ThreadWithPostsListResponse
 type ThreadWithPostsListResponse struct {
-	ID         int              `json:"id"`
-	AuthorId   int              `json:"authorId"`
-	AuthorName string           `json:"authorName"`
-	Title      string           `json:"title"`
-	Content    string           `json:"content"`
-	PostsCount int              `json:"postsCount"`
-	CreatedAt  time.Time        `json:"createdAt"`
-	Posts      []ThreadPostItem `json:"posts"`
+	ID              int              `json:"id"`
+	AuthorId        int              `json:"authorId"`
+	AuthorName      string           `json:"authorName"`
+	AuthorAvatarUrl url.URL          `json:"authorAvatarUrl"`
+	Title           string           `json:"title"`
+	Content         string           `json:"content"`
+	PostsCount      int              `json:"postsCount"`
+	CreatedAt       time.Time        `json:"createdAt"`
+	Posts           []ThreadPostItem `json:"posts"`
 }
 
 // GetID returns the value of ID.
@@ -616,6 +639,11 @@ func (s *ThreadWithPostsListResponse) GetAuthorId() int {
 // GetAuthorName returns the value of AuthorName.
 func (s *ThreadWithPostsListResponse) GetAuthorName() string {
 	return s.AuthorName
+}
+
+// GetAuthorAvatarUrl returns the value of AuthorAvatarUrl.
+func (s *ThreadWithPostsListResponse) GetAuthorAvatarUrl() url.URL {
+	return s.AuthorAvatarUrl
 }
 
 // GetTitle returns the value of Title.
@@ -656,6 +684,11 @@ func (s *ThreadWithPostsListResponse) SetAuthorId(val int) {
 // SetAuthorName sets the value of AuthorName.
 func (s *ThreadWithPostsListResponse) SetAuthorName(val string) {
 	s.AuthorName = val
+}
+
+// SetAuthorAvatarUrl sets the value of AuthorAvatarUrl.
+func (s *ThreadWithPostsListResponse) SetAuthorAvatarUrl(val url.URL) {
+	s.AuthorAvatarUrl = val
 }
 
 // SetTitle sets the value of Title.

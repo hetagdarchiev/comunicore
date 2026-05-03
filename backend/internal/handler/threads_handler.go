@@ -5,6 +5,7 @@ package handler
 
 import (
 	"context"
+	"net/url"
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/apperror"
 	api "github.com/hetagdarchiev/comunicore/backend/internal/handler/generated"
@@ -87,12 +88,17 @@ func (h *ThreadsHandler) ThreadGet(ctx context.Context, params api.ThreadGetPara
 	}
 	var posts []api.ThreadPostItem
 	for _, post := range threadWithPosts.Posts {
+		avatarUrl, err := url.Parse(post.AuthorAvatarUrl)
+		if err != nil {
+			avatarUrl = nil
+		}
 		posts = append(posts, api.ThreadPostItem{
-			ID:         post.ID,
-			AuthorId:   post.UserID,
-			AuthorName: post.UserName,
-			Content:    post.Content,
-			CreatedAt:  post.CreatedAt,
+			ID:              post.ID,
+			AuthorId:        post.UserID,
+			AuthorName:      post.UserName,
+			AuthorAvatarUrl: *avatarUrl,
+			Content:         post.Content,
+			CreatedAt:       post.CreatedAt,
 		})
 	}
 	return &api.ThreadWithPostsListResponse{

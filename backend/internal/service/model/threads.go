@@ -6,14 +6,15 @@ package model
 import "time"
 
 type ThreadWithPosts struct {
-	ID         int
-	AuthorID   int
-	AuthorName string
-	Title      string
-	Content    string
-	PostsCount int
-	CreatedAt  time.Time
-	Posts      []PostListItem
+	ID              int
+	AuthorID        int
+	AuthorName      string
+	AuthorAvatarUrl string
+	Title           string
+	Content         string
+	PostsCount      int
+	CreatedAt       time.Time
+	Posts           []PostListItem
 }
 
 type ThreadCreate struct {
@@ -37,13 +38,14 @@ type ThreadListRepo struct {
 	HaveNext            bool
 }
 type ThreadInfoResponse struct {
-	ID         int
-	Title      string
-	Content    string
-	AuthorID   int
-	AuthorName string
-	PostsCount int
-	CreatedAt  time.Time
+	ID              int
+	Title           string
+	Content         string
+	AuthorID        int
+	AuthorName      string
+	AuthorAvatarUrl string
+	PostsCount      int
+	CreatedAt       time.Time
 }
 
 type ThreadListResponse struct {
