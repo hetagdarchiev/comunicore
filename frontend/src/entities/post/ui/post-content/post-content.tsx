@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import {ReactNode} from "react";
 
+import { renderHtml } from '@/shared/lib/markdown';
+
 interface PostContentProps {
   id: string | number;
   title: string;
@@ -14,8 +16,9 @@ export const PostContent = ({ id, title, children }: PostContentProps) => (
         {title}
       </h2>
     </Link>
-    <p className='line-clamp-6 text-base leading-6 font-light tracking-wider'>
-      {children}
-    </p>
+    <div
+      className='line-clamp-6 text-base leading-6 font-light tracking-wider'
+      dangerouslySetInnerHTML={{ __html: renderHtml(String(children ?? '')) }}
+    />
   </div>
 );
