@@ -5,7 +5,6 @@ package threads
 
 import (
 	"context"
-	"strings"
 
 	"github.com/hetagdarchiev/comunicore/backend/internal/repository"
 	threadDb "github.com/hetagdarchiev/comunicore/backend/internal/repository/sqlc/db"
@@ -38,30 +37,9 @@ func (r *ThreadsRepo) Create(ctx context.Context, thread model.ThreadCreate) (mo
 		UserID:     int(row.UserID),
 		Title:      row.Title,
 		Content:    row.Content,
-		PostsCount: int(row.PostsCount),
+		PostsCount: 0,
 		CreatedAt:  row.CreatedAt.Time,
 	}, err
-}
-
-func (r *ThreadsRepo) InsertThreadTags(ctx context.Context, threadID int, tags []string) error {
-	seen := make(map[string]struct{}, len(tags))
-	for _, raw := range tags {
-		tag := strings.ToLower(strings.TrimSpace(raw))
-		if tag == "" {
-			continue
-		}
-		if _, ok := seen[tag]; ok {
-			continue
-		}
-		seen[tag] = struct{}{}
-		if err := r.queries.ThreadTagInsert(ctx, threadDb.ThreadTagInsertParams{
-			ThreadID: int32(threadID),
-			Tag:      tag,
-		}); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 // list threads page

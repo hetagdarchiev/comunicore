@@ -8,19 +8,6 @@ import (
 
 // Handler handles operations described by OpenAPI v3 specification.
 type Handler interface {
-	// AnalyticsMetricsGet implements analyticsMetricsGet operation.
-	//
-	// Aggregated analytics (requires login).
-	//
-	// GET /api/analytics/metrics
-	AnalyticsMetricsGet(ctx context.Context, params AnalyticsMetricsGetParams) (AnalyticsMetricsGetRes, error)
-	// AnalyticsVisitBatchSubmit implements analyticsVisitBatchSubmit operation.
-	//
-	// Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
-	// Idempotent per `clientBatchId`.
-	//
-	// POST /api/analytics/visit-batch
-	AnalyticsVisitBatchSubmit(ctx context.Context, req *AnalyticsVisitBatchRequest) (AnalyticsVisitBatchSubmitRes, error)
 	// AuthLogin implements authLogin operation.
 	//
 	// Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.

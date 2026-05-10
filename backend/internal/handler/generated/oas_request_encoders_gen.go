@@ -14,20 +14,6 @@ import (
 	"github.com/ogen-go/ogen/uri"
 )
 
-func encodeAnalyticsVisitBatchSubmitRequest(
-	req *AnalyticsVisitBatchRequest,
-	r *http.Request,
-) error {
-	const contentType = "application/json"
-	e := new(jx.Encoder)
-	{
-		req.Encode(e)
-	}
-	encoded := e.Bytes()
-	ht.SetBody(r, bytes.NewReader(encoded), contentType)
-	return nil
-}
-
 func encodeAuthLoginRequest(
 	req *AuthLoginRequest,
 	r *http.Request,

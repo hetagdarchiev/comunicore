@@ -23,14 +23,12 @@ import (
 	"github.com/ogen-go/ogen/ogenerrors"
 
 	authRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/auth"
-	analyticsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/analytics"
 	mediaRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/media"
 	postsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/posts"
 	threadsRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/threads"
 	userRepo "github.com/hetagdarchiev/comunicore/backend/internal/repository/user"
 
 	authService "github.com/hetagdarchiev/comunicore/backend/internal/service/auth"
-	analyticsService "github.com/hetagdarchiev/comunicore/backend/internal/service/analytics"
 	mediaService "github.com/hetagdarchiev/comunicore/backend/internal/service/media"
 	threadsService "github.com/hetagdarchiev/comunicore/backend/internal/service/threads"
 	userService "github.com/hetagdarchiev/comunicore/backend/internal/service/user"
@@ -38,11 +36,10 @@ import (
 
 // OgenHandler implements api.Handler.
 type OgenHandler struct {
-	authHandler      *AuthHandler
-	userHandler      *UserHandler
-	threadsHandler   *ThreadsHandler
-	mediaHandler     *MediaHandler
-	analyticsHandler *AnalyticsHandler
+	authHandler    *AuthHandler
+	userHandler    *UserHandler
+	threadsHandler *ThreadsHandler
+	mediaHandler   *MediaHandler
 	api.UnimplementedHandler
 }
 
@@ -51,52 +48,14 @@ func NewOgenHandler(
 	userHandler *UserHandler,
 	threadsHandler *ThreadsHandler,
 	mediaHandler *MediaHandler,
-	analyticsHandler *AnalyticsHandler,
 ) *OgenHandler {
 
 	return &OgenHandler{
-		threadsHandler:   threadsHandler,
-		userHandler:      userHandler,
-		authHandler:      authHandler,
-		mediaHandler:     mediaHandler,
-		analyticsHandler: analyticsHandler,
+		threadsHandler: threadsHandler,
+		userHandler:    userHandler,
+		authHandler:    authHandler,
+		mediaHandler:   mediaHandler,
 	}
-}
-
-// optionalCookieSession attaches user id to GlobalContext when a valid sid cookie is present
-// (for routes that do not run ogen cookie security, e.g. analytics batch ingest).
-func optionalCookieSession(authR *authRepo.AuthRepo, next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		gc := GlobalContextFromContext(r.Context())
-		if gc == nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		cookie, err := r.Cookie("sid")
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		sessionID, err := urlencode.Decode(cookie.Value)
-		if err != nil || len(sessionID) == 0 {
-			next.ServeHTTP(w, r)
-			return
-		}
-		sessionUUID, err := uuid.FromBytes(sessionID)
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		userID, err := authR.GetUserIDBySessionID(r.Context(), sessionUUID)
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-		gc.SessionID = sessionUUID
-		gc.UserID = userID
-		gc.UserIDIsSet = true
-		next.ServeHTTP(w, r)
-	})
 }
 
 type securityHandler struct {
@@ -210,25 +169,19 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	if err != nil {
 		panic(err)
 	}
-	analyticsR, err := analyticsRepo.NewAnalyticsRepo(config.Database.DSN())
-	if err != nil {
-		panic(err)
-	}
 
 	authS := authService.NewAuthService(authR, userR)
 	userS := userService.NewUserService(userR, authR)
 	mediaS := mediaService.NewMediaService(config.Server.BaseURL, mediaR)
 
 	threadsS := threadsService.NewThreadsService(threadR, postR, userR)
-	analyticsS := analyticsService.NewAnalyticsService(analyticsR)
 
 	authH := NewAuthHandler(authS)
 	userH := NewUserHandler(userS)
 	threadsH := NewThreadsHandler(threadsS)
 	mediaH := NewMediaHandler(mediaS)
-	analyticsH := NewAnalyticsHandler(analyticsS)
 
-	ogenHandler := NewOgenHandler(authH, userH, threadsH, mediaH, analyticsH)
+	ogenHandler := NewOgenHandler(authH, userH, threadsH, mediaH)
 	secHandler := NewSecurityHandler(authR)
 
 	errHandler := &errorHandler{}
@@ -236,7 +189,7 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	if err != nil {
 		panic(err)
 	}
-	apiHandler := WithGlobalContext(optionalCookieSession(authR, srv))
+	apiHandler := WithGlobalContext(srv)
 
 	fmt.Printf("cors enabled for origins %s\n", config.Server.PermittedOrigin)
 	if len(config.Server.PermittedOrigin) > 0 {
@@ -298,12 +251,4 @@ func (h *OgenHandler) AuthLogout(ctx context.Context) error {
 }
 func (h *OgenHandler) MediaUpload(ctx context.Context, req *api.MediaUploadRequestMultipart) (api.MediaUploadRes, error) {
 	return h.mediaHandler.MediaUpload(ctx, req)
-}
-
-func (h *OgenHandler) AnalyticsVisitBatchSubmit(ctx context.Context, req *api.AnalyticsVisitBatchRequest) (api.AnalyticsVisitBatchSubmitRes, error) {
-	return h.analyticsHandler.AnalyticsVisitBatchSubmit(ctx, req)
-}
-
-func (h *OgenHandler) AnalyticsMetricsGet(ctx context.Context, params api.AnalyticsMetricsGetParams) (api.AnalyticsMetricsGetRes, error) {
-	return h.analyticsHandler.AnalyticsMetricsGet(ctx, params)
 }

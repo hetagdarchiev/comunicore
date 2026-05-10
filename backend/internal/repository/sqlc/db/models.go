@@ -46,22 +46,3 @@ type User struct {
 	CreatedAt pgtype.Timestamptz
 	UpdatedAt pgtype.Timestamptz
 }
-
-type ThreadTag struct {
-	ThreadID int32
-	Tag      string
-}
-
-type AnalyticsVisitBatch struct {
-	ID                 int64
-	UserID             pgtype.Int4
-	ClientBatchID      pgtype.UUID
-	ActiveDurationMs   int64
-	VisibleDurationMs  int64
-	IsMobile           bool
-	HadComposeActivity bool
-	HadReadActivity    bool
-	BatchStartAt       pgtype.Timestamptz
-	BatchEndAt         pgtype.Timestamptz
-	CreatedAt          pgtype.Timestamptz
-}

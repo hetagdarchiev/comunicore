@@ -12,962 +12,6 @@ import (
 	"github.com/ogen-go/ogen/validate"
 )
 
-// Encode implements json.Marshaler.
-func (s *AnalyticsHourBucket) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *AnalyticsHourBucket) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("hour")
-		e.Int(s.Hour)
-	}
-	{
-		e.FieldStart("sharePercent")
-		e.Float64(s.SharePercent)
-	}
-}
-
-var jsonFieldsNameOfAnalyticsHourBucket = [2]string{
-	0: "hour",
-	1: "sharePercent",
-}
-
-// Decode decodes AnalyticsHourBucket from json.
-func (s *AnalyticsHourBucket) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AnalyticsHourBucket to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "hour":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Int()
-				s.Hour = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"hour\"")
-			}
-		case "sharePercent":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Float64()
-				s.SharePercent = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"sharePercent\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode AnalyticsHourBucket")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000011,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfAnalyticsHourBucket) {
-					name = jsonFieldsNameOfAnalyticsHourBucket[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *AnalyticsHourBucket) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AnalyticsHourBucket) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes AnalyticsMetricsGetInternalServerErrorApplicationJSON as json.
-func (s AnalyticsMetricsGetInternalServerErrorApplicationJSON) Encode(e *jx.Encoder) {
-	unwrapped := string(s)
-
-	e.Str(unwrapped)
-}
-
-// Decode decodes AnalyticsMetricsGetInternalServerErrorApplicationJSON from json.
-func (s *AnalyticsMetricsGetInternalServerErrorApplicationJSON) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AnalyticsMetricsGetInternalServerErrorApplicationJSON to nil")
-	}
-	var unwrapped string
-	if err := func() error {
-		v, err := d.Str()
-		unwrapped = string(v)
-		if err != nil {
-			return err
-		}
-		return nil
-	}(); err != nil {
-		return errors.Wrap(err, "alias")
-	}
-	*s = AnalyticsMetricsGetInternalServerErrorApplicationJSON(unwrapped)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s AnalyticsMetricsGetInternalServerErrorApplicationJSON) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AnalyticsMetricsGetInternalServerErrorApplicationJSON) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *AnalyticsMetricsResponse) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *AnalyticsMetricsResponse) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("avgActiveTimeMs")
-		e.Float64(s.AvgActiveTimeMs)
-	}
-	{
-		e.FieldStart("avgVisibleTimeMs")
-		e.Float64(s.AvgVisibleTimeMs)
-	}
-	{
-		e.FieldStart("maxActiveTimeMs")
-		e.Int64(s.MaxActiveTimeMs)
-	}
-	{
-		e.FieldStart("connectionDensity")
-		e.Float64(s.ConnectionDensity)
-	}
-	{
-		e.FieldStart("dropoffChurnPercent")
-		e.Float64(s.DropoffChurnPercent)
-	}
-	{
-		e.FieldStart("dropoffAfterMessages")
-		e.Int(s.DropoffAfterMessages)
-	}
-	{
-		e.FieldStart("dropoffInactiveDays")
-		e.Int(s.DropoffInactiveDays)
-	}
-	{
-		e.FieldStart("mobilePctReaders")
-		e.Float64(s.MobilePctReaders)
-	}
-	{
-		e.FieldStart("mobilePctWriters")
-		e.Float64(s.MobilePctWriters)
-	}
-	{
-		e.FieldStart("mobilePctSessions")
-		e.Float64(s.MobilePctSessions)
-	}
-	{
-		e.FieldStart("mobilePctUsers")
-		e.Float64(s.MobilePctUsers)
-	}
-	{
-		e.FieldStart("activityByHourUtc")
-		e.ArrStart()
-		for _, elem := range s.ActivityByHourUtc {
-			elem.Encode(e)
-		}
-		e.ArrEnd()
-	}
-	{
-		if s.TopTag.Set {
-			e.FieldStart("topTag")
-			s.TopTag.Encode(e)
-		}
-	}
-	{
-		if s.TopThreadWeekly.Set {
-			e.FieldStart("topThreadWeekly")
-			s.TopThreadWeekly.Encode(e)
-		}
-	}
-	{
-		if s.TopThreadMonthly.Set {
-			e.FieldStart("topThreadMonthly")
-			s.TopThreadMonthly.Encode(e)
-		}
-	}
-}
-
-var jsonFieldsNameOfAnalyticsMetricsResponse = [15]string{
-	0:  "avgActiveTimeMs",
-	1:  "avgVisibleTimeMs",
-	2:  "maxActiveTimeMs",
-	3:  "connectionDensity",
-	4:  "dropoffChurnPercent",
-	5:  "dropoffAfterMessages",
-	6:  "dropoffInactiveDays",
-	7:  "mobilePctReaders",
-	8:  "mobilePctWriters",
-	9:  "mobilePctSessions",
-	10: "mobilePctUsers",
-	11: "activityByHourUtc",
-	12: "topTag",
-	13: "topThreadWeekly",
-	14: "topThreadMonthly",
-}
-
-// Decode decodes AnalyticsMetricsResponse from json.
-func (s *AnalyticsMetricsResponse) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AnalyticsMetricsResponse to nil")
-	}
-	var requiredBitSet [2]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "avgActiveTimeMs":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Float64()
-				s.AvgActiveTimeMs = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"avgActiveTimeMs\"")
-			}
-		case "avgVisibleTimeMs":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Float64()
-				s.AvgVisibleTimeMs = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"avgVisibleTimeMs\"")
-			}
-		case "maxActiveTimeMs":
-			requiredBitSet[0] |= 1 << 2
-			if err := func() error {
-				v, err := d.Int64()
-				s.MaxActiveTimeMs = int64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"maxActiveTimeMs\"")
-			}
-		case "connectionDensity":
-			requiredBitSet[0] |= 1 << 3
-			if err := func() error {
-				v, err := d.Float64()
-				s.ConnectionDensity = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"connectionDensity\"")
-			}
-		case "dropoffChurnPercent":
-			requiredBitSet[0] |= 1 << 4
-			if err := func() error {
-				v, err := d.Float64()
-				s.DropoffChurnPercent = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"dropoffChurnPercent\"")
-			}
-		case "dropoffAfterMessages":
-			requiredBitSet[0] |= 1 << 5
-			if err := func() error {
-				v, err := d.Int()
-				s.DropoffAfterMessages = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"dropoffAfterMessages\"")
-			}
-		case "dropoffInactiveDays":
-			requiredBitSet[0] |= 1 << 6
-			if err := func() error {
-				v, err := d.Int()
-				s.DropoffInactiveDays = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"dropoffInactiveDays\"")
-			}
-		case "mobilePctReaders":
-			requiredBitSet[0] |= 1 << 7
-			if err := func() error {
-				v, err := d.Float64()
-				s.MobilePctReaders = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"mobilePctReaders\"")
-			}
-		case "mobilePctWriters":
-			requiredBitSet[1] |= 1 << 0
-			if err := func() error {
-				v, err := d.Float64()
-				s.MobilePctWriters = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"mobilePctWriters\"")
-			}
-		case "mobilePctSessions":
-			requiredBitSet[1] |= 1 << 1
-			if err := func() error {
-				v, err := d.Float64()
-				s.MobilePctSessions = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"mobilePctSessions\"")
-			}
-		case "mobilePctUsers":
-			requiredBitSet[1] |= 1 << 2
-			if err := func() error {
-				v, err := d.Float64()
-				s.MobilePctUsers = float64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"mobilePctUsers\"")
-			}
-		case "activityByHourUtc":
-			requiredBitSet[1] |= 1 << 3
-			if err := func() error {
-				s.ActivityByHourUtc = make([]AnalyticsHourBucket, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem AnalyticsHourBucket
-					if err := elem.Decode(d); err != nil {
-						return err
-					}
-					s.ActivityByHourUtc = append(s.ActivityByHourUtc, elem)
-					return nil
-				}); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"activityByHourUtc\"")
-			}
-		case "topTag":
-			if err := func() error {
-				s.TopTag.Reset()
-				if err := s.TopTag.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"topTag\"")
-			}
-		case "topThreadWeekly":
-			if err := func() error {
-				s.TopThreadWeekly.Reset()
-				if err := s.TopThreadWeekly.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"topThreadWeekly\"")
-			}
-		case "topThreadMonthly":
-			if err := func() error {
-				s.TopThreadMonthly.Reset()
-				if err := s.TopThreadMonthly.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"topThreadMonthly\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode AnalyticsMetricsResponse")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [2]uint8{
-		0b11111111,
-		0b00001111,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfAnalyticsMetricsResponse) {
-					name = jsonFieldsNameOfAnalyticsMetricsResponse[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *AnalyticsMetricsResponse) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AnalyticsMetricsResponse) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *AnalyticsTopTag) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *AnalyticsTopTag) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("tag")
-		e.Str(s.Tag)
-	}
-	{
-		e.FieldStart("usageCount")
-		e.Int64(s.UsageCount)
-	}
-}
-
-var jsonFieldsNameOfAnalyticsTopTag = [2]string{
-	0: "tag",
-	1: "usageCount",
-}
-
-// Decode decodes AnalyticsTopTag from json.
-func (s *AnalyticsTopTag) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AnalyticsTopTag to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "tag":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Str()
-				s.Tag = string(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"tag\"")
-			}
-		case "usageCount":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Int64()
-				s.UsageCount = int64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"usageCount\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode AnalyticsTopTag")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000011,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfAnalyticsTopTag) {
-					name = jsonFieldsNameOfAnalyticsTopTag[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *AnalyticsTopTag) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AnalyticsTopTag) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *AnalyticsTopThread) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *AnalyticsTopThread) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("threadId")
-		e.Int(s.ThreadId)
-	}
-	{
-		e.FieldStart("title")
-		e.Str(s.Title)
-	}
-	{
-		e.FieldStart("repliesInWindow")
-		e.Int64(s.RepliesInWindow)
-	}
-}
-
-var jsonFieldsNameOfAnalyticsTopThread = [3]string{
-	0: "threadId",
-	1: "title",
-	2: "repliesInWindow",
-}
-
-// Decode decodes AnalyticsTopThread from json.
-func (s *AnalyticsTopThread) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AnalyticsTopThread to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "threadId":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := d.Int()
-				s.ThreadId = int(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"threadId\"")
-			}
-		case "title":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Str()
-				s.Title = string(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"title\"")
-			}
-		case "repliesInWindow":
-			requiredBitSet[0] |= 1 << 2
-			if err := func() error {
-				v, err := d.Int64()
-				s.RepliesInWindow = int64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"repliesInWindow\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode AnalyticsTopThread")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b00000111,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfAnalyticsTopThread) {
-					name = jsonFieldsNameOfAnalyticsTopThread[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *AnalyticsTopThread) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AnalyticsTopThread) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode implements json.Marshaler.
-func (s *AnalyticsVisitBatchRequest) Encode(e *jx.Encoder) {
-	e.ObjStart()
-	s.encodeFields(e)
-	e.ObjEnd()
-}
-
-// encodeFields encodes fields.
-func (s *AnalyticsVisitBatchRequest) encodeFields(e *jx.Encoder) {
-	{
-		e.FieldStart("clientBatchId")
-		json.EncodeUUID(e, s.ClientBatchId)
-	}
-	{
-		e.FieldStart("activeDurationMs")
-		e.Int64(s.ActiveDurationMs)
-	}
-	{
-		e.FieldStart("visibleDurationMs")
-		e.Int64(s.VisibleDurationMs)
-	}
-	{
-		e.FieldStart("isMobile")
-		e.Bool(s.IsMobile)
-	}
-	{
-		if s.HadComposeActivity.Set {
-			e.FieldStart("hadComposeActivity")
-			s.HadComposeActivity.Encode(e)
-		}
-	}
-	{
-		if s.HadReadActivity.Set {
-			e.FieldStart("hadReadActivity")
-			s.HadReadActivity.Encode(e)
-		}
-	}
-	{
-		e.FieldStart("batchStartAt")
-		json.EncodeDateTime(e, s.BatchStartAt)
-	}
-	{
-		e.FieldStart("batchEndAt")
-		json.EncodeDateTime(e, s.BatchEndAt)
-	}
-}
-
-var jsonFieldsNameOfAnalyticsVisitBatchRequest = [8]string{
-	0: "clientBatchId",
-	1: "activeDurationMs",
-	2: "visibleDurationMs",
-	3: "isMobile",
-	4: "hadComposeActivity",
-	5: "hadReadActivity",
-	6: "batchStartAt",
-	7: "batchEndAt",
-}
-
-// Decode decodes AnalyticsVisitBatchRequest from json.
-func (s *AnalyticsVisitBatchRequest) Decode(d *jx.Decoder) error {
-	if s == nil {
-		return errors.New("invalid: unable to decode AnalyticsVisitBatchRequest to nil")
-	}
-	var requiredBitSet [1]uint8
-
-	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
-		switch string(k) {
-		case "clientBatchId":
-			requiredBitSet[0] |= 1 << 0
-			if err := func() error {
-				v, err := json.DecodeUUID(d)
-				s.ClientBatchId = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"clientBatchId\"")
-			}
-		case "activeDurationMs":
-			requiredBitSet[0] |= 1 << 1
-			if err := func() error {
-				v, err := d.Int64()
-				s.ActiveDurationMs = int64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"activeDurationMs\"")
-			}
-		case "visibleDurationMs":
-			requiredBitSet[0] |= 1 << 2
-			if err := func() error {
-				v, err := d.Int64()
-				s.VisibleDurationMs = int64(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"visibleDurationMs\"")
-			}
-		case "isMobile":
-			requiredBitSet[0] |= 1 << 3
-			if err := func() error {
-				v, err := d.Bool()
-				s.IsMobile = bool(v)
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"isMobile\"")
-			}
-		case "hadComposeActivity":
-			if err := func() error {
-				s.HadComposeActivity.Reset()
-				if err := s.HadComposeActivity.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"hadComposeActivity\"")
-			}
-		case "hadReadActivity":
-			if err := func() error {
-				s.HadReadActivity.Reset()
-				if err := s.HadReadActivity.Decode(d); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"hadReadActivity\"")
-			}
-		case "batchStartAt":
-			requiredBitSet[0] |= 1 << 6
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.BatchStartAt = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"batchStartAt\"")
-			}
-		case "batchEndAt":
-			requiredBitSet[0] |= 1 << 7
-			if err := func() error {
-				v, err := json.DecodeDateTime(d)
-				s.BatchEndAt = v
-				if err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"batchEndAt\"")
-			}
-		default:
-			return d.Skip()
-		}
-		return nil
-	}); err != nil {
-		return errors.Wrap(err, "decode AnalyticsVisitBatchRequest")
-	}
-	// Validate required fields.
-	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
-		0b11001111,
-	} {
-		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
-			// Mask only required fields and check equality to mask using XOR.
-			//
-			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
-			// Bits of fields which would be set are actually bits of missed fields.
-			missed := bits.OnesCount8(result)
-			for bitN := 0; bitN < missed; bitN++ {
-				bitIdx := bits.TrailingZeros8(result)
-				fieldIdx := i*8 + bitIdx
-				var name string
-				if fieldIdx < len(jsonFieldsNameOfAnalyticsVisitBatchRequest) {
-					name = jsonFieldsNameOfAnalyticsVisitBatchRequest[fieldIdx]
-				} else {
-					name = strconv.Itoa(fieldIdx)
-				}
-				failures = append(failures, validate.FieldError{
-					Name:  name,
-					Error: validate.ErrFieldRequired,
-				})
-				// Reset bit.
-				result &^= 1 << bitIdx
-			}
-		}
-	}
-	if len(failures) > 0 {
-		return &validate.Error{Fields: failures}
-	}
-
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s *AnalyticsVisitBatchRequest) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *AnalyticsVisitBatchRequest) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes AuthLoginBadRequest as json.
 func (s *AuthLoginBadRequest) Encode(e *jx.Encoder) {
 	unwrapped := (*ErrorStringMessage)(s)
@@ -1002,6 +46,46 @@ func (s *AuthLoginBadRequest) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *AuthLoginBadRequest) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode encodes AuthLoginInternalServerErrorApplicationJSON as json.
+func (s AuthLoginInternalServerErrorApplicationJSON) Encode(e *jx.Encoder) {
+	unwrapped := string(s)
+
+	e.Str(unwrapped)
+}
+
+// Decode decodes AuthLoginInternalServerErrorApplicationJSON from json.
+func (s *AuthLoginInternalServerErrorApplicationJSON) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AuthLoginInternalServerErrorApplicationJSON to nil")
+	}
+	var unwrapped string
+	if err := func() error {
+		v, err := d.Str()
+		unwrapped = string(v)
+		if err != nil {
+			return err
+		}
+		return nil
+	}(); err != nil {
+		return errors.Wrap(err, "alias")
+	}
+	*s = AuthLoginInternalServerErrorApplicationJSON(unwrapped)
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s AuthLoginInternalServerErrorApplicationJSON) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AuthLoginInternalServerErrorApplicationJSON) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -1771,110 +855,9 @@ func (s *MediaUploadUnauthorized) UnmarshalJSON(data []byte) error {
 	return s.Decode(d)
 }
 
-// Encode encodes AnalyticsTopTag as json.
-func (o OptAnalyticsTopTag) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes AnalyticsTopTag from json.
-func (o *OptAnalyticsTopTag) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptAnalyticsTopTag to nil")
-	}
-	o.Set = true
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptAnalyticsTopTag) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptAnalyticsTopTag) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes AnalyticsTopThread as json.
-func (o OptAnalyticsTopThread) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	o.Value.Encode(e)
-}
-
-// Decode decodes AnalyticsTopThread from json.
-func (o *OptAnalyticsTopThread) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptAnalyticsTopThread to nil")
-	}
-	o.Set = true
-	if err := o.Value.Decode(d); err != nil {
-		return err
-	}
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptAnalyticsTopThread) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptAnalyticsTopThread) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
-// Encode encodes bool as json.
-func (o OptBool) Encode(e *jx.Encoder) {
-	if !o.Set {
-		return
-	}
-	e.Bool(bool(o.Value))
-}
-
-// Decode decodes bool from json.
-func (o *OptBool) Decode(d *jx.Decoder) error {
-	if o == nil {
-		return errors.New("invalid: unable to decode OptBool to nil")
-	}
-	o.Set = true
-	v, err := d.Bool()
-	if err != nil {
-		return err
-	}
-	o.Value = bool(v)
-	return nil
-}
-
-// MarshalJSON implements stdjson.Marshaler.
-func (s OptBool) MarshalJSON() ([]byte, error) {
-	e := jx.Encoder{}
-	s.Encode(&e)
-	return e.Bytes(), nil
-}
-
-// UnmarshalJSON implements stdjson.Unmarshaler.
-func (s *OptBool) UnmarshalJSON(data []byte) error {
-	d := jx.DecodeBytes(data)
-	return s.Decode(d)
-}
-
 // Encode encodes ThreadAddPostBadRequest as json.
 func (s ThreadAddPostBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := AnalyticsMetricsGetInternalServerErrorApplicationJSON(s)
+	unwrapped := AuthLoginInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1884,7 +867,7 @@ func (s *ThreadAddPostBadRequest) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadAddPostBadRequest to nil")
 	}
-	var unwrapped AnalyticsMetricsGetInternalServerErrorApplicationJSON
+	var unwrapped AuthLoginInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -1912,7 +895,7 @@ func (s *ThreadAddPostBadRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadAddPostInternalServerError as json.
 func (s ThreadAddPostInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AnalyticsMetricsGetInternalServerErrorApplicationJSON(s)
+	unwrapped := AuthLoginInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1922,7 +905,7 @@ func (s *ThreadAddPostInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadAddPostInternalServerError to nil")
 	}
-	var unwrapped AnalyticsMetricsGetInternalServerErrorApplicationJSON
+	var unwrapped AuthLoginInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -1950,7 +933,7 @@ func (s *ThreadAddPostInternalServerError) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadCreateInternalServerError as json.
 func (s ThreadCreateInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AnalyticsMetricsGetInternalServerErrorApplicationJSON(s)
+	unwrapped := AuthLoginInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -1960,7 +943,7 @@ func (s *ThreadCreateInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadCreateInternalServerError to nil")
 	}
-	var unwrapped AnalyticsMetricsGetInternalServerErrorApplicationJSON
+	var unwrapped AuthLoginInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -2099,22 +1082,11 @@ func (s *ThreadCreateRequest) encodeFields(e *jx.Encoder) {
 		e.FieldStart("content")
 		e.Str(s.Content)
 	}
-	{
-		if s.Tags != nil {
-			e.FieldStart("tags")
-			e.ArrStart()
-			for _, elem := range s.Tags {
-				e.Str(elem)
-			}
-			e.ArrEnd()
-		}
-	}
 }
 
-var jsonFieldsNameOfThreadCreateRequest = [3]string{
+var jsonFieldsNameOfThreadCreateRequest = [2]string{
 	0: "title",
 	1: "content",
-	2: "tags",
 }
 
 // Decode decodes ThreadCreateRequest from json.
@@ -2149,25 +1121,6 @@ func (s *ThreadCreateRequest) Decode(d *jx.Decoder) error {
 				return nil
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"content\"")
-			}
-		case "tags":
-			if err := func() error {
-				s.Tags = make([]string, 0)
-				if err := d.Arr(func(d *jx.Decoder) error {
-					var elem string
-					v, err := d.Str()
-					elem = string(v)
-					if err != nil {
-						return err
-					}
-					s.Tags = append(s.Tags, elem)
-					return nil
-				}); err != nil {
-					return err
-				}
-				return nil
-			}(); err != nil {
-				return errors.Wrap(err, "decode field \"tags\"")
 			}
 		default:
 			return d.Skip()
@@ -2227,7 +1180,7 @@ func (s *ThreadCreateRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadCreateUnauthorized as json.
 func (s ThreadCreateUnauthorized) Encode(e *jx.Encoder) {
-	unwrapped := AnalyticsMetricsGetInternalServerErrorApplicationJSON(s)
+	unwrapped := AuthLoginInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -2237,7 +1190,7 @@ func (s *ThreadCreateUnauthorized) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadCreateUnauthorized to nil")
 	}
-	var unwrapped AnalyticsMetricsGetInternalServerErrorApplicationJSON
+	var unwrapped AuthLoginInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -2265,7 +1218,7 @@ func (s *ThreadCreateUnauthorized) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadGetBadRequest as json.
 func (s ThreadGetBadRequest) Encode(e *jx.Encoder) {
-	unwrapped := AnalyticsMetricsGetInternalServerErrorApplicationJSON(s)
+	unwrapped := AuthLoginInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -2275,7 +1228,7 @@ func (s *ThreadGetBadRequest) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadGetBadRequest to nil")
 	}
-	var unwrapped AnalyticsMetricsGetInternalServerErrorApplicationJSON
+	var unwrapped AuthLoginInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err
@@ -2303,7 +1256,7 @@ func (s *ThreadGetBadRequest) UnmarshalJSON(data []byte) error {
 
 // Encode encodes ThreadGetInternalServerError as json.
 func (s ThreadGetInternalServerError) Encode(e *jx.Encoder) {
-	unwrapped := AnalyticsMetricsGetInternalServerErrorApplicationJSON(s)
+	unwrapped := AuthLoginInternalServerErrorApplicationJSON(s)
 
 	unwrapped.Encode(e)
 }
@@ -2313,7 +1266,7 @@ func (s *ThreadGetInternalServerError) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadGetInternalServerError to nil")
 	}
-	var unwrapped AnalyticsMetricsGetInternalServerErrorApplicationJSON
+	var unwrapped AuthLoginInternalServerErrorApplicationJSON
 	if err := func() error {
 		if err := unwrapped.Decode(d); err != nil {
 			return err

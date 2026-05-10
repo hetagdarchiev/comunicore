@@ -8,388 +8,20 @@ import (
 	"time"
 
 	"github.com/go-faster/errors"
-	"github.com/google/uuid"
 	ht "github.com/ogen-go/ogen/http"
 )
-
-// Ref: #/components/schemas/AnalyticsHourBucket
-type AnalyticsHourBucket struct {
-	Hour         int     `json:"hour"`
-	SharePercent float64 `json:"sharePercent"`
-}
-
-// GetHour returns the value of Hour.
-func (s *AnalyticsHourBucket) GetHour() int {
-	return s.Hour
-}
-
-// GetSharePercent returns the value of SharePercent.
-func (s *AnalyticsHourBucket) GetSharePercent() float64 {
-	return s.SharePercent
-}
-
-// SetHour sets the value of Hour.
-func (s *AnalyticsHourBucket) SetHour(val int) {
-	s.Hour = val
-}
-
-// SetSharePercent sets the value of SharePercent.
-func (s *AnalyticsHourBucket) SetSharePercent(val float64) {
-	s.SharePercent = val
-}
-
-type AnalyticsMetricsGetInternalServerErrorApplicationJSON string
-
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) analyticsMetricsGetRes()       {}
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) analyticsVisitBatchSubmitRes() {}
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) authLoginRes()                 {}
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) mediaGetRes()                  {}
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) threadsListRes()               {}
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) userCreateRes()                {}
-func (*AnalyticsMetricsGetInternalServerErrorApplicationJSON) userMeRes()                    {}
-
-// Ref: #/components/schemas/AnalyticsMetricsResponse
-type AnalyticsMetricsResponse struct {
-	// Mean active (focused tab) duration per batch, ms.
-	AvgActiveTimeMs float64 `json:"avgActiveTimeMs"`
-	// Mean tab visible duration per batch, ms.
-	AvgVisibleTimeMs float64 `json:"avgVisibleTimeMs"`
-	MaxActiveTimeMs  int64   `json:"maxActiveTimeMs"`
-	// Total replies divided by distinct participants (posts + thread authors).
-	ConnectionDensity float64 `json:"connectionDensity"`
-	// Share of users with ≥N posts inactive for dropoffInactiveDays.
-	DropoffChurnPercent  float64 `json:"dropoffChurnPercent"`
-	DropoffAfterMessages int     `json:"dropoffAfterMessages"`
-	DropoffInactiveDays  int     `json:"dropoffInactiveDays"`
-	MobilePctReaders     float64 `json:"mobilePctReaders"`
-	MobilePctWriters     float64 `json:"mobilePctWriters"`
-	MobilePctSessions    float64 `json:"mobilePctSessions"`
-	// Share of logged-in users (in batches) with any mobile session.
-	MobilePctUsers    float64               `json:"mobilePctUsers"`
-	ActivityByHourUtc []AnalyticsHourBucket `json:"activityByHourUtc"`
-	TopTag            OptAnalyticsTopTag    `json:"topTag"`
-	TopThreadWeekly   OptAnalyticsTopThread `json:"topThreadWeekly"`
-	TopThreadMonthly  OptAnalyticsTopThread `json:"topThreadMonthly"`
-}
-
-// GetAvgActiveTimeMs returns the value of AvgActiveTimeMs.
-func (s *AnalyticsMetricsResponse) GetAvgActiveTimeMs() float64 {
-	return s.AvgActiveTimeMs
-}
-
-// GetAvgVisibleTimeMs returns the value of AvgVisibleTimeMs.
-func (s *AnalyticsMetricsResponse) GetAvgVisibleTimeMs() float64 {
-	return s.AvgVisibleTimeMs
-}
-
-// GetMaxActiveTimeMs returns the value of MaxActiveTimeMs.
-func (s *AnalyticsMetricsResponse) GetMaxActiveTimeMs() int64 {
-	return s.MaxActiveTimeMs
-}
-
-// GetConnectionDensity returns the value of ConnectionDensity.
-func (s *AnalyticsMetricsResponse) GetConnectionDensity() float64 {
-	return s.ConnectionDensity
-}
-
-// GetDropoffChurnPercent returns the value of DropoffChurnPercent.
-func (s *AnalyticsMetricsResponse) GetDropoffChurnPercent() float64 {
-	return s.DropoffChurnPercent
-}
-
-// GetDropoffAfterMessages returns the value of DropoffAfterMessages.
-func (s *AnalyticsMetricsResponse) GetDropoffAfterMessages() int {
-	return s.DropoffAfterMessages
-}
-
-// GetDropoffInactiveDays returns the value of DropoffInactiveDays.
-func (s *AnalyticsMetricsResponse) GetDropoffInactiveDays() int {
-	return s.DropoffInactiveDays
-}
-
-// GetMobilePctReaders returns the value of MobilePctReaders.
-func (s *AnalyticsMetricsResponse) GetMobilePctReaders() float64 {
-	return s.MobilePctReaders
-}
-
-// GetMobilePctWriters returns the value of MobilePctWriters.
-func (s *AnalyticsMetricsResponse) GetMobilePctWriters() float64 {
-	return s.MobilePctWriters
-}
-
-// GetMobilePctSessions returns the value of MobilePctSessions.
-func (s *AnalyticsMetricsResponse) GetMobilePctSessions() float64 {
-	return s.MobilePctSessions
-}
-
-// GetMobilePctUsers returns the value of MobilePctUsers.
-func (s *AnalyticsMetricsResponse) GetMobilePctUsers() float64 {
-	return s.MobilePctUsers
-}
-
-// GetActivityByHourUtc returns the value of ActivityByHourUtc.
-func (s *AnalyticsMetricsResponse) GetActivityByHourUtc() []AnalyticsHourBucket {
-	return s.ActivityByHourUtc
-}
-
-// GetTopTag returns the value of TopTag.
-func (s *AnalyticsMetricsResponse) GetTopTag() OptAnalyticsTopTag {
-	return s.TopTag
-}
-
-// GetTopThreadWeekly returns the value of TopThreadWeekly.
-func (s *AnalyticsMetricsResponse) GetTopThreadWeekly() OptAnalyticsTopThread {
-	return s.TopThreadWeekly
-}
-
-// GetTopThreadMonthly returns the value of TopThreadMonthly.
-func (s *AnalyticsMetricsResponse) GetTopThreadMonthly() OptAnalyticsTopThread {
-	return s.TopThreadMonthly
-}
-
-// SetAvgActiveTimeMs sets the value of AvgActiveTimeMs.
-func (s *AnalyticsMetricsResponse) SetAvgActiveTimeMs(val float64) {
-	s.AvgActiveTimeMs = val
-}
-
-// SetAvgVisibleTimeMs sets the value of AvgVisibleTimeMs.
-func (s *AnalyticsMetricsResponse) SetAvgVisibleTimeMs(val float64) {
-	s.AvgVisibleTimeMs = val
-}
-
-// SetMaxActiveTimeMs sets the value of MaxActiveTimeMs.
-func (s *AnalyticsMetricsResponse) SetMaxActiveTimeMs(val int64) {
-	s.MaxActiveTimeMs = val
-}
-
-// SetConnectionDensity sets the value of ConnectionDensity.
-func (s *AnalyticsMetricsResponse) SetConnectionDensity(val float64) {
-	s.ConnectionDensity = val
-}
-
-// SetDropoffChurnPercent sets the value of DropoffChurnPercent.
-func (s *AnalyticsMetricsResponse) SetDropoffChurnPercent(val float64) {
-	s.DropoffChurnPercent = val
-}
-
-// SetDropoffAfterMessages sets the value of DropoffAfterMessages.
-func (s *AnalyticsMetricsResponse) SetDropoffAfterMessages(val int) {
-	s.DropoffAfterMessages = val
-}
-
-// SetDropoffInactiveDays sets the value of DropoffInactiveDays.
-func (s *AnalyticsMetricsResponse) SetDropoffInactiveDays(val int) {
-	s.DropoffInactiveDays = val
-}
-
-// SetMobilePctReaders sets the value of MobilePctReaders.
-func (s *AnalyticsMetricsResponse) SetMobilePctReaders(val float64) {
-	s.MobilePctReaders = val
-}
-
-// SetMobilePctWriters sets the value of MobilePctWriters.
-func (s *AnalyticsMetricsResponse) SetMobilePctWriters(val float64) {
-	s.MobilePctWriters = val
-}
-
-// SetMobilePctSessions sets the value of MobilePctSessions.
-func (s *AnalyticsMetricsResponse) SetMobilePctSessions(val float64) {
-	s.MobilePctSessions = val
-}
-
-// SetMobilePctUsers sets the value of MobilePctUsers.
-func (s *AnalyticsMetricsResponse) SetMobilePctUsers(val float64) {
-	s.MobilePctUsers = val
-}
-
-// SetActivityByHourUtc sets the value of ActivityByHourUtc.
-func (s *AnalyticsMetricsResponse) SetActivityByHourUtc(val []AnalyticsHourBucket) {
-	s.ActivityByHourUtc = val
-}
-
-// SetTopTag sets the value of TopTag.
-func (s *AnalyticsMetricsResponse) SetTopTag(val OptAnalyticsTopTag) {
-	s.TopTag = val
-}
-
-// SetTopThreadWeekly sets the value of TopThreadWeekly.
-func (s *AnalyticsMetricsResponse) SetTopThreadWeekly(val OptAnalyticsTopThread) {
-	s.TopThreadWeekly = val
-}
-
-// SetTopThreadMonthly sets the value of TopThreadMonthly.
-func (s *AnalyticsMetricsResponse) SetTopThreadMonthly(val OptAnalyticsTopThread) {
-	s.TopThreadMonthly = val
-}
-
-func (*AnalyticsMetricsResponse) analyticsMetricsGetRes() {}
-
-// Ref: #/components/schemas/AnalyticsTopTag
-type AnalyticsTopTag struct {
-	Tag        string `json:"tag"`
-	UsageCount int64  `json:"usageCount"`
-}
-
-// GetTag returns the value of Tag.
-func (s *AnalyticsTopTag) GetTag() string {
-	return s.Tag
-}
-
-// GetUsageCount returns the value of UsageCount.
-func (s *AnalyticsTopTag) GetUsageCount() int64 {
-	return s.UsageCount
-}
-
-// SetTag sets the value of Tag.
-func (s *AnalyticsTopTag) SetTag(val string) {
-	s.Tag = val
-}
-
-// SetUsageCount sets the value of UsageCount.
-func (s *AnalyticsTopTag) SetUsageCount(val int64) {
-	s.UsageCount = val
-}
-
-// Ref: #/components/schemas/AnalyticsTopThread
-type AnalyticsTopThread struct {
-	ThreadId int    `json:"threadId"`
-	Title    string `json:"title"`
-	// Number of reply posts in the selected time window.
-	RepliesInWindow int64 `json:"repliesInWindow"`
-}
-
-// GetThreadId returns the value of ThreadId.
-func (s *AnalyticsTopThread) GetThreadId() int {
-	return s.ThreadId
-}
-
-// GetTitle returns the value of Title.
-func (s *AnalyticsTopThread) GetTitle() string {
-	return s.Title
-}
-
-// GetRepliesInWindow returns the value of RepliesInWindow.
-func (s *AnalyticsTopThread) GetRepliesInWindow() int64 {
-	return s.RepliesInWindow
-}
-
-// SetThreadId sets the value of ThreadId.
-func (s *AnalyticsTopThread) SetThreadId(val int) {
-	s.ThreadId = val
-}
-
-// SetTitle sets the value of Title.
-func (s *AnalyticsTopThread) SetTitle(val string) {
-	s.Title = val
-}
-
-// SetRepliesInWindow sets the value of RepliesInWindow.
-func (s *AnalyticsTopThread) SetRepliesInWindow(val int64) {
-	s.RepliesInWindow = val
-}
-
-// Ref: #/components/schemas/AnalyticsVisitBatchRequest
-type AnalyticsVisitBatchRequest struct {
-	ClientBatchId     uuid.UUID `json:"clientBatchId"`
-	ActiveDurationMs  int64     `json:"activeDurationMs"`
-	VisibleDurationMs int64     `json:"visibleDurationMs"`
-	IsMobile          bool      `json:"isMobile"`
-	// User composed text or submitted content during this batch.
-	HadComposeActivity OptBool `json:"hadComposeActivity"`
-	// User was reading/browsing (default true if omitted).
-	HadReadActivity OptBool   `json:"hadReadActivity"`
-	BatchStartAt    time.Time `json:"batchStartAt"`
-	BatchEndAt      time.Time `json:"batchEndAt"`
-}
-
-// GetClientBatchId returns the value of ClientBatchId.
-func (s *AnalyticsVisitBatchRequest) GetClientBatchId() uuid.UUID {
-	return s.ClientBatchId
-}
-
-// GetActiveDurationMs returns the value of ActiveDurationMs.
-func (s *AnalyticsVisitBatchRequest) GetActiveDurationMs() int64 {
-	return s.ActiveDurationMs
-}
-
-// GetVisibleDurationMs returns the value of VisibleDurationMs.
-func (s *AnalyticsVisitBatchRequest) GetVisibleDurationMs() int64 {
-	return s.VisibleDurationMs
-}
-
-// GetIsMobile returns the value of IsMobile.
-func (s *AnalyticsVisitBatchRequest) GetIsMobile() bool {
-	return s.IsMobile
-}
-
-// GetHadComposeActivity returns the value of HadComposeActivity.
-func (s *AnalyticsVisitBatchRequest) GetHadComposeActivity() OptBool {
-	return s.HadComposeActivity
-}
-
-// GetHadReadActivity returns the value of HadReadActivity.
-func (s *AnalyticsVisitBatchRequest) GetHadReadActivity() OptBool {
-	return s.HadReadActivity
-}
-
-// GetBatchStartAt returns the value of BatchStartAt.
-func (s *AnalyticsVisitBatchRequest) GetBatchStartAt() time.Time {
-	return s.BatchStartAt
-}
-
-// GetBatchEndAt returns the value of BatchEndAt.
-func (s *AnalyticsVisitBatchRequest) GetBatchEndAt() time.Time {
-	return s.BatchEndAt
-}
-
-// SetClientBatchId sets the value of ClientBatchId.
-func (s *AnalyticsVisitBatchRequest) SetClientBatchId(val uuid.UUID) {
-	s.ClientBatchId = val
-}
-
-// SetActiveDurationMs sets the value of ActiveDurationMs.
-func (s *AnalyticsVisitBatchRequest) SetActiveDurationMs(val int64) {
-	s.ActiveDurationMs = val
-}
-
-// SetVisibleDurationMs sets the value of VisibleDurationMs.
-func (s *AnalyticsVisitBatchRequest) SetVisibleDurationMs(val int64) {
-	s.VisibleDurationMs = val
-}
-
-// SetIsMobile sets the value of IsMobile.
-func (s *AnalyticsVisitBatchRequest) SetIsMobile(val bool) {
-	s.IsMobile = val
-}
-
-// SetHadComposeActivity sets the value of HadComposeActivity.
-func (s *AnalyticsVisitBatchRequest) SetHadComposeActivity(val OptBool) {
-	s.HadComposeActivity = val
-}
-
-// SetHadReadActivity sets the value of HadReadActivity.
-func (s *AnalyticsVisitBatchRequest) SetHadReadActivity(val OptBool) {
-	s.HadReadActivity = val
-}
-
-// SetBatchStartAt sets the value of BatchStartAt.
-func (s *AnalyticsVisitBatchRequest) SetBatchStartAt(val time.Time) {
-	s.BatchStartAt = val
-}
-
-// SetBatchEndAt sets the value of BatchEndAt.
-func (s *AnalyticsVisitBatchRequest) SetBatchEndAt(val time.Time) {
-	s.BatchEndAt = val
-}
-
-// AnalyticsVisitBatchSubmitNoContent is response for AnalyticsVisitBatchSubmit operation.
-type AnalyticsVisitBatchSubmitNoContent struct{}
-
-func (*AnalyticsVisitBatchSubmitNoContent) analyticsVisitBatchSubmitRes() {}
 
 type AuthLoginBadRequest ErrorStringMessage
 
 func (*AuthLoginBadRequest) authLoginRes() {}
+
+type AuthLoginInternalServerErrorApplicationJSON string
+
+func (*AuthLoginInternalServerErrorApplicationJSON) authLoginRes()   {}
+func (*AuthLoginInternalServerErrorApplicationJSON) mediaGetRes()    {}
+func (*AuthLoginInternalServerErrorApplicationJSON) threadsListRes() {}
+func (*AuthLoginInternalServerErrorApplicationJSON) userCreateRes()  {}
+func (*AuthLoginInternalServerErrorApplicationJSON) userMeRes()      {}
 
 // Ref: #/components/schemas/AuthLoginRequest
 type AuthLoginRequest struct {
@@ -538,10 +170,8 @@ func (s *ErrorStringMessage) SetMessage(val string) {
 	s.Message = val
 }
 
-func (*ErrorStringMessage) analyticsMetricsGetRes()       {}
-func (*ErrorStringMessage) analyticsVisitBatchSubmitRes() {}
-func (*ErrorStringMessage) threadsListRes()               {}
-func (*ErrorStringMessage) userMeRes()                    {}
+func (*ErrorStringMessage) threadsListRes() {}
+func (*ErrorStringMessage) userMeRes()      {}
 
 type ErrorStringMessageCode string
 
@@ -656,144 +286,6 @@ type MediaUploadUnauthorized ErrorStringMessage
 
 func (*MediaUploadUnauthorized) mediaUploadRes() {}
 
-// NewOptAnalyticsTopTag returns new OptAnalyticsTopTag with value set to v.
-func NewOptAnalyticsTopTag(v AnalyticsTopTag) OptAnalyticsTopTag {
-	return OptAnalyticsTopTag{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptAnalyticsTopTag is optional AnalyticsTopTag.
-type OptAnalyticsTopTag struct {
-	Value AnalyticsTopTag
-	Set   bool
-}
-
-// IsSet returns true if OptAnalyticsTopTag was set.
-func (o OptAnalyticsTopTag) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptAnalyticsTopTag) Reset() {
-	var v AnalyticsTopTag
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptAnalyticsTopTag) SetTo(v AnalyticsTopTag) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptAnalyticsTopTag) Get() (v AnalyticsTopTag, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptAnalyticsTopTag) Or(d AnalyticsTopTag) AnalyticsTopTag {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptAnalyticsTopThread returns new OptAnalyticsTopThread with value set to v.
-func NewOptAnalyticsTopThread(v AnalyticsTopThread) OptAnalyticsTopThread {
-	return OptAnalyticsTopThread{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptAnalyticsTopThread is optional AnalyticsTopThread.
-type OptAnalyticsTopThread struct {
-	Value AnalyticsTopThread
-	Set   bool
-}
-
-// IsSet returns true if OptAnalyticsTopThread was set.
-func (o OptAnalyticsTopThread) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptAnalyticsTopThread) Reset() {
-	var v AnalyticsTopThread
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptAnalyticsTopThread) SetTo(v AnalyticsTopThread) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptAnalyticsTopThread) Get() (v AnalyticsTopThread, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptAnalyticsTopThread) Or(d AnalyticsTopThread) AnalyticsTopThread {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
-// NewOptBool returns new OptBool with value set to v.
-func NewOptBool(v bool) OptBool {
-	return OptBool{
-		Value: v,
-		Set:   true,
-	}
-}
-
-// OptBool is optional bool.
-type OptBool struct {
-	Value bool
-	Set   bool
-}
-
-// IsSet returns true if OptBool was set.
-func (o OptBool) IsSet() bool { return o.Set }
-
-// Reset unsets value.
-func (o *OptBool) Reset() {
-	var v bool
-	o.Value = v
-	o.Set = false
-}
-
-// SetTo sets value to v.
-func (o *OptBool) SetTo(v bool) {
-	o.Set = true
-	o.Value = v
-}
-
-// Get returns value and boolean that denotes whether value was set.
-func (o OptBool) Get() (v bool, ok bool) {
-	if !o.Set {
-		return v, false
-	}
-	return o.Value, true
-}
-
-// Or returns value if set, or given parameter if does not.
-func (o OptBool) Or(d bool) bool {
-	if v, ok := o.Get(); ok {
-		return v
-	}
-	return d
-}
-
 // NewOptInt returns new OptInt with value set to v.
 func NewOptInt(v int) OptInt {
 	return OptInt{
@@ -840,15 +332,15 @@ func (o OptInt) Or(d int) int {
 	return d
 }
 
-type ThreadAddPostBadRequest AnalyticsMetricsGetInternalServerErrorApplicationJSON
+type ThreadAddPostBadRequest AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadAddPostBadRequest) threadAddPostRes() {}
 
-type ThreadAddPostInternalServerError AnalyticsMetricsGetInternalServerErrorApplicationJSON
+type ThreadAddPostInternalServerError AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadAddPostInternalServerError) threadAddPostRes() {}
 
-type ThreadCreateInternalServerError AnalyticsMetricsGetInternalServerErrorApplicationJSON
+type ThreadCreateInternalServerError AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadCreateInternalServerError) threadCreateRes() {}
 
@@ -871,8 +363,6 @@ func (s *ThreadCreatePostRequest) SetContent(val string) {
 type ThreadCreateRequest struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
-	// Optional tags for analytics (normalized to lowercase on server).
-	Tags []string `json:"tags"`
 }
 
 // GetTitle returns the value of Title.
@@ -885,11 +375,6 @@ func (s *ThreadCreateRequest) GetContent() string {
 	return s.Content
 }
 
-// GetTags returns the value of Tags.
-func (s *ThreadCreateRequest) GetTags() []string {
-	return s.Tags
-}
-
 // SetTitle sets the value of Title.
 func (s *ThreadCreateRequest) SetTitle(val string) {
 	s.Title = val
@@ -900,20 +385,15 @@ func (s *ThreadCreateRequest) SetContent(val string) {
 	s.Content = val
 }
 
-// SetTags sets the value of Tags.
-func (s *ThreadCreateRequest) SetTags(val []string) {
-	s.Tags = val
-}
-
-type ThreadCreateUnauthorized AnalyticsMetricsGetInternalServerErrorApplicationJSON
+type ThreadCreateUnauthorized AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadCreateUnauthorized) threadCreateRes() {}
 
-type ThreadGetBadRequest AnalyticsMetricsGetInternalServerErrorApplicationJSON
+type ThreadGetBadRequest AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadGetBadRequest) threadGetRes() {}
 
-type ThreadGetInternalServerError AnalyticsMetricsGetInternalServerErrorApplicationJSON
+type ThreadGetInternalServerError AuthLoginInternalServerErrorApplicationJSON
 
 func (*ThreadGetInternalServerError) threadGetRes() {}
 
