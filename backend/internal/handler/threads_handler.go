@@ -63,6 +63,7 @@ func (h *ThreadsHandler) ThreadCreate(
 		Title:   req.Title,
 		Content: req.Content,
 		UserID:  globalCtx.UserID,
+		Tags:    req.Tags,
 	}
 
 	thread, err := h.threadsService.Create(ctx, modelThreadCreate)

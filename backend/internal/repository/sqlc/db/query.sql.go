@@ -7,6 +7,7 @@ package db
 
 import (
 	"context"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgtype"
 )
@@ -498,5 +499,263 @@ func (q *Queries) UserUpdate(ctx context.Context, arg UserUpdateParams) (UserUpd
 		&i.Email,
 		&i.AvatarUrl,
 	)
+	return i, err
+}
+
+const threadTagInsert = `-- name: ThreadTagInsert :exec
+INSERT INTO thread_tags (thread_id, tag) VALUES ($1, $2) ON CONFLICT DO NOTHING
+`
+
+type ThreadTagInsertParams struct {
+	ThreadID int32
+	Tag      string
+}
+
+func (q *Queries) ThreadTagInsert(ctx context.Context, arg ThreadTagInsertParams) error {
+	_, err := q.db.Exec(ctx, threadTagInsert, arg.ThreadID, arg.Tag)
+	return err
+}
+
+const analyticsVisitBatchInsert = `-- name: AnalyticsVisitBatchInsert :exec
+INSERT INTO analytics_visit_batches (
+    user_id, client_batch_id, active_duration_ms, visible_duration_ms,
+    is_mobile, had_compose_activity, had_read_activity, batch_start_at, batch_end_at
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+ON CONFLICT (client_batch_id) DO NOTHING
+`
+
+type AnalyticsVisitBatchInsertParams struct {
+	UserID               *int32
+	ClientBatchID        pgtype.UUID
+	ActiveDurationMs     int64
+	VisibleDurationMs    int64
+	IsMobile             bool
+	HadComposeActivity   bool
+	HadReadActivity      bool
+	BatchStartAt         time.Time
+	BatchEndAt           time.Time
+}
+
+func (q *Queries) AnalyticsVisitBatchInsert(ctx context.Context, arg AnalyticsVisitBatchInsertParams) error {
+	_, err := q.db.Exec(ctx, analyticsVisitBatchInsert,
+		arg.UserID,
+		arg.ClientBatchID,
+		arg.ActiveDurationMs,
+		arg.VisibleDurationMs,
+		arg.IsMobile,
+		arg.HadComposeActivity,
+		arg.HadReadActivity,
+		arg.BatchStartAt,
+		arg.BatchEndAt,
+	)
+	return err
+}
+
+const analyticsAvgDurations = `-- name: AnalyticsAvgDurations :one
+SELECT
+    COALESCE(AVG(active_duration_ms)::float8, 0) AS avg_active_ms,
+    COALESCE(AVG(visible_duration_ms)::float8, 0) AS avg_visible_ms,
+    COALESCE(MAX(active_duration_ms)::bigint, 0) AS max_active_ms
+FROM analytics_visit_batches
+`
+
+type AnalyticsAvgDurationsRow struct {
+	AvgActiveMs   float64
+	AvgVisibleMs  float64
+	MaxActiveMs   int64
+}
+
+func (q *Queries) AnalyticsAvgDurations(ctx context.Context) (AnalyticsAvgDurationsRow, error) {
+	row := q.db.QueryRow(ctx, analyticsAvgDurations)
+	var i AnalyticsAvgDurationsRow
+	err := row.Scan(&i.AvgActiveMs, &i.AvgVisibleMs, &i.MaxActiveMs)
+	return i, err
+}
+
+const analyticsConnectionDensity = `-- name: AnalyticsConnectionDensity :one
+SELECT COALESCE(
+    (SELECT COUNT(*)::float8 FROM posts) / NULLIF((
+        SELECT COUNT(*)::float8 FROM (
+            SELECT user_id FROM posts
+            UNION
+            SELECT user_id FROM threads
+        ) AS u
+    ), 0),
+    0
+) AS density
+`
+
+func (q *Queries) AnalyticsConnectionDensity(ctx context.Context) (float64, error) {
+	row := q.db.QueryRow(ctx, analyticsConnectionDensity)
+	var density float64
+	err := row.Scan(&density)
+	return density, err
+}
+
+const analyticsDropoffPercent = `-- name: AnalyticsDropoffPercent :one
+WITH user_stats AS (
+    SELECT user_id,
+           COUNT(*) AS post_count,
+           MAX(created_at) AS last_post_at
+    FROM posts
+    GROUP BY user_id
+),
+eligible AS (
+    SELECT * FROM user_stats WHERE post_count >= $1::int
+)
+SELECT
+    CASE WHEN COUNT(*) = 0 THEN 0::float8
+    ELSE 100.0 * COUNT(*) FILTER (
+        WHERE last_post_at < NOW() - ($2::int * INTERVAL '1 day')
+    )::float8 / COUNT(*)::float8
+    END AS churn_percent
+FROM eligible
+`
+
+type AnalyticsDropoffPercentParams struct {
+	ThresholdN    int32
+	InactiveDays  int32
+}
+
+func (q *Queries) AnalyticsDropoffPercent(ctx context.Context, arg AnalyticsDropoffPercentParams) (float64, error) {
+	row := q.db.QueryRow(ctx, analyticsDropoffPercent, arg.ThresholdN, arg.InactiveDays)
+	var churn float64
+	err := row.Scan(&churn)
+	return churn, err
+}
+
+const analyticsMobileSessionShares = `-- name: AnalyticsMobileSessionShares :one
+SELECT
+    CASE WHEN COUNT(*) FILTER (WHERE had_read_activity) = 0 THEN 0::float8
+    ELSE 100.0 * COUNT(*) FILTER (WHERE had_read_activity AND is_mobile)::float8
+         / COUNT(*) FILTER (WHERE had_read_activity)::float8
+    END AS pct_mobile_readers,
+    CASE WHEN COUNT(*) FILTER (WHERE had_compose_activity) = 0 THEN 0::float8
+    ELSE 100.0 * COUNT(*) FILTER (WHERE had_compose_activity AND is_mobile)::float8
+         / COUNT(*) FILTER (WHERE had_compose_activity)::float8
+    END AS pct_mobile_writers,
+    CASE WHEN COUNT(*) = 0 THEN 0::float8
+    ELSE 100.0 * COUNT(*) FILTER (WHERE is_mobile)::float8 / COUNT(*)::float8
+    END AS pct_mobile_sessions
+FROM analytics_visit_batches
+`
+
+type AnalyticsMobileSessionSharesRow struct {
+	PctMobileReaders   float64
+	PctMobileWriters   float64
+	PctMobileSessions  float64
+}
+
+func (q *Queries) AnalyticsMobileSessionShares(ctx context.Context) (AnalyticsMobileSessionSharesRow, error) {
+	row := q.db.QueryRow(ctx, analyticsMobileSessionShares)
+	var i AnalyticsMobileSessionSharesRow
+	err := row.Scan(&i.PctMobileReaders, &i.PctMobileWriters, &i.PctMobileSessions)
+	return i, err
+}
+
+const analyticsMobileUserPercent = `-- name: AnalyticsMobileUserPercent :one
+WITH u AS (
+    SELECT user_id, BOOL_OR(is_mobile) AS used_mobile
+    FROM analytics_visit_batches
+    WHERE user_id IS NOT NULL
+    GROUP BY user_id
+)
+SELECT
+    CASE WHEN COUNT(*) = 0 THEN 0::float8
+    ELSE 100.0 * COUNT(*) FILTER (WHERE used_mobile)::float8 / COUNT(*)::float8
+    END AS pct_users_with_mobile
+FROM u
+`
+
+func (q *Queries) AnalyticsMobileUserPercent(ctx context.Context) (float64, error) {
+	row := q.db.QueryRow(ctx, analyticsMobileUserPercent)
+	var pct float64
+	err := row.Scan(&pct)
+	return pct, err
+}
+
+const analyticsActivityHourDistribution = `-- name: AnalyticsActivityHourDistribution :many
+WITH hourly AS (
+    SELECT EXTRACT(HOUR FROM batch_start_at AT TIME ZONE 'UTC')::int AS hr, COUNT(*) AS cnt
+    FROM analytics_visit_batches
+    GROUP BY 1
+),
+tot AS (SELECT COALESCE(SUM(cnt), 0)::float8 AS total FROM hourly)
+SELECT hourly.hr AS hour_utc,
+       CASE WHEN tot.total = 0 THEN 0::float8
+       ELSE 100.0 * hourly.cnt::float8 / tot.total END AS share_percent
+FROM hourly CROSS JOIN tot
+ORDER BY hourly.hr
+`
+
+type AnalyticsActivityHourDistributionRow struct {
+	HourUtc       int32
+	SharePercent  float64
+}
+
+func (q *Queries) AnalyticsActivityHourDistribution(ctx context.Context) ([]AnalyticsActivityHourDistributionRow, error) {
+	rows, err := q.db.Query(ctx, analyticsActivityHourDistribution)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []AnalyticsActivityHourDistributionRow
+	for rows.Next() {
+		var i AnalyticsActivityHourDistributionRow
+		if err := rows.Scan(&i.HourUtc, &i.SharePercent); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const analyticsTopTag = `-- name: AnalyticsTopTag :one
+SELECT tag, COUNT(*)::bigint AS usage_count
+FROM thread_tags
+GROUP BY tag
+ORDER BY usage_count DESC, tag ASC
+LIMIT 1
+`
+
+type AnalyticsTopTagRow struct {
+	Tag         string
+	UsageCount  int64
+}
+
+func (q *Queries) AnalyticsTopTag(ctx context.Context) (AnalyticsTopTagRow, error) {
+	row := q.db.QueryRow(ctx, analyticsTopTag)
+	var i AnalyticsTopTagRow
+	err := row.Scan(&i.Tag, &i.UsageCount)
+	return i, err
+}
+
+const analyticsTopThreadInRange = `-- name: AnalyticsTopThreadInRange :one
+SELECT t.id, t.title, COUNT(p.id)::bigint AS reply_count_in_range
+FROM threads t
+LEFT JOIN posts p ON p.thread_id = t.id AND p.created_at >= $1 AND p.created_at < $2
+GROUP BY t.id, t.title
+ORDER BY reply_count_in_range DESC, t.id ASC
+LIMIT 1
+`
+
+type AnalyticsTopThreadInRangeParams struct {
+	StartAt time.Time
+	EndAt   time.Time
+}
+
+type AnalyticsTopThreadInRangeRow struct {
+	ID                  int32
+	Title               string
+	ReplyCountInRange   int64
+}
+
+func (q *Queries) AnalyticsTopThreadInRange(ctx context.Context, arg AnalyticsTopThreadInRangeParams) (AnalyticsTopThreadInRangeRow, error) {
+	row := q.db.QueryRow(ctx, analyticsTopThreadInRange, arg.StartAt, arg.EndAt)
+	var i AnalyticsTopThreadInRangeRow
+	err := row.Scan(&i.ID, &i.Title, &i.ReplyCountInRange)
 	return i, err
 }
