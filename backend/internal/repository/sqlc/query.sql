@@ -34,7 +34,7 @@ SELECT id, thread_id, user_id, content, created_at FROM posts
 WHERE thread_id = $1 ORDER BY created_at DESC;
 
 -- name: ThreadCreate :one
-INSERT INTO threads (title, content, user_id, posts_count) VALUES ($1, $2, $3, 1)
+INSERT INTO threads (title, content, user_id, posts_count) VALUES ($1, $2, $3, 0)
 RETURNING id, title, content, posts_count, user_id, created_at;
 -- name: ThreadGetById :one
 SELECT id, title, content, user_id, posts_count, created_at FROM threads WHERE id = $1;

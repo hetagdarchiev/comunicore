@@ -172,7 +172,7 @@ func (q *Queries) PostListByThreadId(ctx context.Context, threadID int32) ([]Pos
 }
 
 const threadCreate = `-- name: ThreadCreate :one
-INSERT INTO threads (title, content, user_id, posts_count) VALUES ($1, $2, $3, 1)
+INSERT INTO threads (title, content, user_id, posts_count) VALUES ($1, $2, $3, 0)
 RETURNING id, title, content, posts_count, user_id, created_at
 `
 

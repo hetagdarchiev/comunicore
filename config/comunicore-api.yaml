@@ -593,6 +593,7 @@ components:
           type: string
         postsCount:
           type: integer
+          description: Number of reply posts (rows in posts). The opening message lives in title/content only and is not counted.
         createdAt:
           type: string
           format: date-time
@@ -632,6 +633,7 @@ components:
           type: string
         postsCount:
           type: integer
+          description: Number of reply posts (rows in posts). The opening message is not included.
         createdAt:
           type: string
           format: date-time
