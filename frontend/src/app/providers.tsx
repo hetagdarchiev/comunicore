@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from 'react';
 
+import { AnalyticsBatchTracker } from '@/shared/analytics/ui/AnalyticsBatchTracker';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import '@/shared/api/setup';
@@ -19,6 +20,9 @@ export default function Providers({ children }: { children: ReactNode }) {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <AnalyticsBatchTracker />
+      {children}
+    </QueryClientProvider>
   );
 }
