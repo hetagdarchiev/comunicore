@@ -14,6 +14,7 @@ type ThreadsRepo interface {
 	Get(ctx context.Context, threadId int) (*model.ThreadRepoInfo, error)
 	PageByPageID(ctx context.Context, page, limit int) (model.ThreadListRepo, error)
 	PageByOffset(ctx context.Context, threadId, limit int, before bool) (model.ThreadListRepo, error)
+	InsertThreadTags(ctx context.Context, threadID int, tags []string) error
 }
 type PostsRepo interface {
 	Create(ctx context.Context, post model.PostCreate) (model.Post, error)
@@ -56,6 +57,11 @@ func (s *ThreadsService) Create(ctx context.Context, thread model.ThreadCreate) 
 	createdThread, err := s.threadsRepo.Create(ctx, thread)
 	if err != nil {
 		return model.ThreadInfo{}, err
+	}
+	if len(thread.Tags) > 0 {
+		if err := s.threadsRepo.InsertThreadTags(ctx, createdThread.ID, thread.Tags); err != nil {
+			return model.ThreadInfo{}, err
+		}
 	}
 	userName, err := s.userRepo.GetNameById(ctx, createdThread.UserID)
 	if err != nil {

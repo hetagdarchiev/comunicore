@@ -10,6 +10,85 @@ import (
 	"github.com/go-faster/jx"
 )
 
+func encodeAnalyticsMetricsGetResponse(response AnalyticsMetricsGetRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *AnalyticsMetricsResponse:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(200)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *ErrorStringMessage:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(401)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(500)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
+	}
+}
+
+func encodeAnalyticsVisitBatchSubmitResponse(response AnalyticsVisitBatchSubmitRes, w http.ResponseWriter) error {
+	switch response := response.(type) {
+	case *AnalyticsVisitBatchSubmitNoContent:
+		w.WriteHeader(204)
+
+		return nil
+
+	case *ErrorStringMessage:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(400)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.WriteHeader(500)
+
+		e := new(jx.Encoder)
+		response.Encode(e)
+		if _, err := e.WriteTo(w); err != nil {
+			return errors.Wrap(err, "write")
+		}
+
+		return nil
+
+	default:
+		return errors.Errorf("unexpected response type: %T", response)
+	}
+}
+
 func encodeAuthLoginResponse(response AuthLoginRes, w http.ResponseWriter) error {
 	switch response := response.(type) {
 	case *UserCreateResponse:
@@ -48,7 +127,7 @@ func encodeAuthLoginResponse(response AuthLoginRes, w http.ResponseWriter) error
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -123,7 +202,7 @@ func encodeMediaGetResponse(response MediaGetRes, w http.ResponseWriter) error {
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -338,7 +417,7 @@ func encodeThreadsListResponse(response ThreadsListRes, w http.ResponseWriter) e
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -381,7 +460,7 @@ func encodeUserCreateResponse(response UserCreateRes, w http.ResponseWriter) err
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 
@@ -490,7 +569,7 @@ func encodeUserMeResponse(response UserMeRes, w http.ResponseWriter) error {
 
 		return nil
 
-	case *AuthLoginInternalServerErrorApplicationJSON:
+	case *AnalyticsMetricsGetInternalServerErrorApplicationJSON:
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(500)
 

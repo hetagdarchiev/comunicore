@@ -297,6 +297,66 @@ paths:
           $ref: '#/components/responses/ErrorStringDescription'
         "500":
           $ref: '#/components/responses/ErrorStringDescription'
+  /api/analytics/visit-batch:
+    post:
+      operationId: analyticsVisitBatchSubmit
+      summary: Submit a client-side analytics batch (durations, device, activity hints)
+      description: |
+        Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+        Idempotent per `clientBatchId`.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnalyticsVisitBatchRequest'
+      responses:
+        '204':
+          description: Accepted
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        '500':
+          $ref: '#/components/responses/ErrorStringDescription'
+  /api/analytics/metrics:
+    get:
+      operationId: analyticsMetricsGet
+      summary: Aggregated analytics (requires login)
+      parameters:
+        - name: dropoffAfterMessages
+          in: query
+          description: N in “churn after N posts” (users with at least N posts and inactive since)
+          required: false
+          schema:
+            type: integer
+            default: 5
+            minimum: 1
+        - name: dropoffInactiveDays
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 30
+            minimum: 1
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnalyticsMetricsResponse'
+        '401':
+          description: Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorStringMessage'
+        '500':
+          $ref: '#/components/responses/ErrorStringDescription'
   /api/media:
     post:
       summary: Upload media file
@@ -650,6 +710,11 @@ components:
           type: string
         content:
           type: string
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional tags for analytics (normalized to lowercase on server)
       required:
         - title
         - content
@@ -684,6 +749,142 @@ components:
           type: string
           format: uri
       required: [url, fileName]
+    AnalyticsVisitBatchRequest:
+      type: object
+      required:
+        - clientBatchId
+        - activeDurationMs
+        - visibleDurationMs
+        - isMobile
+        - batchStartAt
+        - batchEndAt
+      properties:
+        clientBatchId:
+          type: string
+          format: uuid
+        activeDurationMs:
+          type: integer
+          format: int64
+          minimum: 0
+        visibleDurationMs:
+          type: integer
+          format: int64
+          minimum: 0
+        isMobile:
+          type: boolean
+        hadComposeActivity:
+          type: boolean
+          description: User composed text or submitted content during this batch
+        hadReadActivity:
+          type: boolean
+          description: User was reading/browsing (default true if omitted)
+        batchStartAt:
+          type: string
+          format: date-time
+        batchEndAt:
+          type: string
+          format: date-time
+    AnalyticsHourBucket:
+      type: object
+      required:
+        - hour
+        - sharePercent
+      properties:
+        hour:
+          type: integer
+          minimum: 0
+          maximum: 23
+        sharePercent:
+          type: number
+          format: double
+    AnalyticsTopTag:
+      type: object
+      required:
+        - tag
+        - usageCount
+      properties:
+        tag:
+          type: string
+        usageCount:
+          type: integer
+          format: int64
+    AnalyticsTopThread:
+      type: object
+      required:
+        - threadId
+        - title
+        - repliesInWindow
+      properties:
+        threadId:
+          type: integer
+        title:
+          type: string
+        repliesInWindow:
+          type: integer
+          format: int64
+          description: Number of reply posts in the selected time window
+    AnalyticsMetricsResponse:
+      type: object
+      required:
+        - avgActiveTimeMs
+        - avgVisibleTimeMs
+        - maxActiveTimeMs
+        - connectionDensity
+        - dropoffChurnPercent
+        - dropoffAfterMessages
+        - dropoffInactiveDays
+        - mobilePctReaders
+        - mobilePctWriters
+        - mobilePctSessions
+        - mobilePctUsers
+        - activityByHourUtc
+      properties:
+        avgActiveTimeMs:
+          type: number
+          format: double
+          description: Mean active (focused tab) duration per batch, ms
+        avgVisibleTimeMs:
+          type: number
+          format: double
+          description: Mean tab visible duration per batch, ms
+        maxActiveTimeMs:
+          type: integer
+          format: int64
+        connectionDensity:
+          type: number
+          format: double
+          description: Total replies divided by distinct participants (posts + thread authors)
+        dropoffChurnPercent:
+          type: number
+          format: double
+          description: Share of users with ≥N posts inactive for dropoffInactiveDays
+        dropoffAfterMessages:
+          type: integer
+        dropoffInactiveDays:
+          type: integer
+        mobilePctReaders:
+          type: number
+          format: double
+        mobilePctWriters:
+          type: number
+          format: double
+        mobilePctSessions:
+          type: number
+          format: double
+        mobilePctUsers:
+          type: number
+          format: double
+          description: Share of logged-in users (in batches) with any mobile session
+        activityByHourUtc:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsHourBucket'
+        topTag:
+          $ref: '#/components/schemas/AnalyticsTopTag'
+        topThreadWeekly:
+          $ref: '#/components/schemas/AnalyticsTopThread'
+        topThreadMonthly:
+          $ref: '#/components/schemas/AnalyticsTopThread'
     # errors
     ErrorStringMessage:
       description: |
