@@ -154,3 +154,39 @@ LEFT JOIN posts p ON p.thread_id = t.id AND p.created_at >= $1 AND p.created_at 
 GROUP BY t.id, t.title
 ORDER BY reply_count_in_range DESC, t.id ASC
 LIMIT 1;
+
+-- name: AnalyticsTopUsersByPosts :many
+SELECT u.id, u.name, COUNT(p.id)::bigint AS post_count
+FROM users u
+JOIN posts p ON u.id = p.user_id
+GROUP BY u.id, u.name
+ORDER BY post_count DESC, u.id ASC
+LIMIT 10;
+
+-- name: AnalyticsPopularTagsByThreadCount :many
+SELECT tag, COUNT(*)::bigint AS thread_count
+FROM thread_tags
+GROUP BY tag
+ORDER BY thread_count DESC, tag ASC;
+
+-- name: AnalyticsPostsActivityByDay :many
+SELECT DATE(created_at) AS day, COUNT(*)::bigint AS posts_count
+FROM posts
+GROUP BY day
+ORDER BY day;
+
+-- name: AnalyticsTopUsersByThreads :many
+SELECT u.id, u.name, COUNT(t.id)::bigint AS thread_count
+FROM users u
+JOIN threads t ON u.id = t.user_id
+GROUP BY u.id, u.name
+ORDER BY thread_count DESC, u.id ASC;
+
+-- name: AnalyticsUsersWithPostsButNoThreads :many
+SELECT u.id, u.name, COUNT(p.id)::bigint AS post_count
+FROM users u
+JOIN posts p ON u.id = p.user_id
+LEFT JOIN threads t ON u.id = t.user_id
+WHERE t.id IS NULL
+GROUP BY u.id, u.name
+ORDER BY post_count DESC, u.id ASC;
