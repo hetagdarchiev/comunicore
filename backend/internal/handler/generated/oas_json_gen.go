@@ -1306,12 +1306,16 @@ func (s *ThreadListItem) encodeFields(e *jx.Encoder) {
 		e.Int(s.ID)
 	}
 	{
-		e.FieldStart("author_id")
-		e.Int(s.AuthorID)
+		e.FieldStart("authorId")
+		e.Int(s.AuthorId)
 	}
 	{
-		e.FieldStart("author_name")
+		e.FieldStart("authorName")
 		e.Str(s.AuthorName)
+	}
+	{
+		e.FieldStart("authorAvatarUrl")
+		json.EncodeURI(e, s.AuthorAvatarUrl)
 	}
 	{
 		e.FieldStart("title")
@@ -1322,23 +1326,24 @@ func (s *ThreadListItem) encodeFields(e *jx.Encoder) {
 		e.Str(s.Content)
 	}
 	{
-		e.FieldStart("posts_count")
+		e.FieldStart("postsCount")
 		e.Int(s.PostsCount)
 	}
 	{
-		e.FieldStart("created_at")
+		e.FieldStart("createdAt")
 		json.EncodeDateTime(e, s.CreatedAt)
 	}
 }
 
-var jsonFieldsNameOfThreadListItem = [7]string{
+var jsonFieldsNameOfThreadListItem = [8]string{
 	0: "id",
-	1: "author_id",
-	2: "author_name",
-	3: "title",
-	4: "content",
-	5: "posts_count",
-	6: "created_at",
+	1: "authorId",
+	2: "authorName",
+	3: "authorAvatarUrl",
+	4: "title",
+	5: "content",
+	6: "postsCount",
+	7: "createdAt",
 }
 
 // Decode decodes ThreadListItem from json.
@@ -1362,19 +1367,19 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
-		case "author_id":
+		case "authorId":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
 				v, err := d.Int()
-				s.AuthorID = int(v)
+				s.AuthorId = int(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"author_id\"")
+				return errors.Wrap(err, "decode field \"authorId\"")
 			}
-		case "author_name":
+		case "authorName":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
 				v, err := d.Str()
@@ -1384,10 +1389,22 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"author_name\"")
+				return errors.Wrap(err, "decode field \"authorName\"")
+			}
+		case "authorAvatarUrl":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := json.DecodeURI(d)
+				s.AuthorAvatarUrl = v
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"authorAvatarUrl\"")
 			}
 		case "title":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -1399,7 +1416,7 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "content":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Str()
 				s.Content = string(v)
@@ -1410,8 +1427,8 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"content\"")
 			}
-		case "posts_count":
-			requiredBitSet[0] |= 1 << 5
+		case "postsCount":
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				v, err := d.Int()
 				s.PostsCount = int(v)
@@ -1420,10 +1437,10 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"posts_count\"")
+				return errors.Wrap(err, "decode field \"postsCount\"")
 			}
-		case "created_at":
-			requiredBitSet[0] |= 1 << 6
+		case "createdAt":
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				v, err := json.DecodeDateTime(d)
 				s.CreatedAt = v
@@ -1432,7 +1449,7 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"created_at\"")
+				return errors.Wrap(err, "decode field \"createdAt\"")
 			}
 		default:
 			return d.Skip()
@@ -1444,7 +1461,7 @@ func (s *ThreadListItem) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b01111111,
+		0b11111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -1508,24 +1525,24 @@ func (s *ThreadListResponse) encodeFields(e *jx.Encoder) {
 		e.ArrEnd()
 	}
 	{
-		e.FieldStart("total_count_estimated")
+		e.FieldStart("totalCountEstimated")
 		e.Int(s.TotalCountEstimated)
 	}
 	{
-		e.FieldStart("have_prev")
+		e.FieldStart("havePrev")
 		e.Bool(s.HavePrev)
 	}
 	{
-		e.FieldStart("have_next")
+		e.FieldStart("haveNext")
 		e.Bool(s.HaveNext)
 	}
 }
 
 var jsonFieldsNameOfThreadListResponse = [4]string{
 	0: "threads",
-	1: "total_count_estimated",
-	2: "have_prev",
-	3: "have_next",
+	1: "totalCountEstimated",
+	2: "havePrev",
+	3: "haveNext",
 }
 
 // Decode decodes ThreadListResponse from json.
@@ -1555,7 +1572,7 @@ func (s *ThreadListResponse) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"threads\"")
 			}
-		case "total_count_estimated":
+		case "totalCountEstimated":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
 				v, err := d.Int()
@@ -1565,9 +1582,9 @@ func (s *ThreadListResponse) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"total_count_estimated\"")
+				return errors.Wrap(err, "decode field \"totalCountEstimated\"")
 			}
-		case "have_prev":
+		case "havePrev":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
 				v, err := d.Bool()
@@ -1577,9 +1594,9 @@ func (s *ThreadListResponse) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"have_prev\"")
+				return errors.Wrap(err, "decode field \"havePrev\"")
 			}
-		case "have_next":
+		case "haveNext":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := d.Bool()
@@ -1589,7 +1606,7 @@ func (s *ThreadListResponse) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"have_next\"")
+				return errors.Wrap(err, "decode field \"haveNext\"")
 			}
 		default:
 			return d.Skip()
@@ -1661,29 +1678,34 @@ func (s *ThreadPostItem) encodeFields(e *jx.Encoder) {
 		e.Int(s.ID)
 	}
 	{
-		e.FieldStart("author_id")
-		e.Int(s.AuthorID)
+		e.FieldStart("authorId")
+		e.Int(s.AuthorId)
 	}
 	{
-		e.FieldStart("author_name")
+		e.FieldStart("authorName")
 		e.Str(s.AuthorName)
+	}
+	{
+		e.FieldStart("authorAvatarUrl")
+		json.EncodeURI(e, s.AuthorAvatarUrl)
 	}
 	{
 		e.FieldStart("content")
 		e.Str(s.Content)
 	}
 	{
-		e.FieldStart("created_at")
+		e.FieldStart("createdAt")
 		json.EncodeDateTime(e, s.CreatedAt)
 	}
 }
 
-var jsonFieldsNameOfThreadPostItem = [5]string{
+var jsonFieldsNameOfThreadPostItem = [6]string{
 	0: "id",
-	1: "author_id",
-	2: "author_name",
-	3: "content",
-	4: "created_at",
+	1: "authorId",
+	2: "authorName",
+	3: "authorAvatarUrl",
+	4: "content",
+	5: "createdAt",
 }
 
 // Decode decodes ThreadPostItem from json.
@@ -1707,19 +1729,19 @@ func (s *ThreadPostItem) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
-		case "author_id":
+		case "authorId":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
 				v, err := d.Int()
-				s.AuthorID = int(v)
+				s.AuthorId = int(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"author_id\"")
+				return errors.Wrap(err, "decode field \"authorId\"")
 			}
-		case "author_name":
+		case "authorName":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
 				v, err := d.Str()
@@ -1729,10 +1751,22 @@ func (s *ThreadPostItem) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"author_name\"")
+				return errors.Wrap(err, "decode field \"authorName\"")
+			}
+		case "authorAvatarUrl":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := json.DecodeURI(d)
+				s.AuthorAvatarUrl = v
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"authorAvatarUrl\"")
 			}
 		case "content":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Str()
 				s.Content = string(v)
@@ -1743,8 +1777,8 @@ func (s *ThreadPostItem) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"content\"")
 			}
-		case "created_at":
-			requiredBitSet[0] |= 1 << 4
+		case "createdAt":
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := json.DecodeDateTime(d)
 				s.CreatedAt = v
@@ -1753,7 +1787,7 @@ func (s *ThreadPostItem) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"created_at\"")
+				return errors.Wrap(err, "decode field \"createdAt\"")
 			}
 		default:
 			return d.Skip()
@@ -1765,7 +1799,7 @@ func (s *ThreadPostItem) Decode(d *jx.Decoder) error {
 	// Validate required fields.
 	var failures []validate.FieldError
 	for i, mask := range [1]uint8{
-		0b00011111,
+		0b00111111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -1825,12 +1859,16 @@ func (s *ThreadWithPostsListResponse) encodeFields(e *jx.Encoder) {
 		e.Int(s.ID)
 	}
 	{
-		e.FieldStart("author_id")
-		e.Int(s.AuthorID)
+		e.FieldStart("authorId")
+		e.Int(s.AuthorId)
 	}
 	{
-		e.FieldStart("author_name")
+		e.FieldStart("authorName")
 		e.Str(s.AuthorName)
+	}
+	{
+		e.FieldStart("authorAvatarUrl")
+		json.EncodeURI(e, s.AuthorAvatarUrl)
 	}
 	{
 		e.FieldStart("title")
@@ -1841,11 +1879,11 @@ func (s *ThreadWithPostsListResponse) encodeFields(e *jx.Encoder) {
 		e.Str(s.Content)
 	}
 	{
-		e.FieldStart("posts_count")
+		e.FieldStart("postsCount")
 		e.Int(s.PostsCount)
 	}
 	{
-		e.FieldStart("created_at")
+		e.FieldStart("createdAt")
 		json.EncodeDateTime(e, s.CreatedAt)
 	}
 	{
@@ -1858,15 +1896,16 @@ func (s *ThreadWithPostsListResponse) encodeFields(e *jx.Encoder) {
 	}
 }
 
-var jsonFieldsNameOfThreadWithPostsListResponse = [8]string{
+var jsonFieldsNameOfThreadWithPostsListResponse = [9]string{
 	0: "id",
-	1: "author_id",
-	2: "author_name",
-	3: "title",
-	4: "content",
-	5: "posts_count",
-	6: "created_at",
-	7: "posts",
+	1: "authorId",
+	2: "authorName",
+	3: "authorAvatarUrl",
+	4: "title",
+	5: "content",
+	6: "postsCount",
+	7: "createdAt",
+	8: "posts",
 }
 
 // Decode decodes ThreadWithPostsListResponse from json.
@@ -1874,7 +1913,7 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode ThreadWithPostsListResponse to nil")
 	}
-	var requiredBitSet [1]uint8
+	var requiredBitSet [2]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -1890,19 +1929,19 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"id\"")
 			}
-		case "author_id":
+		case "authorId":
 			requiredBitSet[0] |= 1 << 1
 			if err := func() error {
 				v, err := d.Int()
-				s.AuthorID = int(v)
+				s.AuthorId = int(v)
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"author_id\"")
+				return errors.Wrap(err, "decode field \"authorId\"")
 			}
-		case "author_name":
+		case "authorName":
 			requiredBitSet[0] |= 1 << 2
 			if err := func() error {
 				v, err := d.Str()
@@ -1912,10 +1951,22 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"author_name\"")
+				return errors.Wrap(err, "decode field \"authorName\"")
+			}
+		case "authorAvatarUrl":
+			requiredBitSet[0] |= 1 << 3
+			if err := func() error {
+				v, err := json.DecodeURI(d)
+				s.AuthorAvatarUrl = v
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"authorAvatarUrl\"")
 			}
 		case "title":
-			requiredBitSet[0] |= 1 << 3
+			requiredBitSet[0] |= 1 << 4
 			if err := func() error {
 				v, err := d.Str()
 				s.Title = string(v)
@@ -1927,7 +1978,7 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 				return errors.Wrap(err, "decode field \"title\"")
 			}
 		case "content":
-			requiredBitSet[0] |= 1 << 4
+			requiredBitSet[0] |= 1 << 5
 			if err := func() error {
 				v, err := d.Str()
 				s.Content = string(v)
@@ -1938,8 +1989,8 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"content\"")
 			}
-		case "posts_count":
-			requiredBitSet[0] |= 1 << 5
+		case "postsCount":
+			requiredBitSet[0] |= 1 << 6
 			if err := func() error {
 				v, err := d.Int()
 				s.PostsCount = int(v)
@@ -1948,10 +1999,10 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"posts_count\"")
+				return errors.Wrap(err, "decode field \"postsCount\"")
 			}
-		case "created_at":
-			requiredBitSet[0] |= 1 << 6
+		case "createdAt":
+			requiredBitSet[0] |= 1 << 7
 			if err := func() error {
 				v, err := json.DecodeDateTime(d)
 				s.CreatedAt = v
@@ -1960,10 +2011,10 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"created_at\"")
+				return errors.Wrap(err, "decode field \"createdAt\"")
 			}
 		case "posts":
-			requiredBitSet[0] |= 1 << 7
+			requiredBitSet[1] |= 1 << 0
 			if err := func() error {
 				s.Posts = make([]ThreadPostItem, 0)
 				if err := d.Arr(func(d *jx.Decoder) error {
@@ -1989,8 +2040,9 @@ func (s *ThreadWithPostsListResponse) Decode(d *jx.Decoder) error {
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
-	for i, mask := range [1]uint8{
+	for i, mask := range [2]uint8{
 		0b11111111,
+		0b00000001,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
 			// Mask only required fields and check equality to mask using XOR.
@@ -2314,8 +2366,8 @@ func (s *UserCreateResponse) encodeFields(e *jx.Encoder) {
 		e.Str(s.Email)
 	}
 	{
-		e.FieldStart("avatar_url")
-		json.EncodeURI(e, s.AvatarURL)
+		e.FieldStart("avatarUrl")
+		json.EncodeURI(e, s.AvatarUrl)
 	}
 }
 
@@ -2323,7 +2375,7 @@ var jsonFieldsNameOfUserCreateResponse = [4]string{
 	0: "id",
 	1: "name",
 	2: "email",
-	3: "avatar_url",
+	3: "avatarUrl",
 }
 
 // Decode decodes UserCreateResponse from json.
@@ -2371,17 +2423,17 @@ func (s *UserCreateResponse) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"email\"")
 			}
-		case "avatar_url":
+		case "avatarUrl":
 			requiredBitSet[0] |= 1 << 3
 			if err := func() error {
 				v, err := json.DecodeURI(d)
-				s.AvatarURL = v
+				s.AvatarUrl = v
 				if err != nil {
 					return err
 				}
 				return nil
 			}(); err != nil {
-				return errors.Wrap(err, "decode field \"avatar_url\"")
+				return errors.Wrap(err, "decode field \"avatarUrl\"")
 			}
 		default:
 			return d.Skip()

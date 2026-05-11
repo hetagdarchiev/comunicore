@@ -13,7 +13,7 @@ export type Thread = {
     comments: number;
     shares: number;
   };
-  avatarUrl?: string; // Если в PostCard используется аватар
+  avatarUrl?: string;
 };
 
 export type ThreadsResponse = {

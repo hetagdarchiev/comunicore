@@ -39,7 +39,6 @@ var operationRolesCookieAuth = map[string][]string{
 	ThreadAddPostOperation: []string{},
 	ThreadCreateOperation:  []string{},
 	ThreadGetOperation:     []string{},
-	ThreadsListOperation:   []string{},
 	UserDeleteOperation:    []string{},
 	UserGetOperation:       []string{},
 	UserMeOperation:        []string{},

@@ -6,7 +6,7 @@ const formatter = new Intl.DateTimeFormat('ru-RU', {
   minute: '2-digit',
 });
 
-export const formatDate = (dateString: string) => {
+export const formatDate = (dateString: string | Date) => {
   const date = new Date(dateString);
 
   if (isNaN(date.getTime())) {

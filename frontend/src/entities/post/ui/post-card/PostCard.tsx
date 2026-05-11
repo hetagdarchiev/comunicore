@@ -10,18 +10,18 @@ import { PostTags } from './components/post-tags/PostTags';
 import { PostViews } from './components/post-views/PostViews';
 
 export const PostCard = ({
-  author_id,
-  author_name,
-  created_at,
+  authorId,
+  authorName,
+  createdAt,
   title,
   content,
   id,
 }: ThreadListItem) => (
   <article className='border-gray-ea bg-post-card min-w-75 rounded-md border px-7.5 py-5 shadow-[2px_1px_5px_0px_#00000026]'>
     <PostHeader
-      authorId={author_id}
-      authorName={author_name}
-      createdAt={created_at}
+      authorId={authorId}
+      authorName={authorName}
+      createdAt={createdAt}
     />
 
     <PostContent id={id} title={title}>

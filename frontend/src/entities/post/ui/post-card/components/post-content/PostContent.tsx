@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import clsx from 'clsx';
 
 import { AppRouter } from '@/shared/config/app-router';
+import { renderHtml } from '@/shared/lib/markdown';
 
 interface PostContentProps {
   id: string | number;
@@ -11,23 +11,14 @@ interface PostContentProps {
 
 export const PostContent = ({ id, title, children }: PostContentProps) => (
   <div className='mb-4'>
-    <Link href={AppRouter.post.getRoute(String(id))}>
-      <h2
-        className={clsx(
-          'mb-2.5 line-clamp-2 text-2xl leading-none font-bold wrap-break-word',
-          'max-sm:text-xl',
-        )}
-      >
+    <Link href={AppRouter.post.getRoute(id.toString())}>
+      <h2 className='mb-2.5 text-2xl leading-none font-bold max-sm:text-xl'>
         {title}
       </h2>
     </Link>
-    <p
-      className={clsx(
-        'line-clamp-6 text-base leading-6 font-light tracking-wider',
-        'sm:max-w-full',
-      )}
-    >
-      {children}
-    </p>
+    <div
+      className='line-clamp-6 text-base leading-6 font-light tracking-wider'
+      dangerouslySetInnerHTML={{ __html: renderHtml(String(children ?? '')) }}
+    />
   </div>
 );

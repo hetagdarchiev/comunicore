@@ -20,7 +20,7 @@ export type UserCreateResponse = {
   id: number;
   name: string;
   email: string;
-  avatar_url: string;
+  avatarUrl: string;
 };
 
 export type UserUpdateRequest = {
@@ -36,38 +36,38 @@ export type AuthLoginRequest = {
 
 export type ThreadListResponse = {
   threads: Array<ThreadListItem>;
-  total_count_estimated: number;
-  have_prev: boolean;
-  have_next: boolean;
+  totalCountEstimated: number;
+  havePrev: boolean;
+  haveNext: boolean;
 };
 
 export type ThreadListItem = {
   id: number;
-  author_id: number;
-  author_name: string;
+  authorId: number;
+  authorName: string;
   title: string;
   content: string;
-  posts_count: number;
-  created_at: string;
+  postsCount: number;
+  createdAt: string;
 };
 
 export type ThreadWithPostsListResponse = {
   id: number;
-  author_id: number;
-  author_name: string;
+  authorId: number;
+  authorName: string;
   title: string;
   content: string;
-  posts_count: number;
-  created_at: string;
+  postsCount: number;
+  createdAt: string;
   posts: Array<ThreadPostItem>;
 };
 
 export type ThreadPostItem = {
   id: number;
-  author_id: number;
-  author_name: string;
+  authorId: number;
+  authorName: string;
   content: string;
-  created_at: string;
+  createdAt: string;
 };
 
 export type ThreadCreateRequest = {
