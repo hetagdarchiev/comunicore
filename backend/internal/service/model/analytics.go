@@ -37,6 +37,22 @@ type AnalyticsTopThread struct {
 	RepliesInWindow int64
 }
 
+type AnalyticsUserCount struct {
+	UserID int
+	Name   string
+	Count  int64
+}
+
+type AnalyticsTagCount struct {
+	Tag         string
+	ThreadCount int64
+}
+
+type AnalyticsDayPosts struct {
+	Day        time.Time
+	PostsCount int64
+}
+
 type AnalyticsMetricsRepo struct {
 	AvgActiveTimeMs     float64
 	AvgVisibleTimeMs    float64
@@ -51,4 +67,9 @@ type AnalyticsMetricsRepo struct {
 	TopTag              *AnalyticsTopTag
 	TopThreadWeekly     *AnalyticsTopThread
 	TopThreadMonthly    *AnalyticsTopThread
+	TopUsersByPosts     []AnalyticsUserCount
+	PopularTags         []AnalyticsTagCount
+	PostsActivityByDay  []AnalyticsDayPosts
+	TopUsersByThreads   []AnalyticsUserCount
+	PostOnlyUsers       []AnalyticsUserCount
 }

@@ -825,6 +825,43 @@ components:
           type: integer
           format: int64
           description: Number of reply posts in the selected time window
+    AnalyticsUserCount:
+      type: object
+      required:
+        - userId
+        - name
+        - count
+      properties:
+        userId:
+          type: integer
+        name:
+          type: string
+        count:
+          type: integer
+          format: int64
+    AnalyticsTagCount:
+      type: object
+      required:
+        - tag
+        - threadCount
+      properties:
+        tag:
+          type: string
+        threadCount:
+          type: integer
+          format: int64
+    AnalyticsDayPosts:
+      type: object
+      required:
+        - day
+        - postsCount
+      properties:
+        day:
+          type: string
+          format: date
+        postsCount:
+          type: integer
+          format: int64
     AnalyticsMetricsResponse:
       type: object
       required:
@@ -840,6 +877,11 @@ components:
         - mobilePctSessions
         - mobilePctUsers
         - activityByHourUtc
+        - topUsersByPosts
+        - popularTags
+        - postsActivityByDay
+        - topUsersByThreads
+        - postOnlyUsers
       properties:
         avgActiveTimeMs:
           type: number
@@ -887,6 +929,31 @@ components:
           $ref: '#/components/schemas/AnalyticsTopThread'
         topThreadMonthly:
           $ref: '#/components/schemas/AnalyticsTopThread'
+        topUsersByPosts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsUserCount'
+          description: Top-10 users ranked by total posts count
+        popularTags:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsTagCount'
+          description: Tags ranked by number of tagged threads
+        postsActivityByDay:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsDayPosts'
+          description: Daily posts count time series
+        topUsersByThreads:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsUserCount'
+          description: Users ranked by total created threads
+        postOnlyUsers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AnalyticsUserCount'
+          description: Users with posts but without created threads
     # errors
     ErrorStringMessage:
       description: |
