@@ -12,6 +12,32 @@ import (
 	ht "github.com/ogen-go/ogen/http"
 )
 
+// Ref: #/components/schemas/AnalyticsDayPosts
+type AnalyticsDayPosts struct {
+	Day        time.Time `json:"day"`
+	PostsCount int64     `json:"postsCount"`
+}
+
+// GetDay returns the value of Day.
+func (s *AnalyticsDayPosts) GetDay() time.Time {
+	return s.Day
+}
+
+// GetPostsCount returns the value of PostsCount.
+func (s *AnalyticsDayPosts) GetPostsCount() int64 {
+	return s.PostsCount
+}
+
+// SetDay sets the value of Day.
+func (s *AnalyticsDayPosts) SetDay(val time.Time) {
+	s.Day = val
+}
+
+// SetPostsCount sets the value of PostsCount.
+func (s *AnalyticsDayPosts) SetPostsCount(val int64) {
+	s.PostsCount = val
+}
+
 // Ref: #/components/schemas/AnalyticsHourBucket
 type AnalyticsHourBucket struct {
 	Hour         int     `json:"hour"`
@@ -70,6 +96,16 @@ type AnalyticsMetricsResponse struct {
 	TopTag            OptAnalyticsTopTag    `json:"topTag"`
 	TopThreadWeekly   OptAnalyticsTopThread `json:"topThreadWeekly"`
 	TopThreadMonthly  OptAnalyticsTopThread `json:"topThreadMonthly"`
+	// Top-10 users ranked by total posts count.
+	TopUsersByPosts []AnalyticsUserCount `json:"topUsersByPosts"`
+	// Tags ranked by number of tagged threads.
+	PopularTags []AnalyticsTagCount `json:"popularTags"`
+	// Daily posts count time series.
+	PostsActivityByDay []AnalyticsDayPosts `json:"postsActivityByDay"`
+	// Users ranked by total created threads.
+	TopUsersByThreads []AnalyticsUserCount `json:"topUsersByThreads"`
+	// Users with posts but without created threads.
+	PostOnlyUsers []AnalyticsUserCount `json:"postOnlyUsers"`
 }
 
 // GetAvgActiveTimeMs returns the value of AvgActiveTimeMs.
@@ -147,6 +183,31 @@ func (s *AnalyticsMetricsResponse) GetTopThreadMonthly() OptAnalyticsTopThread {
 	return s.TopThreadMonthly
 }
 
+// GetTopUsersByPosts returns the value of TopUsersByPosts.
+func (s *AnalyticsMetricsResponse) GetTopUsersByPosts() []AnalyticsUserCount {
+	return s.TopUsersByPosts
+}
+
+// GetPopularTags returns the value of PopularTags.
+func (s *AnalyticsMetricsResponse) GetPopularTags() []AnalyticsTagCount {
+	return s.PopularTags
+}
+
+// GetPostsActivityByDay returns the value of PostsActivityByDay.
+func (s *AnalyticsMetricsResponse) GetPostsActivityByDay() []AnalyticsDayPosts {
+	return s.PostsActivityByDay
+}
+
+// GetTopUsersByThreads returns the value of TopUsersByThreads.
+func (s *AnalyticsMetricsResponse) GetTopUsersByThreads() []AnalyticsUserCount {
+	return s.TopUsersByThreads
+}
+
+// GetPostOnlyUsers returns the value of PostOnlyUsers.
+func (s *AnalyticsMetricsResponse) GetPostOnlyUsers() []AnalyticsUserCount {
+	return s.PostOnlyUsers
+}
+
 // SetAvgActiveTimeMs sets the value of AvgActiveTimeMs.
 func (s *AnalyticsMetricsResponse) SetAvgActiveTimeMs(val float64) {
 	s.AvgActiveTimeMs = val
@@ -222,7 +283,58 @@ func (s *AnalyticsMetricsResponse) SetTopThreadMonthly(val OptAnalyticsTopThread
 	s.TopThreadMonthly = val
 }
 
+// SetTopUsersByPosts sets the value of TopUsersByPosts.
+func (s *AnalyticsMetricsResponse) SetTopUsersByPosts(val []AnalyticsUserCount) {
+	s.TopUsersByPosts = val
+}
+
+// SetPopularTags sets the value of PopularTags.
+func (s *AnalyticsMetricsResponse) SetPopularTags(val []AnalyticsTagCount) {
+	s.PopularTags = val
+}
+
+// SetPostsActivityByDay sets the value of PostsActivityByDay.
+func (s *AnalyticsMetricsResponse) SetPostsActivityByDay(val []AnalyticsDayPosts) {
+	s.PostsActivityByDay = val
+}
+
+// SetTopUsersByThreads sets the value of TopUsersByThreads.
+func (s *AnalyticsMetricsResponse) SetTopUsersByThreads(val []AnalyticsUserCount) {
+	s.TopUsersByThreads = val
+}
+
+// SetPostOnlyUsers sets the value of PostOnlyUsers.
+func (s *AnalyticsMetricsResponse) SetPostOnlyUsers(val []AnalyticsUserCount) {
+	s.PostOnlyUsers = val
+}
+
 func (*AnalyticsMetricsResponse) analyticsMetricsGetRes() {}
+
+// Ref: #/components/schemas/AnalyticsTagCount
+type AnalyticsTagCount struct {
+	Tag         string `json:"tag"`
+	ThreadCount int64  `json:"threadCount"`
+}
+
+// GetTag returns the value of Tag.
+func (s *AnalyticsTagCount) GetTag() string {
+	return s.Tag
+}
+
+// GetThreadCount returns the value of ThreadCount.
+func (s *AnalyticsTagCount) GetThreadCount() int64 {
+	return s.ThreadCount
+}
+
+// SetTag sets the value of Tag.
+func (s *AnalyticsTagCount) SetTag(val string) {
+	s.Tag = val
+}
+
+// SetThreadCount sets the value of ThreadCount.
+func (s *AnalyticsTagCount) SetThreadCount(val int64) {
+	s.ThreadCount = val
+}
 
 // Ref: #/components/schemas/AnalyticsTopTag
 type AnalyticsTopTag struct {
@@ -286,6 +398,43 @@ func (s *AnalyticsTopThread) SetTitle(val string) {
 // SetRepliesInWindow sets the value of RepliesInWindow.
 func (s *AnalyticsTopThread) SetRepliesInWindow(val int64) {
 	s.RepliesInWindow = val
+}
+
+// Ref: #/components/schemas/AnalyticsUserCount
+type AnalyticsUserCount struct {
+	UserId int    `json:"userId"`
+	Name   string `json:"name"`
+	Count  int64  `json:"count"`
+}
+
+// GetUserId returns the value of UserId.
+func (s *AnalyticsUserCount) GetUserId() int {
+	return s.UserId
+}
+
+// GetName returns the value of Name.
+func (s *AnalyticsUserCount) GetName() string {
+	return s.Name
+}
+
+// GetCount returns the value of Count.
+func (s *AnalyticsUserCount) GetCount() int64 {
+	return s.Count
+}
+
+// SetUserId sets the value of UserId.
+func (s *AnalyticsUserCount) SetUserId(val int) {
+	s.UserId = val
+}
+
+// SetName sets the value of Name.
+func (s *AnalyticsUserCount) SetName(val string) {
+	s.Name = val
+}
+
+// SetCount sets the value of Count.
+func (s *AnalyticsUserCount) SetCount(val int64) {
+	s.Count = val
 }
 
 // Ref: #/components/schemas/AnalyticsVisitBatchRequest
@@ -919,14 +1068,16 @@ func (*ThreadGetInternalServerError) threadGetRes() {}
 
 // Ref: #/components/schemas/ThreadListItem
 type ThreadListItem struct {
-	ID              int       `json:"id"`
-	AuthorId        int       `json:"authorId"`
-	AuthorName      string    `json:"authorName"`
-	AuthorAvatarUrl url.URL   `json:"authorAvatarUrl"`
-	Title           string    `json:"title"`
-	Content         string    `json:"content"`
-	PostsCount      int       `json:"postsCount"`
-	CreatedAt       time.Time `json:"createdAt"`
+	ID              int     `json:"id"`
+	AuthorId        int     `json:"authorId"`
+	AuthorName      string  `json:"authorName"`
+	AuthorAvatarUrl url.URL `json:"authorAvatarUrl"`
+	Title           string  `json:"title"`
+	Content         string  `json:"content"`
+	// Number of reply posts (rows in posts). The opening message lives in title/content only and is not
+	// counted.
+	PostsCount int       `json:"postsCount"`
+	CreatedAt  time.Time `json:"createdAt"`
 }
 
 // GetID returns the value of ID.
@@ -1135,15 +1286,16 @@ func (*ThreadPostItem) threadAddPostRes() {}
 
 // Ref: #/components/schemas/ThreadWithPostsListResponse
 type ThreadWithPostsListResponse struct {
-	ID              int              `json:"id"`
-	AuthorId        int              `json:"authorId"`
-	AuthorName      string           `json:"authorName"`
-	AuthorAvatarUrl url.URL          `json:"authorAvatarUrl"`
-	Title           string           `json:"title"`
-	Content         string           `json:"content"`
-	PostsCount      int              `json:"postsCount"`
-	CreatedAt       time.Time        `json:"createdAt"`
-	Posts           []ThreadPostItem `json:"posts"`
+	ID              int     `json:"id"`
+	AuthorId        int     `json:"authorId"`
+	AuthorName      string  `json:"authorName"`
+	AuthorAvatarUrl url.URL `json:"authorAvatarUrl"`
+	Title           string  `json:"title"`
+	Content         string  `json:"content"`
+	// Number of reply posts (rows in posts). The opening message is not included.
+	PostsCount int              `json:"postsCount"`
+	CreatedAt  time.Time        `json:"createdAt"`
+	Posts      []ThreadPostItem `json:"posts"`
 }
 
 // GetID returns the value of ID.

@@ -175,6 +175,61 @@ func (s *AnalyticsMetricsResponse) Validate() error {
 			Error: err,
 		})
 	}
+	if err := func() error {
+		if s.TopUsersByPosts == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "topUsersByPosts",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.PopularTags == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "popularTags",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.PostsActivityByDay == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "postsActivityByDay",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.TopUsersByThreads == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "topUsersByThreads",
+			Error: err,
+		})
+	}
+	if err := func() error {
+		if s.PostOnlyUsers == nil {
+			return errors.New("nil is invalid value")
+		}
+		return nil
+	}(); err != nil {
+		failures = append(failures, validate.FieldError{
+			Name:  "postOnlyUsers",
+			Error: err,
+		})
+	}
 	if len(failures) > 0 {
 		return &validate.Error{Fields: failures}
 	}

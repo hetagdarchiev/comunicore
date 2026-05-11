@@ -65,20 +65,23 @@ ON CONFLICT (client_batch_id) DO NOTHING;
 
 -- name: AnalyticsAvgDurations :one
 SELECT
-    COALESCE(AVG(active_duration_ms)::float8, 0) AS avg_active_ms,
-    COALESCE(AVG(visible_duration_ms)::float8, 0) AS avg_visible_ms,
-    COALESCE(MAX(active_duration_ms)::bigint, 0) AS max_active_ms
+    COALESCE(AVG(active_duration_ms), 0)::double precision AS avg_active_ms,
+    COALESCE(AVG(visible_duration_ms), 0)::double precision AS avg_visible_ms,
+    COALESCE(MAX(active_duration_ms), 0)::bigint AS max_active_ms
 FROM analytics_visit_batches;
 
 -- name: AnalyticsConnectionDensity :one
 SELECT
-    (SELECT COUNT(*)::float8 FROM posts) / NULLIF((
-        SELECT COUNT(*)::float8 FROM (
+    COALESCE(
+        (SELECT COUNT(*)::double precision FROM posts) / NULLIF((
+        SELECT COUNT(*)::double precision FROM (
             SELECT user_id FROM posts
             UNION
             SELECT user_id FROM threads
         ) AS u
-    ), 0) AS density;
+    ), 0.0),
+    0.0
+    )::double precision AS density;
 
 -- name: AnalyticsDropoffPercent :one
 WITH user_stats AS (
@@ -89,14 +92,14 @@ WITH user_stats AS (
     GROUP BY user_id
 ),
 eligible AS (
-    SELECT * FROM user_stats WHERE post_count >= $1::int
+    SELECT * FROM user_stats WHERE post_count >= sqlc.arg(threshold_n)::int
 )
 SELECT
     CASE WHEN COUNT(*) = 0 THEN 0::float8
     ELSE 100.0 * COUNT(*) FILTER (
-        WHERE last_post_at < NOW() - ($2::int * INTERVAL '1 day')
+        WHERE last_post_at < NOW() - (sqlc.arg(inactive_days)::int * INTERVAL '1 day')
     )::float8 / COUNT(*)::float8
-    END AS churn_percent
+    END::float8 AS churn_percent
 FROM eligible;
 
 -- name: AnalyticsMobileSessionShares :one
@@ -104,14 +107,14 @@ SELECT
     CASE WHEN COUNT(*) FILTER (WHERE had_read_activity) = 0 THEN 0::float8
     ELSE 100.0 * COUNT(*) FILTER (WHERE had_read_activity AND is_mobile)::float8
          / COUNT(*) FILTER (WHERE had_read_activity)::float8
-    END AS pct_mobile_readers,
+    END::float8 AS pct_mobile_readers,
     CASE WHEN COUNT(*) FILTER (WHERE had_compose_activity) = 0 THEN 0::float8
     ELSE 100.0 * COUNT(*) FILTER (WHERE had_compose_activity AND is_mobile)::float8
          / COUNT(*) FILTER (WHERE had_compose_activity)::float8
-    END AS pct_mobile_writers,
+    END::float8 AS pct_mobile_writers,
     CASE WHEN COUNT(*) = 0 THEN 0::float8
     ELSE 100.0 * COUNT(*) FILTER (WHERE is_mobile)::float8 / COUNT(*)::float8
-    END AS pct_mobile_sessions
+    END::float8 AS pct_mobile_sessions
 FROM analytics_visit_batches;
 
 -- name: AnalyticsMobileUserPercent :one
@@ -124,7 +127,7 @@ WITH u AS (
 SELECT
     CASE WHEN COUNT(*) = 0 THEN 0::float8
     ELSE 100.0 * COUNT(*) FILTER (WHERE used_mobile)::float8 / COUNT(*)::float8
-    END AS pct_users_with_mobile
+    END::float8 AS pct_users_with_mobile
 FROM u;
 
 -- name: AnalyticsActivityHourDistribution :many
@@ -136,7 +139,7 @@ WITH hourly AS (
 tot AS (SELECT COALESCE(SUM(cnt), 0)::float8 AS total FROM hourly)
 SELECT hourly.hr AS hour_utc,
        CASE WHEN tot.total = 0 THEN 0::float8
-       ELSE 100.0 * hourly.cnt::float8 / tot.total END AS share_percent
+       ELSE 100.0 * hourly.cnt::float8 / tot.total END::float8 AS share_percent
 FROM hourly CROSS JOIN tot
 ORDER BY hourly.hr;
 
@@ -150,7 +153,9 @@ LIMIT 1;
 -- name: AnalyticsTopThreadInRange :one
 SELECT t.id, t.title, COUNT(p.id)::bigint AS reply_count_in_range
 FROM threads t
-LEFT JOIN posts p ON p.thread_id = t.id AND p.created_at >= $1 AND p.created_at < $2
+LEFT JOIN posts p ON p.thread_id = t.id
+    AND p.created_at >= sqlc.arg(start_at)
+    AND p.created_at < sqlc.arg(end_at)
 GROUP BY t.id, t.title
 ORDER BY reply_count_in_range DESC, t.id ASC
 LIMIT 1;

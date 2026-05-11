@@ -35,11 +35,14 @@ func pgUUID(u uuid.UUID) pgtype.UUID {
 	return pgtype.UUID{Bytes: u, Valid: true}
 }
 
+func pgTimestamptz(t time.Time) pgtype.Timestamptz {
+	return pgtype.Timestamptz{Time: t, Valid: true}
+}
+
 func (r *AnalyticsRepo) InsertVisitBatch(ctx context.Context, batch model.AnalyticsVisitBatchInsert) error {
-	var uid *int32
+	uid := pgtype.Int4{Valid: false}
 	if batch.UserID != nil {
-		v := int32(*batch.UserID)
-		uid = &v
+		uid = pgtype.Int4{Int32: int32(*batch.UserID), Valid: true}
 	}
 	return r.queries.AnalyticsVisitBatchInsert(ctx, analyticsDb.AnalyticsVisitBatchInsertParams{
 		UserID:               uid,
@@ -49,8 +52,8 @@ func (r *AnalyticsRepo) InsertVisitBatch(ctx context.Context, batch model.Analyt
 		IsMobile:             batch.IsMobile,
 		HadComposeActivity:   batch.HadComposeActivity,
 		HadReadActivity:      batch.HadReadActivity,
-		BatchStartAt:         batch.BatchStartAt,
-		BatchEndAt:           batch.BatchEndAt,
+		BatchStartAt:         pgTimestamptz(batch.BatchStartAt),
+		BatchEndAt:           pgTimestamptz(batch.BatchEndAt),
 	})
 }
 
@@ -122,8 +125,8 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 	monthStart := now.AddDate(0, -1, 0)
 
 	weekRow, err := r.queries.AnalyticsTopThreadInRange(ctx, analyticsDb.AnalyticsTopThreadInRangeParams{
-		StartAt: weekStart,
-		EndAt:   now,
+		StartAt: pgTimestamptz(weekStart),
+		EndAt:   pgTimestamptz(now),
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -140,8 +143,8 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 	}
 
 	monthRow, err := r.queries.AnalyticsTopThreadInRange(ctx, analyticsDb.AnalyticsTopThreadInRangeParams{
-		StartAt: monthStart,
-		EndAt:   now,
+		StartAt: pgTimestamptz(monthStart),
+		EndAt:   pgTimestamptz(now),
 	})
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -155,6 +158,69 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 			Title:              monthRow.Title,
 			RepliesInWindow:    monthRow.ReplyCountInRange,
 		}
+	}
+
+	topUsersByPosts, err := r.queries.AnalyticsTopUsersByPosts(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.TopUsersByPosts = make([]model.AnalyticsUserCount, 0, len(topUsersByPosts))
+	for _, row := range topUsersByPosts {
+		out.TopUsersByPosts = append(out.TopUsersByPosts, model.AnalyticsUserCount{
+			UserID: int(row.ID),
+			Name:   row.Name,
+			Count:  row.PostCount,
+		})
+	}
+
+	popularTags, err := r.queries.AnalyticsPopularTagsByThreadCount(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.PopularTags = make([]model.AnalyticsTagCount, 0, len(popularTags))
+	for _, row := range popularTags {
+		out.PopularTags = append(out.PopularTags, model.AnalyticsTagCount{
+			Tag:         row.Tag,
+			ThreadCount: row.ThreadCount,
+		})
+	}
+
+	postsByDay, err := r.queries.AnalyticsPostsActivityByDay(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.PostsActivityByDay = make([]model.AnalyticsDayPosts, 0, len(postsByDay))
+	for _, row := range postsByDay {
+		out.PostsActivityByDay = append(out.PostsActivityByDay, model.AnalyticsDayPosts{
+			Day:        row.Day.Time,
+			PostsCount: row.PostsCount,
+		})
+	}
+
+	topUsersByThreads, err := r.queries.AnalyticsTopUsersByThreads(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.TopUsersByThreads = make([]model.AnalyticsUserCount, 0, len(topUsersByThreads))
+	for _, row := range topUsersByThreads {
+		out.TopUsersByThreads = append(out.TopUsersByThreads, model.AnalyticsUserCount{
+			UserID: int(row.ID),
+			Name:   row.Name,
+			Count:  row.ThreadCount,
+		})
+	}
+
+	postOnlyUsers, err := r.queries.AnalyticsUsersWithPostsButNoThreads(ctx)
+	if err != nil {
+		return out, err
+	}
+	out.PostOnlyUsers = make([]model.AnalyticsUserCount, 0, len(postOnlyUsers))
+	for _, row := range postOnlyUsers {
+		out.PostOnlyUsers = append(out.PostOnlyUsers, model.AnalyticsUserCount{
+			UserID: int(row.ID),
+			Name:   row.Name,
+			Count:  row.PostCount,
+		})
 	}
 
 	return out, nil

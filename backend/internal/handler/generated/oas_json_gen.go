@@ -13,6 +13,119 @@ import (
 )
 
 // Encode implements json.Marshaler.
+func (s *AnalyticsDayPosts) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *AnalyticsDayPosts) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("day")
+		json.EncodeDate(e, s.Day)
+	}
+	{
+		e.FieldStart("postsCount")
+		e.Int64(s.PostsCount)
+	}
+}
+
+var jsonFieldsNameOfAnalyticsDayPosts = [2]string{
+	0: "day",
+	1: "postsCount",
+}
+
+// Decode decodes AnalyticsDayPosts from json.
+func (s *AnalyticsDayPosts) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AnalyticsDayPosts to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "day":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := json.DecodeDate(d)
+				s.Day = v
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"day\"")
+			}
+		case "postsCount":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int64()
+				s.PostsCount = int64(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"postsCount\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode AnalyticsDayPosts")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfAnalyticsDayPosts) {
+					name = jsonFieldsNameOfAnalyticsDayPosts[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *AnalyticsDayPosts) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AnalyticsDayPosts) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
 func (s *AnalyticsHourBucket) Encode(e *jx.Encoder) {
 	e.ObjStart()
 	s.encodeFields(e)
@@ -244,9 +357,49 @@ func (s *AnalyticsMetricsResponse) encodeFields(e *jx.Encoder) {
 			s.TopThreadMonthly.Encode(e)
 		}
 	}
+	{
+		e.FieldStart("topUsersByPosts")
+		e.ArrStart()
+		for _, elem := range s.TopUsersByPosts {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		e.FieldStart("popularTags")
+		e.ArrStart()
+		for _, elem := range s.PopularTags {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		e.FieldStart("postsActivityByDay")
+		e.ArrStart()
+		for _, elem := range s.PostsActivityByDay {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		e.FieldStart("topUsersByThreads")
+		e.ArrStart()
+		for _, elem := range s.TopUsersByThreads {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
+	{
+		e.FieldStart("postOnlyUsers")
+		e.ArrStart()
+		for _, elem := range s.PostOnlyUsers {
+			elem.Encode(e)
+		}
+		e.ArrEnd()
+	}
 }
 
-var jsonFieldsNameOfAnalyticsMetricsResponse = [15]string{
+var jsonFieldsNameOfAnalyticsMetricsResponse = [20]string{
 	0:  "avgActiveTimeMs",
 	1:  "avgVisibleTimeMs",
 	2:  "maxActiveTimeMs",
@@ -262,6 +415,11 @@ var jsonFieldsNameOfAnalyticsMetricsResponse = [15]string{
 	12: "topTag",
 	13: "topThreadWeekly",
 	14: "topThreadMonthly",
+	15: "topUsersByPosts",
+	16: "popularTags",
+	17: "postsActivityByDay",
+	18: "topUsersByThreads",
+	19: "postOnlyUsers",
 }
 
 // Decode decodes AnalyticsMetricsResponse from json.
@@ -269,7 +427,7 @@ func (s *AnalyticsMetricsResponse) Decode(d *jx.Decoder) error {
 	if s == nil {
 		return errors.New("invalid: unable to decode AnalyticsMetricsResponse to nil")
 	}
-	var requiredBitSet [2]uint8
+	var requiredBitSet [3]uint8
 
 	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
 		switch string(k) {
@@ -453,6 +611,96 @@ func (s *AnalyticsMetricsResponse) Decode(d *jx.Decoder) error {
 			}(); err != nil {
 				return errors.Wrap(err, "decode field \"topThreadMonthly\"")
 			}
+		case "topUsersByPosts":
+			requiredBitSet[1] |= 1 << 7
+			if err := func() error {
+				s.TopUsersByPosts = make([]AnalyticsUserCount, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem AnalyticsUserCount
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.TopUsersByPosts = append(s.TopUsersByPosts, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"topUsersByPosts\"")
+			}
+		case "popularTags":
+			requiredBitSet[2] |= 1 << 0
+			if err := func() error {
+				s.PopularTags = make([]AnalyticsTagCount, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem AnalyticsTagCount
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.PopularTags = append(s.PopularTags, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"popularTags\"")
+			}
+		case "postsActivityByDay":
+			requiredBitSet[2] |= 1 << 1
+			if err := func() error {
+				s.PostsActivityByDay = make([]AnalyticsDayPosts, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem AnalyticsDayPosts
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.PostsActivityByDay = append(s.PostsActivityByDay, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"postsActivityByDay\"")
+			}
+		case "topUsersByThreads":
+			requiredBitSet[2] |= 1 << 2
+			if err := func() error {
+				s.TopUsersByThreads = make([]AnalyticsUserCount, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem AnalyticsUserCount
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.TopUsersByThreads = append(s.TopUsersByThreads, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"topUsersByThreads\"")
+			}
+		case "postOnlyUsers":
+			requiredBitSet[2] |= 1 << 3
+			if err := func() error {
+				s.PostOnlyUsers = make([]AnalyticsUserCount, 0)
+				if err := d.Arr(func(d *jx.Decoder) error {
+					var elem AnalyticsUserCount
+					if err := elem.Decode(d); err != nil {
+						return err
+					}
+					s.PostOnlyUsers = append(s.PostOnlyUsers, elem)
+					return nil
+				}); err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"postOnlyUsers\"")
+			}
 		default:
 			return d.Skip()
 		}
@@ -462,8 +710,9 @@ func (s *AnalyticsMetricsResponse) Decode(d *jx.Decoder) error {
 	}
 	// Validate required fields.
 	var failures []validate.FieldError
-	for i, mask := range [2]uint8{
+	for i, mask := range [3]uint8{
 		0b11111111,
+		0b10001111,
 		0b00001111,
 	} {
 		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
@@ -506,6 +755,119 @@ func (s *AnalyticsMetricsResponse) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *AnalyticsMetricsResponse) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *AnalyticsTagCount) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *AnalyticsTagCount) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("tag")
+		e.Str(s.Tag)
+	}
+	{
+		e.FieldStart("threadCount")
+		e.Int64(s.ThreadCount)
+	}
+}
+
+var jsonFieldsNameOfAnalyticsTagCount = [2]string{
+	0: "tag",
+	1: "threadCount",
+}
+
+// Decode decodes AnalyticsTagCount from json.
+func (s *AnalyticsTagCount) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AnalyticsTagCount to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "tag":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Str()
+				s.Tag = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"tag\"")
+			}
+		case "threadCount":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Int64()
+				s.ThreadCount = int64(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"threadCount\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode AnalyticsTagCount")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000011,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfAnalyticsTagCount) {
+					name = jsonFieldsNameOfAnalyticsTagCount[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *AnalyticsTagCount) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AnalyticsTagCount) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }
@@ -749,6 +1111,136 @@ func (s *AnalyticsTopThread) MarshalJSON() ([]byte, error) {
 
 // UnmarshalJSON implements stdjson.Unmarshaler.
 func (s *AnalyticsTopThread) UnmarshalJSON(data []byte) error {
+	d := jx.DecodeBytes(data)
+	return s.Decode(d)
+}
+
+// Encode implements json.Marshaler.
+func (s *AnalyticsUserCount) Encode(e *jx.Encoder) {
+	e.ObjStart()
+	s.encodeFields(e)
+	e.ObjEnd()
+}
+
+// encodeFields encodes fields.
+func (s *AnalyticsUserCount) encodeFields(e *jx.Encoder) {
+	{
+		e.FieldStart("userId")
+		e.Int(s.UserId)
+	}
+	{
+		e.FieldStart("name")
+		e.Str(s.Name)
+	}
+	{
+		e.FieldStart("count")
+		e.Int64(s.Count)
+	}
+}
+
+var jsonFieldsNameOfAnalyticsUserCount = [3]string{
+	0: "userId",
+	1: "name",
+	2: "count",
+}
+
+// Decode decodes AnalyticsUserCount from json.
+func (s *AnalyticsUserCount) Decode(d *jx.Decoder) error {
+	if s == nil {
+		return errors.New("invalid: unable to decode AnalyticsUserCount to nil")
+	}
+	var requiredBitSet [1]uint8
+
+	if err := d.ObjBytes(func(d *jx.Decoder, k []byte) error {
+		switch string(k) {
+		case "userId":
+			requiredBitSet[0] |= 1 << 0
+			if err := func() error {
+				v, err := d.Int()
+				s.UserId = int(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"userId\"")
+			}
+		case "name":
+			requiredBitSet[0] |= 1 << 1
+			if err := func() error {
+				v, err := d.Str()
+				s.Name = string(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"name\"")
+			}
+		case "count":
+			requiredBitSet[0] |= 1 << 2
+			if err := func() error {
+				v, err := d.Int64()
+				s.Count = int64(v)
+				if err != nil {
+					return err
+				}
+				return nil
+			}(); err != nil {
+				return errors.Wrap(err, "decode field \"count\"")
+			}
+		default:
+			return d.Skip()
+		}
+		return nil
+	}); err != nil {
+		return errors.Wrap(err, "decode AnalyticsUserCount")
+	}
+	// Validate required fields.
+	var failures []validate.FieldError
+	for i, mask := range [1]uint8{
+		0b00000111,
+	} {
+		if result := (requiredBitSet[i] & mask) ^ mask; result != 0 {
+			// Mask only required fields and check equality to mask using XOR.
+			//
+			// If XOR result is not zero, result is not equal to expected, so some fields are missed.
+			// Bits of fields which would be set are actually bits of missed fields.
+			missed := bits.OnesCount8(result)
+			for bitN := 0; bitN < missed; bitN++ {
+				bitIdx := bits.TrailingZeros8(result)
+				fieldIdx := i*8 + bitIdx
+				var name string
+				if fieldIdx < len(jsonFieldsNameOfAnalyticsUserCount) {
+					name = jsonFieldsNameOfAnalyticsUserCount[fieldIdx]
+				} else {
+					name = strconv.Itoa(fieldIdx)
+				}
+				failures = append(failures, validate.FieldError{
+					Name:  name,
+					Error: validate.ErrFieldRequired,
+				})
+				// Reset bit.
+				result &^= 1 << bitIdx
+			}
+		}
+	}
+	if len(failures) > 0 {
+		return &validate.Error{Fields: failures}
+	}
+
+	return nil
+}
+
+// MarshalJSON implements stdjson.Marshaler.
+func (s *AnalyticsUserCount) MarshalJSON() ([]byte, error) {
+	e := jx.Encoder{}
+	s.Encode(&e)
+	return e.Bytes(), nil
+}
+
+// UnmarshalJSON implements stdjson.Unmarshaler.
+func (s *AnalyticsUserCount) UnmarshalJSON(data []byte) error {
 	d := jx.DecodeBytes(data)
 	return s.Decode(d)
 }

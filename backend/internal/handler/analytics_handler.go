@@ -111,5 +111,43 @@ func (h *AnalyticsHandler) AnalyticsMetricsGet(ctx context.Context, params api.A
 		})
 	}
 
+	for _, row := range m.TopUsersByPosts {
+		resp.TopUsersByPosts = append(resp.TopUsersByPosts, api.AnalyticsUserCount{
+			UserId: row.UserID,
+			Name:   row.Name,
+			Count:  row.Count,
+		})
+	}
+
+	for _, row := range m.PopularTags {
+		resp.PopularTags = append(resp.PopularTags, api.AnalyticsTagCount{
+			Tag:         row.Tag,
+			ThreadCount: row.ThreadCount,
+		})
+	}
+
+	for _, row := range m.PostsActivityByDay {
+		resp.PostsActivityByDay = append(resp.PostsActivityByDay, api.AnalyticsDayPosts{
+			Day:        row.Day,
+			PostsCount: row.PostsCount,
+		})
+	}
+
+	for _, row := range m.TopUsersByThreads {
+		resp.TopUsersByThreads = append(resp.TopUsersByThreads, api.AnalyticsUserCount{
+			UserId: row.UserID,
+			Name:   row.Name,
+			Count:  row.Count,
+		})
+	}
+
+	for _, row := range m.PostOnlyUsers {
+		resp.PostOnlyUsers = append(resp.PostOnlyUsers, api.AnalyticsUserCount{
+			UserId: row.UserID,
+			Name:   row.Name,
+			Count:  row.Count,
+		})
+	}
+
 	return resp, nil
 }
