@@ -13,19 +13,26 @@ import {
 } from '../model/schema/markdown.schema';
 import { EditorMode } from '../model/types/mode.types';
 
-import { Editor } from './components/editor/editor';
-import { ModeSwitcher } from './components/mode-switcher/modeSwitcher';
-import { Preview } from './components/preview/preview';
-import { Toolbar } from './components/toolbar/toolbar';
+import { Editor } from './components/editor/Editor';
+import { ModeSwitcher } from './components/mode-switcher/ModeSwitcher';
+import { Preview } from './components/preview/Preview';
+import { Toolbar } from './components/toolbar/Toolbar';
+
+const defaultValues = {
+  markdown: '',
+};
+
+const EDITOR_MODE = {
+  edit: 'hidden',
+  preview: 'block',
+} satisfies Record<EditorMode, string>;
 
 export function TextEditor() {
   const [mode, setActiveMode] = useState<EditorMode>('edit');
   const form = useForm<MarkDownSchema>({
     resolver: zodResolver(markdownSchema),
     mode: 'onChange',
-    defaultValues: {
-      markdown: '',
-    },
+    defaultValues,
   });
 
   const {
@@ -61,7 +68,7 @@ export function TextEditor() {
           <div
             className={clsx(
               'grid h-full grid-rows-[minmax(1rem,10rem)] overflow-y-auto p-4',
-              mode === 'preview' ? 'block' : 'hidden',
+              EDITOR_MODE[mode],
             )}
           >
             <Preview markdown={markdown ?? ''} />

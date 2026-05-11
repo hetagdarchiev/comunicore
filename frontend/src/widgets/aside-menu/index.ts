@@ -1,1 +1,1 @@
-export { AsideMenu } from './ui/asideMenu';
+export { AsideMenu } from './ui/AsideMenu';

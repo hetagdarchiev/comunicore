@@ -1,0 +1,94 @@
+'use client';
+
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { LuAtSign, LuLock } from 'react-icons/lu';
+import Link from 'next/link';
+
+import { AppRouter } from '@/shared/config/app-router';
+import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
+import { Button } from '@/shared/ui/button';
+import { ErrorMessage } from '@/shared/ui/error-message';
+import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useLogin } from '../../model/hooks/useLogin';
+import {
+  loginFormSchema,
+  type LoginFormTypes,
+} from '../../model/schema/login-form.schema';
+
+const defaultValues = {
+  login: '',
+  password: '',
+};
+
+export function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<LoginFormTypes>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues,
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  });
+
+  const { mutate: authMutate, isPending, error: serverError } = useLogin();
+
+  const onSubmit: SubmitHandler<LoginFormTypes> = (data) => {
+    authMutate(
+      { body: data },
+      {
+        onSuccess: () => {
+          reset(defaultValues);
+        },
+      },
+    );
+  };
+
+  return (
+    <form className='flex flex-col gap-y-5' onSubmit={handleSubmit(onSubmit)}>
+      <Label htmlFor='user-login-email' error={errors.login}>
+        <LuAtSign size={24} aria-hidden={true} role='img' />
+        <Input
+          id='user-login-email'
+          {...register('login')}
+          type='text'
+          isError={errors.login?.message}
+          placeholder='Почта'
+          disabled={isPending}
+        />
+      </Label>
+
+      <Label htmlFor='user-login-password' error={errors.password}>
+        <LuLock size={24} aria-hidden={true} role='img' />
+        <Input
+          id='user-login-password'
+          {...register('password')}
+          type='password'
+          placeholder='Пароль'
+          isError={errors.password?.message}
+          disabled={isPending}
+        />
+      </Label>
+
+      <div className='flex flex-col gap-y-2'>
+        <Link
+          href={AppRouter.recovery.password}
+          className='text-blue-16 w-fit text-sm font-semibold'
+        >
+          Забыл пароль
+        </Link>
+
+        {serverError && <ErrorMessage error={getErrorMessage(serverError)} />}
+      </div>
+
+      <Button type='submit' disabled={isPending}>
+        {isPending ? 'Загрузка...' : 'Войти'}
+      </Button>
+    </form>
+  );
+}

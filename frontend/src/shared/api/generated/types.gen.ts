@@ -20,6 +20,7 @@ export type UserCreateResponse = {
   id: number;
   name: string;
   email: string;
+  avatar_url: string;
 };
 
 export type UserUpdateRequest = {
@@ -93,7 +94,7 @@ export type MediaUploadResponse = {
  *
  */
 export type ErrorStringMessage = {
-  code?: 'ErrorStringMessage';
+  code: 'ErrorStringMessage';
   message: string;
 };
 

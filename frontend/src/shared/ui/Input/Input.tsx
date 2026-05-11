@@ -1,33 +1,24 @@
 import { forwardRef, InputHTMLAttributes } from 'react';
-import { FieldError } from 'react-hook-form';
-import Image from 'next/image';
+import clsx from 'clsx';
 
-import { ErrorMessage } from '../error-message';
-
-interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  icon: string;
-  error?: FieldError;
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  isError?: string;
 }
 
-export const Input = forwardRef<HTMLInputElement, IInputProps>((props, ref) => {
-  const { className = '', icon, error, ...rest } = props;
+export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const { className = '', isError, ...rest } = props;
 
   return (
-    <div>
-      <label
-        className={`${className} bg-light-fc focus-within:ring-gray-80/30 flex h-full w-full max-w-125 items-center gap-x-2.5 rounded-sm px-5 py-3 transition-all duration-200 focus-within:ring-2 ${error ? 'border-red-500' : ''}`}
-        htmlFor={rest.name}
-      >
-        <Image src={icon} alt='' width={24} height={24} />
-        <input
-          className='text-gray-80 placeholder:text-gray-80 w-full bg-transparent text-[18px] outline-none'
-          ref={ref}
-          id={rest.name}
-          {...rest}
-        />
-      </label>
-      {error?.message && <ErrorMessage error={error.message} />}
-    </div>
+    <input
+      className={clsx(
+        'text-gray-80 placeholder:text-gray-80 w-full bg-transparent text-[18px] outline-none',
+        isError && 'text-red-600 outline-red-600',
+        className,
+      )}
+      ref={ref}
+      id={rest.name}
+      {...rest}
+    />
   );
 });
 

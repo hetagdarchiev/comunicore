@@ -1,20 +1,54 @@
+import { replaceRouteId } from '../lib/helpers/replaceRouteId';
+
+export const idTemplate = ':id';
+
 export const AppRouter = {
   main: '/',
   verification: '/verification',
   questions: '/questions',
-  tags: '/tags',
+  tags: {
+    root: '/tags',
+    get template() {
+      return `${this.root}/${idTemplate}`;
+    },
+    getRoute(id: string) {
+      return replaceRouteId(this.template, id);
+    },
+  },
   award: '/award',
-  rules: '/rules',
-  community: '/rules/community',
   notification: '/notification',
   profile: '/profile',
   faq: '/faq',
   favorites: '/favorites',
   registration: '/registration',
   login: '/login',
-  user: (id: number | string) => `/users/${id}`,
-  post: (id: number | string) => `/posts/${id}`,
-
-  // For the time being
   editor: '/editor',
-};
+
+  rules: {
+    root: '/rules',
+    get community() {
+      return `${this.root}/community`;
+    },
+  },
+
+  recovery: {
+    root: '/recovery',
+    get password() {
+      return `${this.root}/password`;
+    },
+  },
+
+  user: {
+    root: `/user/${idTemplate}`,
+    getRoute(id: string) {
+      return replaceRouteId(this.root, id);
+    },
+  },
+
+  post: {
+    root: `/posts/${idTemplate}`,
+    getRoute(id: string) {
+      return replaceRouteId(this.root, id);
+    },
+  },
+} as const;

@@ -1,15 +1,27 @@
-import { useSearchParams } from 'next/navigation';
+'use client';
 
-import { VerificationForm } from '@/features/verification-form';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { VerificationForm } from '@/features/auth';
+import { AppRouter } from '@/shared/config/app-router';
+
+const PARAM_EMAIL_KEY = 'email';
 
 export const VerificationBody = () => {
   const searchParams = useSearchParams();
-  const email = searchParams.get('email');
+  const email = searchParams.get(PARAM_EMAIL_KEY);
+
+  const router = useRouter();
+
+  if (!email) {
+    router.push(AppRouter.registration);
+    return;
+  }
 
   return (
-    <div className='flex flex-col gap-y-5'>
+    <section className='flex flex-col gap-y-5'>
       <h2 className='text-4xl font-bold'>Подтверждение эл. почты</h2>
       <VerificationForm email={email} />
-    </div>
+    </section>
   );
 };

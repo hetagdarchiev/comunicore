@@ -127,6 +127,12 @@ const eslintConfig = defineConfig([
       '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
+  {
+    files: ['src/**/*.store.{js,mjs,ts}'],
+    rules: {
+      ' fsd/no-global-store-imports': 'off',
+    },
+  },
 ]);
 
 export default eslintConfig;

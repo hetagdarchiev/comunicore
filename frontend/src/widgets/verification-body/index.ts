@@ -1,1 +1,1 @@
-export { VerificationBody } from './ui/verificationBody';
+export { VerificationBody } from './ui/VerificationBody';

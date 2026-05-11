@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${robotoSans.variable} overflow-hidden`}>
+      <body className={`${robotoSans.variable} overflow-x-hidden`}>
         <Providers>{children}</Providers>
       </body>
     </html>

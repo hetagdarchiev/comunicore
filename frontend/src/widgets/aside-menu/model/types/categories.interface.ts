@@ -1,5 +1,7 @@
+import { IconType } from 'react-icons/lib';
+
 export interface Category {
   title: string;
-  icon: React.ReactNode;
+  Icon: IconType;
   href: string;
 }

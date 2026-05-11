@@ -4,6 +4,7 @@ export interface PostStats {
   views: number;
   comments: number;
   likes: number;
+  shares: number;
 }
 
 export interface Post {

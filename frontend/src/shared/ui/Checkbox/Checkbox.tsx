@@ -1,8 +1,6 @@
 import { forwardRef, InputHTMLAttributes } from 'react';
 import { FieldError } from 'react-hook-form';
-import Image from 'next/image';
-
-import checkIcon from '../../assets/icons/form/check.svg';
+import { LuCheck } from 'react-icons/lu';
 
 interface ICheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -29,7 +27,7 @@ export const Checkbox = forwardRef<HTMLInputElement, ICheckboxProps>(
               {...rest}
             />
             <div className='pointer-events-none absolute hidden peer-checked:block'>
-              <Image src={checkIcon} alt='' width={20} height={20} />
+              <LuCheck aria-hidden={true} size={20} className='text-white' />
             </div>
           </div>
           <p className='text-gray-80 select-none'>{label}</p>
