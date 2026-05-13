@@ -186,43 +186,44 @@ func (h *errorHandler) handler(ctx context.Context, w http.ResponseWriter, r *ht
 	fmt.Printf("error handler called with error: %T %+v\n", err, err.Error())
 	_, _ = io.WriteString(w, http.StatusText(code))
 }
-func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
-	mediaR, err := mediaRepo.NewMediaRepo(config.Server.UploadDir)
+func RegisterOgenRoutes(mux *http.ServeMux, cfg *config.AppConfig) {
+	mediaR, err := mediaRepo.NewMediaRepo(cfg.Server.UploadDir)
 	if err != nil {
 		fmt.Printf("Failed to create media repo: %v\n", err)
 		return
 	}
-	authR, err := authRepo.NewAuthRepo(config.Database.DSN())
+	authR, err := authRepo.NewAuthRepo(cfg.Database.DSN())
 	if err != nil {
 		fmt.Printf("Failed to create auth repo: %v\n", err)
 		return
 	}
-	userR, err := userRepo.NewUserRepo(config.Database.DSN())
+	userR, err := userRepo.NewUserRepo(cfg.Database.DSN())
 	if err != nil {
 		fmt.Printf("Failed to create storage: %v\n", err)
 		return
 	}
-	postR, err := postsRepo.NewPostsRepo(config.Database.DSN())
+	postR, err := postsRepo.NewPostsRepo(cfg.Database.DSN())
 	if err != nil {
 		panic(err)
 	}
-	threadR, err := threadsRepo.NewThreadsRepo(config.Database.DSN())
+	threadR, err := threadsRepo.NewThreadsRepo(cfg.Database.DSN())
 	if err != nil {
 		panic(err)
 	}
-	analyticsR, err := analyticsRepo.NewAnalyticsRepo(config.Database.DSN())
+	analyticsR, err := analyticsRepo.NewAnalyticsRepo(cfg.Database.DSN())
 	if err != nil {
 		panic(err)
 	}
 
 	authS := authService.NewAuthService(authR, userR)
 	userS := userService.NewUserService(userR, authR)
-	mediaS := mediaService.NewMediaService(config.Server.BaseURL, mediaR)
+	mediaS := mediaService.NewMediaService(cfg.Server.BaseURL, mediaR)
 
 	threadsS := threadsService.NewThreadsService(threadR, postR, userR)
 	analyticsS := analyticsService.NewAnalyticsService(analyticsR)
 
-	authH := NewAuthHandler(authS)
+	secure, sameSite := config.SessionCookieOpts(cfg.Server.BaseURL)
+	authH := NewAuthHandler(authS, secure, sameSite)
 	userH := NewUserHandler(userS)
 	threadsH := NewThreadsHandler(threadsS)
 	mediaH := NewMediaHandler(mediaS)
@@ -238,11 +239,11 @@ func RegisterOgenRoutes(mux *http.ServeMux, config *config.AppConfig) {
 	}
 	apiHandler := WithGlobalContext(optionalCookieSession(authR, srv))
 
-	fmt.Printf("cors enabled for origins %s\n", config.Server.PermittedOrigin)
-	if len(config.Server.PermittedOrigin) > 0 {
-		fmt.Printf("cors enabled for origins %s\n", config.Server.PermittedOrigin)
+	fmt.Printf("cors enabled for origins %s\n", cfg.Server.PermittedOrigin)
+	if len(cfg.Server.PermittedOrigin) > 0 {
+		fmt.Printf("cors enabled for origins %s\n", cfg.Server.PermittedOrigin)
 		corsHandler := cors.New(cors.Options{
-			AllowedOrigins:   []string{config.Server.PermittedOrigin},
+			AllowedOrigins:   []string{cfg.Server.PermittedOrigin},
 			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 			AllowedHeaders:   []string{"Authorization", "Content-Type"},
 			AllowCredentials: true,

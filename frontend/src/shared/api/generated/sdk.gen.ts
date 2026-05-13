@@ -2,7 +2,7 @@
 
 import { type Client, formDataBodySerializer, type Options as Options2, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutResponses, MediaGetData, MediaGetErrors, MediaGetResponses, MediaUploadData, MediaUploadErrors, MediaUploadResponses, ThreadAddPostData, ThreadAddPostErrors, ThreadAddPostResponses, ThreadCreateData, ThreadCreateErrors, ThreadCreateResponses, ThreadGetData, ThreadGetErrors, ThreadGetResponses, ThreadsListData, ThreadsListErrors, ThreadsListResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteResponses, UserGetData, UserGetErrors, UserGetResponses, UserMeData, UserMeErrors, UserMeResponses, UserUpdateData, UserUpdateResponses } from './types.gen';
+import type { AnalyticsMetricsGetData, AnalyticsMetricsGetErrors, AnalyticsMetricsGetResponses, AnalyticsVisitBatchSubmitData, AnalyticsVisitBatchSubmitErrors, AnalyticsVisitBatchSubmitResponses, AuthLoginData, AuthLoginErrors, AuthLoginResponses, AuthLogoutData, AuthLogoutResponses, MediaGetData, MediaGetErrors, MediaGetResponses, MediaUploadData, MediaUploadErrors, MediaUploadResponses, ThreadAddPostData, ThreadAddPostErrors, ThreadAddPostResponses, ThreadCreateData, ThreadCreateErrors, ThreadCreateResponses, ThreadGetData, ThreadGetErrors, ThreadGetResponses, ThreadsListData, ThreadsListErrors, ThreadsListResponses, UserCreateData, UserCreateErrors, UserCreateResponses, UserDeleteData, UserDeleteResponses, UserGetData, UserGetErrors, UserGetResponses, UserMeData, UserMeErrors, UserMeResponses, UserUpdateData, UserUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -139,15 +139,7 @@ export const authLogout = <ThrowOnError extends boolean = false>(options?: Optio
  * а более новым (after) - больший id. И при этом не важно, удалены эти сообщения или нет.
  *
  */
-export const threadsList = <ThrowOnError extends boolean = false>(options?: Options<ThreadsListData, ThrowOnError>) => (options?.client ?? client).get<ThreadsListResponses, ThreadsListErrors, ThrowOnError>({
-    security: [{
-            in: 'cookie',
-            name: 'sid',
-            type: 'apiKey'
-        }],
-    url: '/api/threads',
-    ...options
-});
+export const threadsList = <ThrowOnError extends boolean = false>(options?: Options<ThreadsListData, ThrowOnError>) => (options?.client ?? client).get<ThreadsListResponses, ThreadsListErrors, ThrowOnError>({ url: '/api/threads', ...options });
 
 /**
  * Create a new thread
@@ -194,6 +186,35 @@ export const threadAddPost = <ThrowOnError extends boolean = false>(options: Opt
         'Content-Type': 'application/json',
         ...options.headers
     }
+});
+
+/**
+ * Submit a client-side analytics batch (durations, device, activity hints)
+ *
+ * Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+ * Idempotent per `clientBatchId`.
+ *
+ */
+export const analyticsVisitBatchSubmit = <ThrowOnError extends boolean = false>(options: Options<AnalyticsVisitBatchSubmitData, ThrowOnError>) => (options.client ?? client).post<AnalyticsVisitBatchSubmitResponses, AnalyticsVisitBatchSubmitErrors, ThrowOnError>({
+    url: '/api/analytics/visit-batch',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Aggregated analytics (requires login)
+ */
+export const analyticsMetricsGet = <ThrowOnError extends boolean = false>(options?: Options<AnalyticsMetricsGetData, ThrowOnError>) => (options?.client ?? client).get<AnalyticsMetricsGetResponses, AnalyticsMetricsGetErrors, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sid',
+            type: 'apiKey'
+        }],
+    url: '/api/analytics/metrics',
+    ...options
 });
 
 /**

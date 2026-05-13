@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from 'react';
 
+import { apiBaseUrl } from '../../../shared/api/setup';
+
 type AnalyticsBatchPayload = {
   clientBatchId: string;
   activeDurationMs: number;
@@ -96,7 +98,7 @@ export function AnalyticsBatchTracker() {
       }
 
       try {
-        await fetch('/api/analytics/visit-batch', {
+        await fetch(`${apiBaseUrl}/api/analytics/visit-batch`, {
           method: 'POST',
           credentials: 'include',
           keepalive: true,
@@ -104,7 +106,7 @@ export function AnalyticsBatchTracker() {
           body: JSON.stringify(payload),
         });
       } catch {
-        // Best-effort analytics: ignore network failures.
+        // Оптимальная аналитика: игнорируйте сбои в работе сети.
       } finally {
         startAtRef.current = now;
         activeDurationMsRef.current = 0;
