@@ -1,6 +1,3 @@
-// SPDX-License-Identifier: MIT
-// Copyright 2026 Alex Syrnikov <alex19srv@gmail.com>
-
 package analytics
 
 import (
@@ -45,15 +42,15 @@ func (r *AnalyticsRepo) InsertVisitBatch(ctx context.Context, batch model.Analyt
 		uid = pgtype.Int4{Int32: int32(*batch.UserID), Valid: true}
 	}
 	return r.queries.AnalyticsVisitBatchInsert(ctx, analyticsDb.AnalyticsVisitBatchInsertParams{
-		UserID:               uid,
-		ClientBatchID:        pgUUID(batch.ClientBatchID),
-		ActiveDurationMs:     batch.ActiveDurationMs,
-		VisibleDurationMs:    batch.VisibleDurationMs,
-		IsMobile:             batch.IsMobile,
-		HadComposeActivity:   batch.HadComposeActivity,
-		HadReadActivity:      batch.HadReadActivity,
-		BatchStartAt:         pgTimestamptz(batch.BatchStartAt),
-		BatchEndAt:           pgTimestamptz(batch.BatchEndAt),
+		UserID:             uid,
+		ClientBatchID:      pgUUID(batch.ClientBatchID),
+		ActiveDurationMs:   batch.ActiveDurationMs,
+		VisibleDurationMs:  batch.VisibleDurationMs,
+		IsMobile:           batch.IsMobile,
+		HadComposeActivity: batch.HadComposeActivity,
+		HadReadActivity:    batch.HadReadActivity,
+		BatchStartAt:       pgTimestamptz(batch.BatchStartAt),
+		BatchEndAt:         pgTimestamptz(batch.BatchEndAt),
 	})
 }
 
@@ -101,8 +98,8 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 	out.ActivityByHourUTC = make([]model.AnalyticsHourShare, 0, len(hours))
 	for _, h := range hours {
 		out.ActivityByHourUTC = append(out.ActivityByHourUTC, model.AnalyticsHourShare{
-			Hour:          int(h.HourUtc),
-			SharePercent:  h.SharePercent,
+			Hour:         int(h.HourUtc),
+			SharePercent: h.SharePercent,
 		})
 	}
 
@@ -115,8 +112,8 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 		}
 	} else {
 		out.TopTag = &model.AnalyticsTopTag{
-			Tag:         tagRow.Tag,
-			UsageCount:  tagRow.UsageCount,
+			Tag:        tagRow.Tag,
+			UsageCount: tagRow.UsageCount,
 		}
 	}
 
@@ -136,9 +133,9 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 		}
 	} else {
 		out.TopThreadWeekly = &model.AnalyticsTopThread{
-			ThreadID:           int(weekRow.ID),
-			Title:              weekRow.Title,
-			RepliesInWindow:    weekRow.ReplyCountInRange,
+			ThreadID:        int(weekRow.ID),
+			Title:           weekRow.Title,
+			RepliesInWindow: weekRow.ReplyCountInRange,
 		}
 	}
 
@@ -154,9 +151,9 @@ func (r *AnalyticsRepo) GetMetrics(ctx context.Context, dropoffN, dropoffInactiv
 		}
 	} else {
 		out.TopThreadMonthly = &model.AnalyticsTopThread{
-			ThreadID:           int(monthRow.ID),
-			Title:              monthRow.Title,
-			RepliesInWindow:    monthRow.ReplyCountInRange,
+			ThreadID:        int(monthRow.ID),
+			Title:           monthRow.Title,
+			RepliesInWindow: monthRow.ReplyCountInRange,
 		}
 	}
 
