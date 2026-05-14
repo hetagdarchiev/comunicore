@@ -15,11 +15,21 @@ import (
 )
 
 type AuthHandler struct {
-	authService *authService.AuthService
+	authService    *authService.AuthService
+	cookieSecure   bool
+	cookieSameSite http.SameSite
 }
 
-func NewAuthHandler(authService *authService.AuthService) *AuthHandler {
-	return &AuthHandler{authService: authService}
+func NewAuthHandler(
+	authService *authService.AuthService,
+	cookieSecure bool,
+	cookieSameSite http.SameSite,
+) *AuthHandler {
+	return &AuthHandler{
+		authService:    authService,
+		cookieSecure:   cookieSecure,
+		cookieSameSite: cookieSameSite,
+	}
 }
 
 func (u *AuthHandler) AuthLogin(ctx context.Context, req *api.AuthLoginRequest) (api.AuthLoginRes, error) {
@@ -30,7 +40,7 @@ func (u *AuthHandler) AuthLogin(ctx context.Context, req *api.AuthLoginRequest) 
 
 	globalCtx := GlobalContextFromContext(ctx)
 	sessionID := urlencode.Encode(sessionUUID[:])
-	setCookie(globalCtx.ResponseWriter, sessionID, time.Now().Add(65*24*time.Hour-time.Minute))
+	u.setSessionCookie(globalCtx.ResponseWriter, sessionID, time.Now().Add(65*24*time.Hour-time.Minute))
 
 	return &api.UserCreateResponse{
 		ID:    user.ID,
@@ -49,31 +59,32 @@ func (u *AuthHandler) AuthLogout(ctx context.Context) error {
 		return err
 	}
 
-	deleteCookie(globalCtx.ResponseWriter, "")
+	u.clearSessionCookie(globalCtx.ResponseWriter)
 	globalCtx.ResponseWriter.Header().Set("Clear-Site-Data", "cookies")
 
 	return nil
 }
-func setCookie(w http.ResponseWriter, sessionID string, expires time.Time) {
+func (u *AuthHandler) setSessionCookie(w http.ResponseWriter, sessionID string, expires time.Time) {
 	cookie := &http.Cookie{
 		Name:     "sid",
 		Value:    sessionID,
 		Path:     "/",
 		Expires:  expires,
 		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
+		Secure:   u.cookieSecure,
+		SameSite: u.cookieSameSite,
 	}
 	http.SetCookie(w, cookie)
 }
-func deleteCookie(w http.ResponseWriter, refreshToken string) {
+
+func (u *AuthHandler) clearSessionCookie(w http.ResponseWriter) {
 	cookie := &http.Cookie{
 		Name:     "sid",
-		Value:    refreshToken,
+		Value:    "",
 		MaxAge:   -1,
 		HttpOnly: true,
-		Secure:   true,
-		SameSite: http.SameSiteNoneMode,
+		Secure:   u.cookieSecure,
+		SameSite: u.cookieSameSite,
 	}
 	http.SetCookie(w, cookie)
 }

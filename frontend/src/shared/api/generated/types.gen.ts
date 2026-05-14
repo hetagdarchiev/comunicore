@@ -48,6 +48,9 @@ export type ThreadListItem = {
   authorAvatarUrl: string;
   title: string;
   content: string;
+  /**
+   * Number of reply posts (rows in posts). The opening message lives in title/content only and is not counted.
+   */
   postsCount: number;
   createdAt: string;
 };
@@ -59,6 +62,9 @@ export type ThreadWithPostsListResponse = {
   authorAvatarUrl: string;
   title: string;
   content: string;
+  /**
+   * Number of reply posts (rows in posts). The opening message is not included.
+   */
   postsCount: number;
   createdAt: string;
   posts: Array<ThreadPostItem>;
@@ -76,6 +82,10 @@ export type ThreadPostItem = {
 export type ThreadCreateRequest = {
   title: string;
   content: string;
+  /**
+   * Optional tags for analytics (normalized to lowercase on server)
+   */
+  tags?: Array<string>;
 };
 
 export type ThreadCreatePostRequest = {
@@ -89,6 +99,111 @@ export type MediaUploadRequest = {
 export type MediaUploadResponse = {
   fileName: string;
   url: string;
+};
+
+export type AnalyticsVisitBatchRequest = {
+  clientBatchId: string;
+  activeDurationMs: number;
+  visibleDurationMs: number;
+  isMobile: boolean;
+  /**
+   * User composed text or submitted content during this batch
+   */
+  hadComposeActivity?: boolean;
+  /**
+   * User was reading/browsing (default true if omitted)
+   */
+  hadReadActivity?: boolean;
+  batchStartAt: string;
+  batchEndAt: string;
+};
+
+export type AnalyticsHourBucket = {
+  hour: number;
+  sharePercent: number;
+};
+
+export type AnalyticsTopTag = {
+  tag: string;
+  usageCount: number;
+};
+
+export type AnalyticsTopThread = {
+  threadId: number;
+  title: string;
+  /**
+   * Number of reply posts in the selected time window
+   */
+  repliesInWindow: number;
+};
+
+export type AnalyticsUserCount = {
+  userId: number;
+  name: string;
+  count: number;
+};
+
+export type AnalyticsTagCount = {
+  tag: string;
+  threadCount: number;
+};
+
+export type AnalyticsDayPosts = {
+  day: string;
+  postsCount: number;
+};
+
+export type AnalyticsMetricsResponse = {
+  /**
+   * Mean active (focused tab) duration per batch, ms
+   */
+  avgActiveTimeMs: number;
+  /**
+   * Mean tab visible duration per batch, ms
+   */
+  avgVisibleTimeMs: number;
+  maxActiveTimeMs: number;
+  /**
+   * Total replies divided by distinct participants (posts + thread authors)
+   */
+  connectionDensity: number;
+  /**
+   * Share of users with ≥N posts inactive for dropoffInactiveDays
+   */
+  dropoffChurnPercent: number;
+  dropoffAfterMessages: number;
+  dropoffInactiveDays: number;
+  mobilePctReaders: number;
+  mobilePctWriters: number;
+  mobilePctSessions: number;
+  /**
+   * Share of logged-in users (in batches) with any mobile session
+   */
+  mobilePctUsers: number;
+  activityByHourUtc: Array<AnalyticsHourBucket>;
+  topTag?: AnalyticsTopTag;
+  topThreadWeekly?: AnalyticsTopThread;
+  topThreadMonthly?: AnalyticsTopThread;
+  /**
+   * Top-10 users ranked by total posts count
+   */
+  topUsersByPosts: Array<AnalyticsUserCount>;
+  /**
+   * Tags ranked by number of tagged threads
+   */
+  popularTags: Array<AnalyticsTagCount>;
+  /**
+   * Daily posts count time series
+   */
+  postsActivityByDay: Array<AnalyticsDayPosts>;
+  /**
+   * Users ranked by total created threads
+   */
+  topUsersByThreads: Array<AnalyticsUserCount>;
+  /**
+   * Users with posts but without created threads
+   */
+  postOnlyUsers: Array<AnalyticsUserCount>;
 };
 
 /**
@@ -446,6 +561,74 @@ export type ThreadAddPostResponses = {
 
 export type ThreadAddPostResponse =
   ThreadAddPostResponses[keyof ThreadAddPostResponses];
+
+export type AnalyticsVisitBatchSubmitData = {
+  body: AnalyticsVisitBatchRequest;
+  path?: never;
+  query?: never;
+  url: '/api/analytics/visit-batch';
+};
+
+export type AnalyticsVisitBatchSubmitErrors = {
+  /**
+   * Bad Request
+   */
+  400: ErrorStringMessage;
+  /**
+   * Error in request with string description (for log, not for user).
+   */
+  500: string;
+};
+
+export type AnalyticsVisitBatchSubmitError =
+  AnalyticsVisitBatchSubmitErrors[keyof AnalyticsVisitBatchSubmitErrors];
+
+export type AnalyticsVisitBatchSubmitResponses = {
+  /**
+   * Accepted
+   */
+  204: void;
+};
+
+export type AnalyticsVisitBatchSubmitResponse =
+  AnalyticsVisitBatchSubmitResponses[keyof AnalyticsVisitBatchSubmitResponses];
+
+export type AnalyticsMetricsGetData = {
+  body?: never;
+  path?: never;
+  query?: {
+    /**
+     * N in “churn after N posts” (users with at least N posts and inactive since)
+     */
+    dropoffAfterMessages?: number;
+    dropoffInactiveDays?: number;
+  };
+  url: '/api/analytics/metrics';
+};
+
+export type AnalyticsMetricsGetErrors = {
+  /**
+   * Authentication required
+   */
+  401: ErrorStringMessage;
+  /**
+   * Error in request with string description (for log, not for user).
+   */
+  500: string;
+};
+
+export type AnalyticsMetricsGetError =
+  AnalyticsMetricsGetErrors[keyof AnalyticsMetricsGetErrors];
+
+export type AnalyticsMetricsGetResponses = {
+  /**
+   * OK
+   */
+  200: AnalyticsMetricsResponse;
+};
+
+export type AnalyticsMetricsGetResponse =
+  AnalyticsMetricsGetResponses[keyof AnalyticsMetricsGetResponses];
 
 export type MediaUploadData = {
   body: MediaUploadRequest;

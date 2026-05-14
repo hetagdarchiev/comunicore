@@ -1,16 +1,20 @@
 'use client';
 
+import { RefObject } from 'react';
 import clsx from 'clsx';
 
 import { AccList } from './components/acc-list/AccList';
 import { CategoriesList } from './components/categories-list/CategoriesList';
 import { SocialMedia } from './components/social-media/SocialMedia';
 
-import { useMenuIsOpen, useMenuRefs } from '@/shared/hooks/useMenu.selectors';
+import { useMenuIsOpen } from '@/shared/hooks/useMenu.selectors';
 
-export function AsideMenu() {
+interface AsideMenuProps {
+  menuRef: RefObject<HTMLElement | null>;
+}
+
+export function AsideMenu({ menuRef }: AsideMenuProps) {
   const isOpen = useMenuIsOpen();
-  const { menuRef } = useMenuRefs();
   return (
     <aside
       id='aside-menu'

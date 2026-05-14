@@ -60,6 +60,7 @@ func testThreadCreateOk(t *testing.T, baseURL string, cookie *http.Cookie) Threa
 		// res.Value("authorAvatarUrl").String().NotEmpty()
 		res.Value("title").String().HasPrefix("Test Thread ")
 		res.Value("content").String().HasPrefix("This is a test thread content ")
+		// posts_count is replies-only (table posts); opening message is not counted.
 		res.Value("postsCount").Number().IsEqual(0)
 		res.Value("createdAt").String().NotEmpty()
 
@@ -140,6 +141,7 @@ func testThreadGet(t *testing.T, baseURL string,
 		// res.Value("authorAvatarUrl").String().IsEqual(expectedThread.AuthorAvatarUrl)
 		res.Value("title").String().IsEqual(expectedThread.Title)
 		res.Value("content").String().IsEqual(expectedThread.Content)
+		// One reply row exists in posts after threadPostCreateOk.
 		res.Value("postsCount").Number().IsEqual(1)
 		res.Value("createdAt").String().NotEmpty()
 

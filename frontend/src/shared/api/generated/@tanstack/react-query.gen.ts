@@ -10,6 +10,8 @@ import {
 
 import { client } from '../client.gen';
 import {
+  analyticsMetricsGet,
+  analyticsVisitBatchSubmit,
   authLogin,
   authLogout,
   mediaGet,
@@ -26,6 +28,12 @@ import {
   userUpdate,
 } from '../sdk.gen';
 import type {
+  AnalyticsMetricsGetData,
+  AnalyticsMetricsGetError,
+  AnalyticsMetricsGetResponse,
+  AnalyticsVisitBatchSubmitData,
+  AnalyticsVisitBatchSubmitError,
+  AnalyticsVisitBatchSubmitResponse,
   AuthLoginData,
   AuthLoginError,
   AuthLoginResponse,
@@ -523,6 +531,65 @@ export const threadAddPostMutation = (
   };
   return mutationOptions;
 };
+
+/**
+ * Submit a client-side analytics batch (durations, device, activity hints)
+ *
+ * Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+ * Idempotent per `clientBatchId`.
+ *
+ */
+export const analyticsVisitBatchSubmitMutation = (
+  options?: Partial<Options<AnalyticsVisitBatchSubmitData>>,
+): UseMutationOptions<
+  AnalyticsVisitBatchSubmitResponse,
+  AnalyticsVisitBatchSubmitError,
+  Options<AnalyticsVisitBatchSubmitData>
+> => {
+  const mutationOptions: UseMutationOptions<
+    AnalyticsVisitBatchSubmitResponse,
+    AnalyticsVisitBatchSubmitError,
+    Options<AnalyticsVisitBatchSubmitData>
+  > = {
+    mutationFn: async (fnOptions) => {
+      const { data } = await analyticsVisitBatchSubmit({
+        ...options,
+        ...fnOptions,
+        throwOnError: true,
+      });
+      return data;
+    },
+  };
+  return mutationOptions;
+};
+
+export const analyticsMetricsGetQueryKey = (
+  options?: Options<AnalyticsMetricsGetData>,
+) => createQueryKey('analyticsMetricsGet', options);
+
+/**
+ * Aggregated analytics (requires login)
+ */
+export const analyticsMetricsGetOptions = (
+  options?: Options<AnalyticsMetricsGetData>,
+) =>
+  queryOptions<
+    AnalyticsMetricsGetResponse,
+    AnalyticsMetricsGetError,
+    AnalyticsMetricsGetResponse,
+    ReturnType<typeof analyticsMetricsGetQueryKey>
+  >({
+    queryFn: async ({ queryKey, signal }) => {
+      const { data } = await analyticsMetricsGet({
+        ...options,
+        ...queryKey[0],
+        signal,
+        throwOnError: true,
+      });
+      return data;
+    },
+    queryKey: analyticsMetricsGetQueryKey(options),
+  });
 
 /**
  * Upload media file

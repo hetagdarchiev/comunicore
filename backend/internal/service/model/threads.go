@@ -21,6 +21,7 @@ type ThreadCreate struct {
 	Title   string
 	Content string
 	UserID  int
+	Tags    []string
 }
 type ThreadRepoInfo struct {
 	ID         int

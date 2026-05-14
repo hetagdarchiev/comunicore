@@ -1,35 +1,36 @@
 'use client';
 
-import { useEffect } from 'react';
+import { RefObject, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
 
-import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
+import { selectIsAuthenticated, useAuthStore } from '@/entities/session';
+
 import logo from '@/shared/assets/images/logo.svg';
 import { AppRouter } from '@/shared/config/app-router';
 import {
   useMenuActions,
   useMenuIsOpen,
-  useMenuRefs,
 } from '@/shared/hooks/useMenu.selectors';
 import { useModal } from '@/shared/hooks/useModal';
 import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import { BurgerMenu } from '@/shared/ui/burger-menu';
 
-export function Header() {
-  const { data: user } = useQuery(userMeOptions());
+interface HeaderProps {
+  menuRef: RefObject<HTMLElement | null>;
+  burgerRef: RefObject<HTMLButtonElement | null>;
+}
 
-  console.log(user);
+export function Header(props: HeaderProps) {
+  const { menuRef, burgerRef } = props;
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
 
   const isOpen = useMenuIsOpen();
   const setIsOpen = useMenuActions().setIsOpen;
-
-  const { menuRef, burgerRef } = useMenuRefs();
 
   const { modalOpen, setModalOpen } = useModal(menuRef, burgerRef, {
     autoClose: true,
@@ -66,7 +67,7 @@ export function Header() {
             className='min-w-18'
           />
         </Link>
-        {!!user ? (
+        {isAuthenticated ? (
           <ProfileActions className='hidden lg:flex' />
         ) : (
           <AuthButtons className='hidden lg:flex' />

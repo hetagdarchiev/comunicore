@@ -8,6 +8,12 @@ import {
 } from './client';
 import { client } from './client.gen';
 import type {
+  AnalyticsMetricsGetData,
+  AnalyticsMetricsGetErrors,
+  AnalyticsMetricsGetResponses,
+  AnalyticsVisitBatchSubmitData,
+  AnalyticsVisitBatchSubmitErrors,
+  AnalyticsVisitBatchSubmitResponses,
   AuthLoginData,
   AuthLoginErrors,
   AuthLoginResponses,
@@ -308,6 +314,51 @@ export const threadAddPost = <ThrowOnError extends boolean = false>(
       'Content-Type': 'application/json',
       ...options.headers,
     },
+  });
+
+/**
+ * Submit a client-side analytics batch (durations, device, activity hints)
+ *
+ * Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+ * Idempotent per `clientBatchId`.
+ *
+ */
+export const analyticsVisitBatchSubmit = <ThrowOnError extends boolean = false>(
+  options: Options<AnalyticsVisitBatchSubmitData, ThrowOnError>,
+) =>
+  (options.client ?? client).post<
+    AnalyticsVisitBatchSubmitResponses,
+    AnalyticsVisitBatchSubmitErrors,
+    ThrowOnError
+  >({
+    url: '/api/analytics/visit-batch',
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+/**
+ * Aggregated analytics (requires login)
+ */
+export const analyticsMetricsGet = <ThrowOnError extends boolean = false>(
+  options?: Options<AnalyticsMetricsGetData, ThrowOnError>,
+) =>
+  (options?.client ?? client).get<
+    AnalyticsMetricsGetResponses,
+    AnalyticsMetricsGetErrors,
+    ThrowOnError
+  >({
+    security: [
+      {
+        in: 'cookie',
+        name: 'sid',
+        type: 'apiKey',
+      },
+    ],
+    url: '/api/analytics/metrics',
+    ...options,
   });
 
 /**
