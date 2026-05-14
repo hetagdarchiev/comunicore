@@ -3,13 +3,13 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
 
-import { useAuthMeQuery } from '@/entities/user';
-
+import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 import logo from '@/shared/assets/images/logo.svg';
 import { AppRouter } from '@/shared/config/app-router';
 import {
@@ -20,13 +20,11 @@ import {
 import { useModal } from '@/shared/hooks/useModal';
 import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import { BurgerMenu } from '@/shared/ui/burger-menu';
-import { useQuery } from '@tanstack/react-query';
-import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 
 export function Header() {
   const { data: user } = useQuery(userMeOptions());
 
-  console.log(user)
+  console.log(user);
 
   const isOpen = useMenuIsOpen();
   const setIsOpen = useMenuActions().setIsOpen;

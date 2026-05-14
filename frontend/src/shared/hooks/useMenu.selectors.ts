@@ -1,5 +1,6 @@
-import { useMenuStore } from '../store/menu-store/menu.store';
 import { useShallow } from 'zustand/react/shallow';
+
+import { useMenuStore } from '../store/menu-store/menu.store';
 
 export const useMenuIsOpen = () => useMenuStore((state) => state.isOpen);
 

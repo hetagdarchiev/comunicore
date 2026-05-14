@@ -1,13 +1,14 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 import Providers from './providers/providers';
 
+import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
+import { getQueryClient } from '@/shared/api/query-client';
+
 import 'highlight.js/styles/atom-one-dark.css';
 import './styles/globals.css';
-import { getQueryClient } from '@/shared/api/query-client';
-import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
-import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
 const robotoSans = Roboto({
   variable: '--font-roboto-sans',
