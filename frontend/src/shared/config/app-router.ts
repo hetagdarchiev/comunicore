@@ -15,8 +15,9 @@ export const AppRouter = {
       return replaceRouteId(this.template, id);
     },
   },
+  support: '/support',
   award: '/award',
-  notification: '/notification',
+  notification: '/notifications',
   profile: '/profile',
   faq: '/faq',
   favorites: '/favorites',

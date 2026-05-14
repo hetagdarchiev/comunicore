@@ -1,8 +1,8 @@
 import { LuLink, LuStar } from 'react-icons/lu';
 
-import { AppRouter } from '@/shared/config/app-router';
-
 import { AccCatergory } from '../types/acc.interface';
+
+import { AppRouter } from '@/shared/config/app-router';
 
 export const accCategories = [
   {

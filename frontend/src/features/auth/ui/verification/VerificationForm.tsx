@@ -32,7 +32,7 @@ export function VerificationForm(props: VerificationFormProps) {
   }, [handleResend]);
 
   return (
-    <div className='flex flex-col gap-y-3'>
+    <div className='flex flex-col items-center gap-y-3 text-center'>
       <p>
         Для подтверждения почты перейдите по ссылке в письме, которое мы
         отправили на <span className='font-semibold'>{email}</span>
@@ -41,7 +41,7 @@ export function VerificationForm(props: VerificationFormProps) {
         {isActive ? TIMER_TITLES.timer(secondsLeft) : TIMER_TITLES.default}
       </span>
       <Button
-        className='disabled:bg-gray-80 bg-black hover:bg-black disabled:cursor-not-allowed'
+        className='disabled:bg-gray-80 w-full bg-black hover:bg-black disabled:cursor-not-allowed'
         disabled={isActive}
         onClick={handleResend}
       >

@@ -38,7 +38,7 @@ export function Editor({ form, markdownFieldRef }: Props) {
   const { clearDraft } = useEditorDraft(form);
   const { onKeyDown } = useEditorKeyBoard(form);
 
-  const { ref, ...mdRedister } = register('markdown');
+  const { ref, ...mdRegister } = register('markdown');
 
   const onSubmit: SubmitHandler<MarkDownSchema> = useCallback(
     async (data) => {
@@ -73,7 +73,7 @@ export function Editor({ form, markdownFieldRef }: Props) {
           'h-full resize-none rounded-lg p-4 duration-200',
           isDragging && 'outline-5 outline-gray-300',
         )}
-        {...mdRedister}
+        {...mdRegister}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

@@ -1,11 +1,11 @@
 'use client';
 
-import { Loader } from '@/shared/ui/loader/Loader';
-
 import { useThreads } from '../model/hooks/useThreads';
 
 import { PostListView } from './components/post-list-view/PostListView';
 import { Sorting } from './components/sorting/Sorting';
+
+import { Loader } from '@/shared/ui/loader/Loader';
 
 export function PostList() {
   const {

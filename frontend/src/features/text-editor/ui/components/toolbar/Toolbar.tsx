@@ -3,15 +3,15 @@
 import { RefObject, useRef } from 'react';
 import clsx from 'clsx';
 
-import { useModal } from '@/shared/hooks/useModal';
-import { BurgerMenu } from '@/shared/ui/burger-menu';
-
 import { toolsGroup } from '../../../model/tools';
 import {
   MarkdownGetValue,
   MarkdownSetValue,
 } from '../../../model/types/ctx.types';
 import { EditorMode } from '../../../model/types/mode.types';
+
+import { useModal } from '@/shared/hooks/useModal';
+import { BurgerMenu } from '@/shared/ui/burger-menu';
 
 interface Props {
   mode: EditorMode;

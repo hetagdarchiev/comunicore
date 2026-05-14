@@ -22,12 +22,17 @@ export const PostHeader = ({
     className='mb-4 flex w-fit items-center gap-3 tracking-wider'
   >
     <div className='relative h-10 w-10'>
-      <ProfileAvatar authorName={authorName} avatarUrl={avatarUrl} />
+      <ProfileAvatar
+        fill
+        unoptimized
+        authorName={authorName}
+        avatarUrl={avatarUrl}
+      />
     </div>
     <div>
-      <h3 className='mb-0.5 leading-none font-normal text-slate-900'>
+      <p className='mb-0.5 leading-none font-normal text-slate-900'>
         {authorName}
-      </h3>
+      </p>
       <p className='text-gray-80 text-xs'>{formatDate(createdAt)}</p>
     </div>
   </Link>

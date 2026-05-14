@@ -1,16 +1,11 @@
 'use client';
 
-import {
-  ButtonHTMLAttributes,
-  Dispatch,
-  RefObject,
-  SetStateAction,
-} from 'react';
+import { ButtonHTMLAttributes, RefObject } from 'react';
 import clsx from 'clsx';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (isOpen: boolean) => void;
   ref?: RefObject<HTMLButtonElement | null>;
   controls: string;
 }

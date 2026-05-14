@@ -1,9 +1,9 @@
 'use client';
 
 import { ClipboardEvent, DragEvent, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 import { mediaUploadMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
-import { useMutation } from '@tanstack/react-query';
 
 export const useMedia = (
   onUploadSuccess?: (url: string, alt: string) => void,

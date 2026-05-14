@@ -1,15 +1,16 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { useAuthStore } from '@/entities/session';
+
 import {
   authLoginMutation,
   userMeOptions,
 } from '@/shared/api/generated/@tanstack/react-query.gen';
 import { AppRouter } from '@/shared/config/app-router';
 import { PREV_PAGE } from '@/shared/lib/constants/local-storage-keys';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 export const useLogin = () => {
   const queryClient = useQueryClient();

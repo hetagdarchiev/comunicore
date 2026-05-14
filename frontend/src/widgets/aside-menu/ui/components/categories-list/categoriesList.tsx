@@ -5,12 +5,21 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 import { categories } from '../../../model/data/categories.data';
+import { ProfileItem } from '../profile-item/ProfileItem';
+
+import { useAuthMeQuery } from '@/entities/user';
+
+import { Loader } from '@/shared/ui/loader';
 
 export function CategoriesList() {
   const pathname = usePathname();
+  const { data: user, isPending } = useAuthMeQuery();
   return (
-    <ul className='flex flex-col gap-y-2.5'>
-      {categories.map(({ Icon, href, title }) => {
+    <ul className='custom-scrollbar flex max-h-55.5 flex-col gap-y-2.5 overflow-auto'>
+      <li className={clsx('lg:hidden', !user && 'px-7.5 py-3')}>
+        {isPending ? <Loader /> : <ProfileItem user={user} />}
+      </li>
+      {categories.map(({ Icon, href, title, isDeskHidden }) => {
         const isActive = pathname === href;
 
         return (
@@ -18,7 +27,8 @@ export function CategoriesList() {
             key={title}
             className={clsx(
               'text-gray-80',
-              isActive && 'text-orange-f4 bg-light-fc',
+              isActive && 'bg-blue-77 text-white',
+              isDeskHidden && 'lg:hidden',
             )}
           >
             <Link

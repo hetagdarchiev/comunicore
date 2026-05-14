@@ -2,10 +2,10 @@
 
 import { ReactNode } from 'react';
 
-import { ErrorMessage } from '@/shared/ui/ErrorMessage';
-import { Input } from '@/shared/ui/Input';
-
 import { useCreateThreadForm } from '../model/useCreateThreadForm';
+
+import { ErrorMessage } from '@/shared/ui/error-message';
+import { Input } from '@/shared/ui/input';
 
 type CreateThreadFormProps = {
   children?: ReactNode;
@@ -22,16 +22,15 @@ export function CreateThreadForm({ children }: CreateThreadFormProps) {
   } = useCreateThreadForm();
 
   return (
-    <div onSubmitCapture={handleSubmit}>
+    <div onSubmitCapture={handleSubmit} className='flex flex-col gap-y-2'>
       <Input
         name='thread-title'
-        icon={''}
         value={title}
         onChange={(event) => setTitle(event.target.value)}
         placeholder='Заголовок поста'
         maxLength={titleMaxLength}
         disabled={isPending}
-        className='mb-2.5 bg-white'
+        className='rounded-sm bg-white p-1'
       />
       {localError && <ErrorMessage error={localError} />}
       {children}

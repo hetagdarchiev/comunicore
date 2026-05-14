@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import { VerificationForm } from '@/features/auth';
+
 import { AppRouter } from '@/shared/config/app-router';
 
 const PARAM_EMAIL_KEY = 'email';
@@ -20,7 +21,6 @@ export const VerificationBody = () => {
 
   return (
     <section className='flex flex-col gap-y-5'>
-      <h2 className='text-4xl font-bold'>Подтверждение эл. почты</h2>
       <VerificationForm email={email} />
     </section>
   );

@@ -1,8 +1,8 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { threadCreateMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const TITLE_MAX_LENGTH = 120;
 

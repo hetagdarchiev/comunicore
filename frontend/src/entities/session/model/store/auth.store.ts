@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
@@ -7,7 +7,7 @@ import { AuthStore } from '../types/auth-store';
 
 export const useAuthStore = create<AuthStore>()(
   immer((set) => ({
-    status: 'loading',
+    status: 'anonymous',
 
     actions: {
       logout: () => {

@@ -2,6 +2,13 @@
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LuAtSign, LuLock, LuUser } from 'react-icons/lu';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useRegistration } from '../../model/hooks/useRegistration';
+import {
+  registrationFormSchema,
+  RegistrationFormTypes,
+} from '../../model/schemas/registration-form.schema';
 
 import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
 import { Button } from '@/shared/ui/button';
@@ -9,13 +16,6 @@ import { Checkbox } from '@/shared/ui/checkbox';
 import { ErrorMessage } from '@/shared/ui/error-message';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label/Label';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { useRegistration } from '../../model/hooks/useRegistration';
-import {
-  registrationFormSchema,
-  RegistrationFormTypes,
-} from '../../model/schema/registration-form.schema';
 
 const defaultValues = {
   name: '',
@@ -51,7 +51,7 @@ export function RegistrationForm() {
 
   return (
     <form
-      className='flex max-w-125 flex-col gap-y-5'
+      className='flex w-full flex-col gap-y-5'
       onSubmit={handleSubmit(onSubmit)}
     >
       <Label htmlFor='user-name' error={errors.name}>
@@ -89,7 +89,7 @@ export function RegistrationForm() {
         {...register('policy')}
       />
 
-      <Button type='submit' disabled={isPending}>
+      <Button type='submit' disabled={isPending} className='w-full'>
         {isPending ? 'Загрузка...' : 'Зарегистрироваться'}
       </Button>
 

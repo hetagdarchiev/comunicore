@@ -1,10 +1,10 @@
 'use client';
 
 import { useMemo, useRef } from 'react';
+import { useInfiniteQuery } from '@tanstack/react-query';
 
 import { threadsListInfiniteOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 import { useObserverInfiniteScroll } from '@/shared/hooks/useObserverInfinityScroll';
-import { useInfiniteQuery } from '@tanstack/react-query';
 
 const LIMIT_POSTS = 10;
 
@@ -18,7 +18,7 @@ export function useThreads() {
       initialPageParam: 1,
 
       getNextPageParam: (lastPage, allPages) => {
-        if (!lastPage.have_next) return undefined;
+        if (!lastPage.haveNext) return undefined;
 
         return allPages.length + 1;
       },

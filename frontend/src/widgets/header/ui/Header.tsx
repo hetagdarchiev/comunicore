@@ -1,30 +1,59 @@
 'use client';
 
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import clsx from 'clsx';
 
-import { NavProfile } from '@/features/dynamic-nav-profile';
-import { SearchForm } from '@/features/search-form';
+import { AuthButtons } from '@/features/auth-buttons';
+import { ProfileActions } from '@/features/profile-actions';
+
+import { useAuthMeQuery } from '@/entities/user';
+
 import logo from '@/shared/assets/images/logo.svg';
 import { AppRouter } from '@/shared/config/app-router';
+import {
+  useMenuActions,
+  useMenuIsOpen,
+  useMenuRefs,
+} from '@/shared/hooks/useMenu.selectors';
+import { useModal } from '@/shared/hooks/useModal';
+import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import { BurgerMenu } from '@/shared/ui/burger-menu';
+import { useQuery } from '@tanstack/react-query';
+import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 
-interface HeaderProps {
-  isOpen: boolean;
-  burgerRef: RefObject<HTMLButtonElement | null>;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-}
+export function Header() {
+  const { data: user } = useQuery(userMeOptions());
 
-export function Header(props: HeaderProps) {
-  const { isOpen, setIsOpen, burgerRef } = props;
+  console.log(user)
+
+  const isOpen = useMenuIsOpen();
+  const setIsOpen = useMenuActions().setIsOpen;
+
+  const { menuRef, burgerRef } = useMenuRefs();
+
+  const { modalOpen, setModalOpen } = useModal(menuRef, burgerRef, {
+    autoClose: true,
+    closeByEsc: true,
+    initialState: isOpen,
+  });
+
+  const { responsiveIsOpen, setResponsiveIsOpen } = useWindowResize(modalOpen);
+
+  useEffect(() => {
+    if (isOpen !== responsiveIsOpen) {
+      setIsOpen(responsiveIsOpen);
+      setModalOpen(responsiveIsOpen);
+    }
+  }, [responsiveIsOpen, isOpen, setIsOpen, setModalOpen]);
+
   return (
     <header className='bg-white'>
       <div
         className={clsx(
-          'mx-auto grid max-w-360 grid-cols-2 items-center justify-between gap-x-5 gap-y-4 px-4 py-6.25',
-          'lg:grid-cols-[1fr_500px_1fr] lg:px-17.5',
+          'mx-auto grid max-w-360 grid-cols-2 items-center justify-between gap-x-5 gap-y-4 px-4 py-5',
+          'lg:grid-cols-2 lg:px-17.5',
         )}
       >
         <h1 className='visually-hidden'>Comunicore</h1>
@@ -36,17 +65,17 @@ export function Header(props: HeaderProps) {
             height={40}
             loading='eager'
             fetchPriority='high'
-            className='min-w-20'
+            className='min-w-18'
           />
         </Link>
-        <SearchForm className='hidden lg:flex' />
-        <NavProfile
-          classNameNav='hidden lg:block'
-          classNameButtons='hidden lg:flex'
-        />
+        {!!user ? (
+          <ProfileActions className='hidden lg:flex' />
+        ) : (
+          <AuthButtons className='hidden lg:flex' />
+        )}
         <BurgerMenu
           isOpen={isOpen}
-          setIsOpen={setIsOpen}
+          setIsOpen={setResponsiveIsOpen}
           ref={burgerRef}
           controls='aside-menu'
           className={clsx(

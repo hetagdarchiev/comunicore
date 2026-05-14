@@ -7,16 +7,19 @@ interface ProfileAvatarProps {
   avatarUrl?: string;
   authorName: string;
   className?: string;
+  fill?: boolean;
+  unoptimized?: boolean;
+  width?: number;
+  height?: number;
 }
 
 export function ProfileAvatar(props: ProfileAvatarProps) {
-  const { authorName, avatarUrl, className = '' } = props;
+  const { authorName, avatarUrl, className = '', ...attrs } = props;
   return (
     <Image
       src={avatarUrl || defaultAvatar}
       alt={authorName}
-      fill
-      unoptimized
+      {...attrs}
       className={clsx('rounded-full object-cover', className)}
     />
   );

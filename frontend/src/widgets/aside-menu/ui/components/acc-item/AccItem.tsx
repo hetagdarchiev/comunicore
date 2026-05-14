@@ -13,10 +13,7 @@ export function AccItem(props: AccordionItemProps) {
   const { category, index } = props;
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <li
-      key={category.title.toLowerCase()}
-      className='grid gap-y-2.5 px-7.5 lg:px-5'
-    >
+    <li key={category.title.toLowerCase()} className='grid gap-y-2.5 px-7.5'>
       <AccButton
         category={category}
         index={index}

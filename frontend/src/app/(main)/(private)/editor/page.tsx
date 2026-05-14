@@ -2,11 +2,17 @@
 
 import Link from 'next/link';
 
-import { useAuth } from '@/shared/hooks/useAuth';
 import { CreateThreadEditor } from '@/widgets/create-thread-editor/ui';
 
+import {
+  selectIsAuthenticated,
+  selectStatus,
+  useAuthStore,
+} from '@/entities/session';
+
 export default function EditorPage() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const isLoading = useAuthStore(selectStatus) === 'loading';
 
   if (isLoading) {
     return (

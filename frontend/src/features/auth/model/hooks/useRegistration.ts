@@ -1,11 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 
 import { userCreateMutation } from '@/shared/api/generated/@tanstack/react-query.gen';
 import { AppRouter } from '@/shared/config/app-router';
 import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
-import { useMutation } from '@tanstack/react-query';
 
 export const useRegistration = () => {
   const router = useRouter();

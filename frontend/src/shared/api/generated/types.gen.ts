@@ -45,6 +45,7 @@ export type ThreadListItem = {
   id: number;
   authorId: number;
   authorName: string;
+  authorAvatarUrl: string;
   title: string;
   content: string;
   postsCount: number;
@@ -55,6 +56,7 @@ export type ThreadWithPostsListResponse = {
   id: number;
   authorId: number;
   authorName: string;
+  authorAvatarUrl: string;
   title: string;
   content: string;
   postsCount: number;
@@ -66,6 +68,7 @@ export type ThreadPostItem = {
   id: number;
   authorId: number;
   authorName: string;
+  authorAvatarUrl: string;
   content: string;
   createdAt: string;
 };

@@ -2,11 +2,12 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { useAuthStore } from '../store/auth.store';
+
 import {
   authLogoutMutation,
   userMeQueryKey,
 } from '@/shared/api/generated/@tanstack/react-query.gen';
-import { useAuthStore } from '../store/auth.store';
 
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient();

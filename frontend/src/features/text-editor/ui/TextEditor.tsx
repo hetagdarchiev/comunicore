@@ -2,10 +2,8 @@
 
 import { useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import clsx from 'clsx';
-
-import { Button } from '@/shared/ui/button';
 import { zodResolver } from '@hookform/resolvers/zod';
+import clsx from 'clsx';
 
 import {
   MarkDownSchema,
@@ -17,6 +15,8 @@ import { Editor } from './components/editor/Editor';
 import { ModeSwitcher } from './components/mode-switcher/ModeSwitcher';
 import { Preview } from './components/preview/Preview';
 import { Toolbar } from './components/toolbar/Toolbar';
+
+import { Button } from '@/shared/ui/button';
 
 const defaultValues = {
   markdown: '',

@@ -1,7 +1,5 @@
 'use client';
 
-import { ThreadListItem } from '@/shared/api/generated';
-
 import { PostCommentsLink } from './components/post-comments-link/PostCommentsLink';
 import { PostContent } from './components/post-content/PostContent';
 import { PostHeader } from './components/post-header/PostHeader';
@@ -9,9 +7,12 @@ import { PostShareButton } from './components/post-share-button/PostShareButton'
 import { PostTags } from './components/post-tags/PostTags';
 import { PostViews } from './components/post-views/PostViews';
 
+import { ThreadListItem } from '@/shared/api/generated';
+
 export const PostCard = ({
   authorId,
   authorName,
+  authorAvatarUrl,
   createdAt,
   title,
   content,
@@ -21,6 +22,7 @@ export const PostCard = ({
     <PostHeader
       authorId={authorId}
       authorName={authorName}
+      avatarUrl={authorAvatarUrl}
       createdAt={createdAt}
     />
 

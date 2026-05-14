@@ -3,6 +3,13 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { LuAtSign, LuLock } from 'react-icons/lu';
 import Link from 'next/link';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { useLogin } from '../../model/hooks/useLogin';
+import {
+  loginFormSchema,
+  type LoginFormTypes,
+} from '../../model/schemas/login-form.schema';
 
 import { AppRouter } from '@/shared/config/app-router';
 import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
@@ -10,13 +17,6 @@ import { Button } from '@/shared/ui/button';
 import { ErrorMessage } from '@/shared/ui/error-message';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-import { useLogin } from '../../model/hooks/useLogin';
-import {
-  loginFormSchema,
-  type LoginFormTypes,
-} from '../../model/schema/login-form.schema';
 
 const defaultValues = {
   login: '',
@@ -75,6 +75,10 @@ export function LoginForm() {
         />
       </Label>
 
+      <Button type='submit' disabled={isPending} className='w-full'>
+        {isPending ? 'Загрузка...' : 'Войти'}
+      </Button>
+
       <div className='flex flex-col gap-y-2'>
         <Link
           href={AppRouter.recovery.password}
@@ -85,10 +89,6 @@ export function LoginForm() {
 
         {serverError && <ErrorMessage error={getErrorMessage(serverError)} />}
       </div>
-
-      <Button type='submit' disabled={isPending}>
-        {isPending ? 'Загрузка...' : 'Войти'}
-      </Button>
     </form>
   );
 }
