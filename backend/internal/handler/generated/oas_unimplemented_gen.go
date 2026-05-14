@@ -13,6 +13,25 @@ type UnimplementedHandler struct{}
 
 var _ Handler = UnimplementedHandler{}
 
+// AnalyticsMetricsGet implements analyticsMetricsGet operation.
+//
+// Aggregated analytics (requires login).
+//
+// GET /api/analytics/metrics
+func (UnimplementedHandler) AnalyticsMetricsGet(ctx context.Context, params AnalyticsMetricsGetParams) (r AnalyticsMetricsGetRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
+// AnalyticsVisitBatchSubmit implements analyticsVisitBatchSubmit operation.
+//
+// Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+// Idempotent per `clientBatchId`.
+//
+// POST /api/analytics/visit-batch
+func (UnimplementedHandler) AnalyticsVisitBatchSubmit(ctx context.Context, req *AnalyticsVisitBatchRequest) (r AnalyticsVisitBatchSubmitRes, _ error) {
+	return r, ht.ErrNotImplemented
+}
+
 // AuthLogin implements authLogin operation.
 //
 // Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.

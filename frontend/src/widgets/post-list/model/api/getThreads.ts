@@ -1,3 +1,5 @@
+import { apiBaseUrl } from '@/shared/api/setup';
+
 import { ThreadsResponse } from '../types/thread.types';
 
 export async function getThreads(
@@ -5,7 +7,7 @@ export async function getThreads(
   limit: number,
 ): Promise<ThreadsResponse> {
   const res = await fetch(
-    `https://comunicore.mooo.com/api/threads?limit=${limit}&page=${page}`,
+    `${apiBaseUrl}/api/threads?limit=${limit}&page=${page}`,
     {
       credentials: 'include',
       headers: {

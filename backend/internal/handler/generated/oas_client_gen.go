@@ -21,6 +21,19 @@ func trimTrailingSlashes(u *url.URL) {
 
 // Invoker invokes operations described by OpenAPI v3 specification.
 type Invoker interface {
+	// AnalyticsMetricsGet invokes analyticsMetricsGet operation.
+	//
+	// Aggregated analytics (requires login).
+	//
+	// GET /api/analytics/metrics
+	AnalyticsMetricsGet(ctx context.Context, params AnalyticsMetricsGetParams) (AnalyticsMetricsGetRes, error)
+	// AnalyticsVisitBatchSubmit invokes analyticsVisitBatchSubmit operation.
+	//
+	// Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+	// Idempotent per `clientBatchId`.
+	//
+	// POST /api/analytics/visit-batch
+	AnalyticsVisitBatchSubmit(ctx context.Context, request *AnalyticsVisitBatchRequest) (AnalyticsVisitBatchSubmitRes, error)
 	// AuthLogin invokes authLogin operation.
 	//
 	// Create access and refresh JWT tokens, send to user. The refresh token also stored in a cookie.
@@ -178,6 +191,154 @@ func (c *Client) requestURL(ctx context.Context) *url.URL {
 		return c.serverURL
 	}
 	return u
+}
+
+// AnalyticsMetricsGet invokes analyticsMetricsGet operation.
+//
+// Aggregated analytics (requires login).
+//
+// GET /api/analytics/metrics
+func (c *Client) AnalyticsMetricsGet(ctx context.Context, params AnalyticsMetricsGetParams) (AnalyticsMetricsGetRes, error) {
+	res, err := c.sendAnalyticsMetricsGet(ctx, params)
+	return res, err
+}
+
+func (c *Client) sendAnalyticsMetricsGet(ctx context.Context, params AnalyticsMetricsGetParams) (res AnalyticsMetricsGetRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/api/analytics/metrics"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	q := uri.NewQueryEncoder()
+	{
+		// Encode "dropoffAfterMessages" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "dropoffAfterMessages",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.DropoffAfterMessages.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	{
+		// Encode "dropoffInactiveDays" parameter.
+		cfg := uri.QueryParameterEncodingConfig{
+			Name:    "dropoffInactiveDays",
+			Style:   uri.QueryStyleForm,
+			Explode: true,
+		}
+
+		if err := q.EncodeParam(cfg, func(e uri.Encoder) error {
+			if val, ok := params.DropoffInactiveDays.Get(); ok {
+				return e.EncodeValue(conv.IntToString(val))
+			}
+			return nil
+		}); err != nil {
+			return res, errors.Wrap(err, "encode query")
+		}
+	}
+	u.RawQuery = q.Values().Encode()
+
+	r, err := ht.NewRequest(ctx, "GET", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+
+	{
+		type bitset = [1]uint8
+		var satisfied bitset
+		{
+
+			switch err := c.securityCookieAuth(ctx, AnalyticsMetricsGetOperation, r); {
+			case err == nil: // if NO error
+				satisfied[0] |= 1 << 0
+			case errors.Is(err, ogenerrors.ErrSkipClientSecurity):
+				// Skip this security.
+			default:
+				return res, errors.Wrap(err, "security \"CookieAuth\"")
+			}
+		}
+
+		if ok := func() bool {
+		nextRequirement:
+			for _, requirement := range []bitset{
+				{0b00000001},
+			} {
+				for i, mask := range requirement {
+					if satisfied[i]&mask != mask {
+						continue nextRequirement
+					}
+				}
+				return true
+			}
+			return false
+		}(); !ok {
+			return res, ogenerrors.ErrSecurityRequirementIsNotSatisfied
+		}
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	result, err := decodeAnalyticsMetricsGetResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
+}
+
+// AnalyticsVisitBatchSubmit invokes analyticsVisitBatchSubmit operation.
+//
+// Public endpoint; when the `sid` cookie is present, the batch is linked to the user.
+// Idempotent per `clientBatchId`.
+//
+// POST /api/analytics/visit-batch
+func (c *Client) AnalyticsVisitBatchSubmit(ctx context.Context, request *AnalyticsVisitBatchRequest) (AnalyticsVisitBatchSubmitRes, error) {
+	res, err := c.sendAnalyticsVisitBatchSubmit(ctx, request)
+	return res, err
+}
+
+func (c *Client) sendAnalyticsVisitBatchSubmit(ctx context.Context, request *AnalyticsVisitBatchRequest) (res AnalyticsVisitBatchSubmitRes, err error) {
+
+	u := uri.Clone(c.requestURL(ctx))
+	var pathParts [1]string
+	pathParts[0] = "/api/analytics/visit-batch"
+	uri.AddPathParts(u, pathParts[:]...)
+
+	r, err := ht.NewRequest(ctx, "POST", u)
+	if err != nil {
+		return res, errors.Wrap(err, "create request")
+	}
+	if err := encodeAnalyticsVisitBatchSubmitRequest(request, r); err != nil {
+		return res, errors.Wrap(err, "encode request")
+	}
+
+	resp, err := c.cfg.Client.Do(r)
+	if err != nil {
+		return res, errors.Wrap(err, "do request")
+	}
+	body := resp.Body
+	defer body.Close()
+
+	result, err := decodeAnalyticsVisitBatchSubmitResponse(resp)
+	if err != nil {
+		return res, errors.Wrap(err, "decode response")
+	}
+
+	return result, nil
 }
 
 // AuthLogin invokes authLogin operation.

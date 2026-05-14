@@ -12,6 +12,7 @@ port = 8080
 # default "http://localhost:8080", cmd --server-baseurl, env FORUM_SERVER_BASEURL
 baseurl = "http://localhost:8080"
 # default "" (CORS disabled), cmd --server-permitted-origin, env FORUM_SERVER_PERMITTED_ORIGIN
+# Локально для Next: permitted_origin = "http://localhost:3000"
 # permitted_origin = ""
 #
 # default is cwd of process (installed by systemd or if running from cmdline),
