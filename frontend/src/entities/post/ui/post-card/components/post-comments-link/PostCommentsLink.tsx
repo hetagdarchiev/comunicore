@@ -1,5 +1,3 @@
-'use client';
-
 import { memo } from 'react';
 import { LuMessageSquare } from 'react-icons/lu';
 import Link from 'next/link';

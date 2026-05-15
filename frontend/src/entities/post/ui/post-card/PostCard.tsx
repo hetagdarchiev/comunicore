@@ -1,5 +1,3 @@
-'use client';
-
 import { PostCommentsLink } from './components/post-comments-link/PostCommentsLink';
 import { PostContent } from './components/post-content/PostContent';
 import { PostHeader } from './components/post-header/PostHeader';
