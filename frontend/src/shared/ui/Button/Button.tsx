@@ -31,7 +31,7 @@ export function Button(props: ButtonProps) {
       <Link
         href={href}
         className={commonClassName}
-        {...(restProps as AnchorHTMLAttributes<HTMLAnchorElement>)}
+        {...(restProps satisfies AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
         {children}
       </Link>
@@ -42,7 +42,7 @@ export function Button(props: ButtonProps) {
     <button
       type='button'
       className={commonClassName}
-      {...(restProps as ButtonHTMLAttributes<HTMLButtonElement>)}
+      {...(restProps satisfies ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {children}
     </button>
