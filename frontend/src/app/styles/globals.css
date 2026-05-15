@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import './normalize.css';
 @import './utils.css';
 
 :root {
