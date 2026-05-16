@@ -41,7 +41,7 @@ export function VerificationForm(props: VerificationFormProps) {
         {isActive ? TIMER_TITLES.timer(secondsLeft) : TIMER_TITLES.default}
       </span>
       <Button
-        className='disabled:bg-gray-80 w-full bg-black hover:bg-black disabled:cursor-not-allowed'
+        className='disabled:bg-gray-80 w-full max-w-100 bg-black whitespace-nowrap hover:bg-black disabled:cursor-not-allowed'
         disabled={isActive}
         onClick={handleResend}
       >

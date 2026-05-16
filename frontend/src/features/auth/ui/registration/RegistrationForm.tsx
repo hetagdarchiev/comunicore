@@ -51,7 +51,7 @@ export function RegistrationForm() {
 
   return (
     <form
-      className='flex w-full flex-col gap-y-5'
+      className='flex w-full max-w-125 flex-col gap-y-5'
       onSubmit={handleSubmit(onSubmit)}
     >
       <Label htmlFor='user-name' error={errors.name}>

@@ -7,7 +7,7 @@ import { AppRouter } from '@/shared/config/app-router';
 export default function Registration() {
   return (
     <>
-      <header className='flex flex-col gap-y-2'>
+      <header className='flex flex-col gap-y-2 text-center'>
         <h2 className='text-2xl font-bold tracking-tight text-gray-900 md:text-3xl'>
           Создать аккаунт
         </h2>
@@ -16,7 +16,7 @@ export default function Registration() {
         </p>
       </header>
 
-      <main className='mt-2'>
+      <main className='mt-2 flex flex-col items-center'>
         <RegistrationForm />
       </main>
 

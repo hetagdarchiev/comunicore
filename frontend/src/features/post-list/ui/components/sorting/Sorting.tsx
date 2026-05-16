@@ -28,7 +28,10 @@ export function Sorting({ className = '' }: { className?: string }) {
       )}
     >
       {SORTING_OPTIONS.map(({ id, Icon, label }) => (
-        <Button key={id} className={`flex shrink-0 ${BTN_CLASS}`}>
+        <Button
+          key={id}
+          className={`flex shrink-0 cursor-pointer ${BTN_CLASS}`}
+        >
           <Icon
             size={12}
             className='max-h-12 max-w-12'

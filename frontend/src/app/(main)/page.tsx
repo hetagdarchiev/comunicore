@@ -3,9 +3,9 @@ import { SearchForm } from '@/features/search-form';
 
 export default function Home() {
   return (
-    <main className='flex flex-1 flex-col overflow-y-hidden pt-5'>
+    <div className='px-4 pt-5'>
       <SearchForm className='bg-white' />
       <PostList />
-    </main>
+    </div>
   );
 }

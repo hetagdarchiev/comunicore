@@ -1,3 +1,3 @@
 export default function Questions() {
-  return <span>content</span>;
+  return <h1>Questions</h1>;
 }

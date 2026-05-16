@@ -28,7 +28,7 @@ export function Label(props: LabelProps) {
       <div className=''>
         <label
           className={clsx(
-            'bg-light-fc focus-within:ring-gray-80/30 flex h-full w-full max-w-125 items-center gap-x-2.5 rounded-sm px-5 py-3 transition-all duration-200 focus-within:ring-2',
+            'bg-light-fc focus-within:ring-gray-80/30 flex h-full w-full items-center gap-x-2.5 rounded-sm px-5 py-3 transition-all duration-200 focus-within:ring-2',
             isHidden && 'visually-hidden',
             error?.message && 'border-red-500',
             className,

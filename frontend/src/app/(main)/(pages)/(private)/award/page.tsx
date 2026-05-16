@@ -1,5 +1,5 @@
 function AwardPage() {
-  return <main>Award</main>;
+  return <h1>Award</h1>;
 }
 
 export default AwardPage;

@@ -50,7 +50,10 @@ export function LoginForm() {
   };
 
   return (
-    <form className='flex flex-col gap-y-5' onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className='flex w-full max-w-125 flex-col items-center gap-y-5 *:[div]:w-full'
+      onSubmit={handleSubmit(onSubmit)}
+    >
       <Label htmlFor='user-login-email' error={errors.login}>
         <LuAtSign size={24} aria-hidden={true} role='img' />
         <Input
@@ -82,7 +85,7 @@ export function LoginForm() {
       <div className='flex flex-col gap-y-2'>
         <Link
           href={AppRouter.recovery.password}
-          className='text-blue-16 w-fit text-sm font-semibold'
+          className='text-blue-16 text-center text-sm font-semibold'
         >
           Забыл пароль
         </Link>
