@@ -14,6 +14,7 @@ export default function HomeLayout({
   const menuRef = useRef<HTMLElement | null>(null);
 
   const burgerRef = useRef<HTMLButtonElement | null>(null);
+
   return (
     <>
       <Header menuRef={menuRef} burgerRef={burgerRef} />

@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { BsQuestionCircle } from 'react-icons/bs';
 import { LuInbox, LuStar } from 'react-icons/lu';
 import Link from 'next/link';
@@ -12,7 +11,6 @@ import { selectIsAuthenticated, useAuthStore } from '@/entities/session';
 import { useAuthMeQuery } from '@/entities/user';
 
 import { AppRouter } from '@/shared/config/app-router';
-import { Loader } from '@/shared/ui/loader';
 import { ProfileAvatar } from '@/shared/ui/profile-avatar';
 
 const navigations = [
@@ -38,15 +36,8 @@ interface Props {
 }
 
 export function ProfileActions({ className = '' }: Props) {
-  const { data: user, isPending, error } = useAuthMeQuery();
   const isAuth = useAuthStore(selectIsAuthenticated);
-  const logoutHandler = useAuthStore((state) => state.actions.logout);
-
-  useEffect(() => {
-    if (!error) return;
-
-    logoutHandler();
-  }, [error, user, logoutHandler, isAuth]);
+  const { data: user } = useAuthMeQuery({ enabled: isAuth });
 
   return (
     <nav className={clsx('justify-self-end', className)}>
@@ -65,19 +56,15 @@ export function ProfileActions({ className = '' }: Props) {
           </li>
         ))}
         <li className='size-6.25'>
-          {isPending ? (
-            <Loader />
-          ) : (
-            <Link href={AppRouter.profile} title={user ? user.name : 'user'}>
-              <ProfileAvatar
-                width={25}
-                height={25}
-                unoptimized
-                authorName={user ? user.name : 'user'}
-                avatarUrl={user?.avatarUrl}
-              />
-            </Link>
-          )}
+          <Link href={AppRouter.profile} title={user ? user.name : 'user'}>
+            <ProfileAvatar
+              width={25}
+              height={25}
+              unoptimized
+              authorName={user ? user.name : 'user'}
+              avatarUrl={user?.avatarUrl}
+            />
+          </Link>
         </li>
       </ul>
     </nav>
