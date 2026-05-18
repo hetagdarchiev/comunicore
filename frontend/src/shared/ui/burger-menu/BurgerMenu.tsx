@@ -28,14 +28,9 @@ export function BurgerMenu(props: Props) {
         className,
       )}
     >
-      {Array.from({ length: 3 }).map((_, index) => (
-        <span
-          key={`line-${index}`}
-          className='h-0.5 w-full rounded-lg bg-white'
-        >
-          {''}
-        </span>
-      ))}
+      <span className='h-0.5 w-full rounded-lg bg-white' />
+      <span className='h-0.5 w-full rounded-lg bg-white' />
+      <span className='h-0.5 w-full rounded-lg bg-white' />
     </button>
   );
 }

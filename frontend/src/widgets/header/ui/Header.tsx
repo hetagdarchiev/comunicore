@@ -55,12 +55,12 @@ export function Header(props: HeaderProps) {
           'lg:grid-cols-2 lg:px-17.5',
         )}
       >
-        <h1 className='visually-hidden'>Comunicore</h1>
+        <h1 className='visually-hidden'>Communicore</h1>
         <Link href={AppRouter.main} className='flex w-fit lg:w-full'>
           <Image
             src={logo}
             alt='Logo'
-            width={40}
+            width={228}
             height={40}
             loading='eager'
             fetchPriority='high'
