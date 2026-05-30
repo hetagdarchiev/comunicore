@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
 
-import { selectIsAuthenticated, useAuthStore } from '@/entities/session';
+import { selectIsAuthenticated, selectStatus, useAuthStore } from '@/entities/session';
 
 import logo from '@/shared/assets/images/logo.svg';
 import { AppRouter } from '@/shared/config/app-router';
@@ -28,6 +28,7 @@ interface HeaderProps {
 export function Header(props: HeaderProps) {
   const { menuRef, burgerRef } = props;
   const isAuthenticated = useAuthStore(selectIsAuthenticated);
+  const status = useAuthStore(selectStatus);
 
   const isOpen = useMenuIsOpen();
   const setIsOpen = useMenuActions().setIsOpen;
@@ -67,10 +68,12 @@ export function Header(props: HeaderProps) {
             className='min-w-18'
           />
         </Link>
-        {isAuthenticated ? (
-          <ProfileActions className='hidden lg:flex' />
+        {status === 'loading' ? (
+          <div>Загрузка...</div>
+        ) : isAuthenticated ? (
+          <ProfileActions className='lg:flex' />
         ) : (
-          <AuthButtons className='hidden lg:flex' />
+          <AuthButtons className='lg:flex' />
         )}
         <BurgerMenu
           isOpen={isOpen}

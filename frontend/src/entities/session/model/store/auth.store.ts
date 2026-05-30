@@ -7,7 +7,7 @@ import { AuthStore } from '../types/auth-store';
 
 export const useAuthStore = create<AuthStore>()(
   immer((set) => ({
-    status: 'anonymous',
+    status: 'loading',
 
     actions: {
       logout: () => {

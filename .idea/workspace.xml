@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/frontend/src/entities/session/model/store/auth.store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/entities/session/model/store/auth.store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/shared/lib/schemas/password.schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/lib/schemas/password.schema.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="399" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3CRtvUCShMkCCtmkUTqRDIWMoMc" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "02d6ca1d",
+    "ignore.virus.scanning.warn.message": "true",
+    "javascript.preferred.runtime.type.id": "node",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Shahzod/Projects/comunicore",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.stylelint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.stylelint": "C:\\Shahzod\\Projects\\comunicore\\frontend\\node_modules\\stylelint",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Shahzod\\Projects\\comunicore\\frontend\\node_modules\\prettier",
+    "settings.editor.selected.configurable": "ml.llm.AcpAgentsConfigurable",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Shahzod\\Projects\\comunicore\\frontend\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Shahzod\Projects\comunicore\frontend\src\shared\lib\MergeClassNames" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-3bd3a6803838-JavaScript-WS-261.22158.274" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="" />
+      <created>1776360440249</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776360440249</updated>
+      <workItem from="1776360441448" duration="103000" />
+      <workItem from="1776360581487" duration="32000" />
+      <workItem from="1776360681440" duration="5000" />
+      <workItem from="1776782519931" duration="3995000" />
+      <workItem from="1776866772954" duration="18000" />
+      <workItem from="1777027334287" duration="610000" />
+      <workItem from="1777029167122" duration="1915000" />
+      <workItem from="1778319168876" duration="1867000" />
+      <workItem from="1778330762257" duration="1049000" />
+      <workItem from="1778340541217" duration="83000" />
+      <workItem from="1778383492570" duration="1858000" />
+      <workItem from="1778390790063" duration="26000" />
+      <workItem from="1778410234789" duration="7873000" />
+      <workItem from="1778508400091" duration="1899000" />
+      <workItem from="1778856659903" duration="2982000" />
+      <workItem from="1778862067352" duration="972000" />
+      <workItem from="1778902492379" duration="6077000" />
+      <workItem from="1779004498196" duration="3416000" />
+      <workItem from="1779018005946" duration="296000" />
+      <workItem from="1779105906129" duration="6576000" />
+      <workItem from="1779283990034" duration="665000" />
+      <workItem from="1780119845934" duration="19000" />
+      <workItem from="1780119965126" duration="4055000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="next.config.ts" />
+  </component>
+</project>
