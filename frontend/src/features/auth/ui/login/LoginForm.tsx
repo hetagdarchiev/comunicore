@@ -32,8 +32,8 @@ export function LoginForm() {
   } = useForm<LoginFormTypes>({
     resolver: zodResolver(loginFormSchema),
     defaultValues,
-    mode: 'onBlur',
-    reValidateMode: 'onChange',
+    mode: 'onSubmit',
+    reValidateMode: 'onSubmit',
   });
 
   const { mutate: authMutate, isPending, error: serverError } = useLogin();

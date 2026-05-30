@@ -12,7 +12,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     <input
       className={clsx(
         'text-gray-80 placeholder:text-gray-80 w-full bg-transparent text-[18px] outline-none',
-        isError && 'text-red-600 outline-red-600',
+        isError && 'outline-red-600',
         className,
       )}
       ref={ref}

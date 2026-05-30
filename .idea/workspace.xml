@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/frontend/src/entities/session/model/store/auth.store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/entities/session/model/store/auth.store.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/shared/lib/schemas/password.schema.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/lib/schemas/password.schema.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +46,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "02d6ca1d",
+    "git-widget-placeholder": "88db5d3f",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.preferred.runtime.type.id": "node",
     "junie.onboarding.icon.badge.shown": "true",
@@ -106,7 +106,7 @@
       <workItem from="1779105906129" duration="6576000" />
       <workItem from="1779283990034" duration="665000" />
       <workItem from="1780119845934" duration="19000" />
-      <workItem from="1780119965126" duration="4055000" />
+      <workItem from="1780119965126" duration="4896000" />
     </task>
     <servers />
   </component>
