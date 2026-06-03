@@ -8,7 +8,7 @@ import { AuthButtons } from '@/features/auth-buttons';
 
 import { UserCreateResponse } from '@/shared/api/generated';
 import { AppRouter } from '@/shared/config/app-router';
-import { ProfileAvatar } from '@/shared/ui/profile-avatar';
+import { ProfileAvatar } from '@/shared/ui';
 
 interface ProfileItemProps {
   user?: UserCreateResponse;

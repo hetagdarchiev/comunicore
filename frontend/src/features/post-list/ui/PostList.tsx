@@ -5,7 +5,7 @@ import { useThreads } from '../model/hooks/useThreads';
 import { PostListView } from './components/post-list-view/PostListView';
 import { Sorting } from './components/sorting/Sorting';
 
-import { Loader } from '@/shared/ui/loader/Loader';
+import { Loader } from '@/shared/ui';
 
 export function PostList() {
   const {

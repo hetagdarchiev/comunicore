@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import Link from 'next/link';
 
 import { AppRouter } from '@/shared/config/app-router';
@@ -6,7 +7,7 @@ import { renderHtml } from '@/shared/lib/markdown';
 interface PostContentProps {
   id: string | number;
   title: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export const PostContent = ({ id, title, children }: PostContentProps) => (

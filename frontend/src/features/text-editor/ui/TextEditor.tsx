@@ -16,7 +16,7 @@ import { ModeSwitcher } from './components/mode-switcher/ModeSwitcher';
 import { Preview } from './components/preview/Preview';
 import { Toolbar } from './components/toolbar/Toolbar';
 
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui';
 
 const defaultValues = {
   markdown: '',

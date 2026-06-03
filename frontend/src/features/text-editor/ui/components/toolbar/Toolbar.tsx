@@ -11,7 +11,7 @@ import {
 import { EditorMode } from '../../../model/types/mode.types';
 
 import { useModal } from '@/shared/hooks/useModal';
-import { BurgerMenu } from '@/shared/ui/burger-menu';
+import { BurgerMenu } from '@/shared/ui';
 
 interface Props {
   mode: EditorMode;

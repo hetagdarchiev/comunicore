@@ -2,7 +2,7 @@ import { LuUserPlus } from 'react-icons/lu';
 import clsx from 'clsx';
 
 import { AppRouter } from '@/shared/config/app-router';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui';
 
 interface Props {
   className?: string;

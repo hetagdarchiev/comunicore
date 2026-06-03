@@ -14,7 +14,7 @@ interface ProfileAvatarProps {
 }
 
 export function ProfileAvatar(props: ProfileAvatarProps) {
-  const { authorName, avatarUrl, className = '', ...attrs } = props;
+  const { authorName, avatarUrl, className, ...attrs } = props;
   return (
     <Image
       src={avatarUrl || defaultAvatar}

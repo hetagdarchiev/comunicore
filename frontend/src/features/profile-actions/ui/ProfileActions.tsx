@@ -11,7 +11,7 @@ import { selectIsAuthenticated, useAuthStore } from '@/entities/session';
 import { useAuthMeQuery } from '@/entities/user';
 
 import { AppRouter } from '@/shared/config/app-router';
-import { ProfileAvatar } from '@/shared/ui/profile-avatar';
+import { ProfileAvatar } from '@/shared/ui';
 
 const navigations = [
   {

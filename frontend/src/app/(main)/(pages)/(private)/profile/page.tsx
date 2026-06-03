@@ -8,9 +8,7 @@ import { useLogoutMutation } from '@/entities/session';
 
 import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 import { AppRouter } from '@/shared/config/app-router';
-import { Button } from '@/shared/ui/button';
-import { ErrorMessage } from '@/shared/ui/error-message';
-import { ProfileAvatar } from '@/shared/ui/profile-avatar';
+import { Button, ErrorMessage, ProfileAvatar } from '@/shared/ui';
 
 function ProfilePage() {
   const router = useRouter();

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { ReactNode, useRef } from 'react';
 import clsx from 'clsx';
 
 import { AsideMenu } from '@/widgets/aside-menu';
@@ -9,7 +9,7 @@ import { Header } from '@/widgets/header';
 export default function HomeLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const menuRef = useRef<HTMLElement | null>(null);
 

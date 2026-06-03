@@ -9,7 +9,7 @@ import { ProfileItem } from '../profile-item/ProfileItem';
 
 import { useAuthMeQuery } from '@/entities/user';
 
-import { Loader } from '@/shared/ui/loader';
+import { Loader } from '@/shared/ui';
 
 export function CategoriesList() {
   const pathname = usePathname();

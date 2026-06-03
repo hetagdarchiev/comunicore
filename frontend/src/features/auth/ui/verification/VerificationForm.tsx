@@ -3,7 +3,7 @@
 import { useCallback, useEffect } from 'react';
 
 import { useTimer } from '@/shared/hooks/useTimer';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui';
 
 interface VerificationFormProps {
   email: string;

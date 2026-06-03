@@ -13,10 +13,7 @@ import {
 
 import { AppRouter } from '@/shared/config/app-router';
 import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
-import { Button } from '@/shared/ui/button';
-import { ErrorMessage } from '@/shared/ui/error-message';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
+import { Button, ErrorMessage, Input, Label } from '@/shared/ui';
 
 const defaultValues = {
   login: '',

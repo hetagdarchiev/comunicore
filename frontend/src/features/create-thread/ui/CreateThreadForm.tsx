@@ -4,8 +4,7 @@ import { ReactNode } from 'react';
 
 import { useCreateThreadForm } from '../model/useCreateThreadForm';
 
-import { ErrorMessage } from '@/shared/ui/error-message';
-import { Input } from '@/shared/ui/input';
+import { ErrorMessage, Input } from '@/shared/ui';
 
 type CreateThreadFormProps = {
   children?: ReactNode;

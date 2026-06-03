@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { AppRouter } from '@/shared/config/app-router';
 import { formatDate } from '@/shared/lib/helpers/formatDate';
-import { ProfileAvatar } from '@/shared/ui/profile-avatar';
+import { ProfileAvatar } from '@/shared/ui';
 
 interface PostHeaderProps {
   authorId: string | number;

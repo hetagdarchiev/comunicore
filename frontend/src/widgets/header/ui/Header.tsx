@@ -22,8 +22,7 @@ import {
 } from '@/shared/hooks/useMenu.selectors';
 import { useModal } from '@/shared/hooks/useModal';
 import { useWindowResize } from '@/shared/hooks/useWindowResize';
-import { BurgerMenu } from '@/shared/ui/burger-menu';
-import { Skeleton } from '@/shared/ui/skeleton/Skeleton';
+import { BurgerMenu, Skeleton } from '@/shared/ui';
 
 interface HeaderProps {
   menuRef: RefObject<HTMLElement | null>;

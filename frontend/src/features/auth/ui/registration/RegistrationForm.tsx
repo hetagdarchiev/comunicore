@@ -11,11 +11,7 @@ import {
 } from '../../model/schemas/registration-form.schema';
 
 import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
-import { Button } from '@/shared/ui/button';
-import { Checkbox } from '@/shared/ui/checkbox';
-import { ErrorMessage } from '@/shared/ui/error-message';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label/Label';
+import { Button, Checkbox, ErrorMessage, Input, Label } from '@/shared/ui';
 
 const defaultValues = {
   name: '',

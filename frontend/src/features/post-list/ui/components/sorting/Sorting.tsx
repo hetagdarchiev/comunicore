@@ -6,7 +6,7 @@ import {
 } from 'react-icons/lu';
 import clsx from 'clsx';
 
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/shared/ui';
 
 const SORTING_OPTIONS = [
   { id: 'new', Icon: LuClock, label: 'Новое' },

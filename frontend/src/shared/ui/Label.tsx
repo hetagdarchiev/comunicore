@@ -2,7 +2,7 @@ import { LabelHTMLAttributes, PropsWithChildren } from 'react';
 import { FieldError } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { ErrorMessage } from '../error-message';
+import { ErrorMessage } from './ErrorMessage';
 
 type LablePropsAttrs = LabelHTMLAttributes<HTMLLabelElement> &
   PropsWithChildren;
