@@ -20,12 +20,11 @@ export default function HomeLayout({
       <Header menuRef={menuRef} burgerRef={burgerRef} />
       <div
         className={clsx(
-          'relative mx-auto flex h-8/10 w-full max-w-360 flex-1 gap-x-5 overflow-x-hidden',
-          'lg:px-17.5',
+          'relative mx-auto flex h-8/10 w-full max-w-360 flex-1 gap-x-5 overflow-x-hidden lg:px-5',
         )}
       >
         <AsideMenu menuRef={menuRef} />
-        <main className='flex flex-1 flex-col overflow-y-hidden'>
+        <main className='flex-1 overflow-y-hidden bg-white px-2.5 py-5'>
           {children}
         </main>
       </div>

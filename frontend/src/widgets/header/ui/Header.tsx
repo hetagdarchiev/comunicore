@@ -56,10 +56,10 @@ export function Header(props: HeaderProps) {
   }, [responsiveIsOpen, isOpen, setIsOpen, setModalOpen]);
 
   return (
-    <header className='bg-white px-4 py-5 lg:px-17.5'>
+    <header className='bg-white py-5'>
       <div
         className={clsx(
-          'flex max-w-360 items-center justify-between gap-x-5 gap-y-4',
+          'mx-auto flex max-w-360 items-center justify-between gap-x-5 gap-y-4 px-5',
         )}
       >
         <h1 className='visually-hidden'>Communicore</h1>

@@ -16,11 +16,11 @@ export default function EditorPage() {
 
   if (isLoading) {
     return (
-      <main className='w-full py-2'>
+      <div className='py-2'>
         <section className='mx-auto flex w-full max-w-5xl flex-col gap-y-3'>
           <p className='text-gray-80'>Проверяем авторизацию...</p>
         </section>
-      </main>
+      </div>
     );
   }
 

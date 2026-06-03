@@ -6,9 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/registration/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/registration/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/verification/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(auth)/verification/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/editor/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/editor/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/favorites/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/favorites/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/notifications/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/notifications/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/profile/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/features/auth-buttons/ui/AuthButtons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/auth-buttons/ui/AuthButtons.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/features/profile-actions/ui/ProfileActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/profile-actions/ui/ProfileActions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/page.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -109,7 +117,7 @@
       <workItem from="1779283990034" duration="665000" />
       <workItem from="1780119845934" duration="19000" />
       <workItem from="1780119965126" duration="4896000" />
-      <workItem from="1780467937179" duration="5660000" />
+      <workItem from="1780467937179" duration="7851000" />
     </task>
     <servers />
   </component>
