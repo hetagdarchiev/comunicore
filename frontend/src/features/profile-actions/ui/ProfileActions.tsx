@@ -35,12 +35,12 @@ interface Props {
   className?: string;
 }
 
-export function ProfileActions({ className = '' }: Props) {
+export function ProfileActions({ className }: Props) {
   const isAuth = useAuthStore(selectIsAuthenticated);
   const { data: user } = useAuthMeQuery({ enabled: isAuth });
 
   return (
-    <nav className={clsx('justify-self-end', className)}>
+    <nav className={clsx(className)}>
       <ul className='flex items-center gap-x-5'>
         {navigations.map(({ name, Icon, href }) => (
           <li key={name.toLowerCase()}>

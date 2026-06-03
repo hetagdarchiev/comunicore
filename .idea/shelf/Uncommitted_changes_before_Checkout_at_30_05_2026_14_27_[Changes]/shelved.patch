@@ -1,0 +1,56 @@
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"19dc2223-17a2-469e-a267-02939385f555\" name=\"Changes\" comment=\"\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"EmbeddingIndexingInfo\">\r\n    <option name=\"cachedIndexableFilesCount\" value=\"399\" />\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"McpProjectServerCommands\">\r\n    <commands />\r\n    <urls />\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8,\r\n  &quot;fromUser&quot;: false\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"3CRtvUCShMkCCtmkUTqRDIWMoMc\" />\r\n  <component name=\"ProjectLevelVcsManager\">\r\n    <ConfirmationsSetting value=\"1\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"ModuleVcsDetector.initialDetectionPerformed\": \"true\",\r\n    \"RunOnceActivity.MCP Project settings loaded\": \"true\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252\": \"true\",\r\n    \"RunOnceActivity.git.unshallow\": \"true\",\r\n    \"RunOnceActivity.typescript.service.memoryLimit.init\": \"true\",\r\n    \"codeWithMe.voiceChat.enabledByDefault\": \"false\",\r\n    \"com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1\": \"true\",\r\n    \"git-widget-placeholder\": \"88db5d3f\",\r\n    \"ignore.virus.scanning.warn.message\": \"true\",\r\n    \"javascript.preferred.runtime.type.id\": \"node\",\r\n    \"junie.onboarding.icon.badge.shown\": \"true\",\r\n    \"last_opened_file_path\": \"C:/Shahzod/Projects/comunicore\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.stylelint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.stylelint\": \"C:\\\\Shahzod\\\\Projects\\\\comunicore\\\\frontend\\\\node_modules\\\\stylelint\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"prettierjs.PrettierConfiguration.Package\": \"C:\\\\Shahzod\\\\Projects\\\\comunicore\\\\frontend\\\\node_modules\\\\prettier\",\r\n    \"settings.editor.selected.configurable\": \"ml.llm.AcpAgentsConfigurable\",\r\n    \"to.speed.mode.migration.done\": \"true\",\r\n    \"ts.external.directory.path\": \"C:\\\\Shahzod\\\\Projects\\\\comunicore\\\\frontend\\\\node_modules\\\\typescript\\\\lib\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Shahzod\\Projects\\comunicore\\frontend\\src\\shared\\lib\\MergeClassNames\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-3bd3a6803838-JavaScript-WS-261.22158.274\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"19dc2223-17a2-469e-a267-02939385f555\" name=\"Changes\" comment=\"\" />\r\n      <created>1776360440249</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1776360440249</updated>\r\n      <workItem from=\"1776360441448\" duration=\"103000\" />\r\n      <workItem from=\"1776360581487\" duration=\"32000\" />\r\n      <workItem from=\"1776360681440\" duration=\"5000\" />\r\n      <workItem from=\"1776782519931\" duration=\"3995000\" />\r\n      <workItem from=\"1776866772954\" duration=\"18000\" />\r\n      <workItem from=\"1777027334287\" duration=\"610000\" />\r\n      <workItem from=\"1777029167122\" duration=\"1915000\" />\r\n      <workItem from=\"1778319168876\" duration=\"1867000\" />\r\n      <workItem from=\"1778330762257\" duration=\"1049000\" />\r\n      <workItem from=\"1778340541217\" duration=\"83000\" />\r\n      <workItem from=\"1778383492570\" duration=\"1858000\" />\r\n      <workItem from=\"1778390790063\" duration=\"26000\" />\r\n      <workItem from=\"1778410234789\" duration=\"7873000\" />\r\n      <workItem from=\"1778508400091\" duration=\"1899000\" />\r\n      <workItem from=\"1778856659903\" duration=\"2982000\" />\r\n      <workItem from=\"1778862067352\" duration=\"972000\" />\r\n      <workItem from=\"1778902492379\" duration=\"6077000\" />\r\n      <workItem from=\"1779004498196\" duration=\"3416000\" />\r\n      <workItem from=\"1779018005946\" duration=\"296000\" />\r\n      <workItem from=\"1779105906129\" duration=\"6576000\" />\r\n      <workItem from=\"1779283990034\" duration=\"665000\" />\r\n      <workItem from=\"1780119845934\" duration=\"19000\" />\r\n      <workItem from=\"1780119965126\" duration=\"4896000\" />\r\n    </task>\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"UnknownFeatures\">\r\n    <option featureType=\"com.intellij.fileTypeFactory\" implementationName=\"next.config.ts\" />\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 82918618f486e85a64dc02258d9f4cd919af90ae)
++++ b/.idea/workspace.xml	(date 1780133223490)
+@@ -4,11 +4,7 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="">
+-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx" afterDir="false" />
+-    </list>
++    <list default="true" id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="" />
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+@@ -46,7 +42,7 @@
+     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+     "codeWithMe.voiceChat.enabledByDefault": "false",
+     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+-    "git-widget-placeholder": "88db5d3f",
++    "git-widget-placeholder": "refactor/fsd__and__adaptive",
+     "ignore.virus.scanning.warn.message": "true",
+     "javascript.preferred.runtime.type.id": "node",
+     "junie.onboarding.icon.badge.shown": "true",
+@@ -106,7 +102,7 @@
+       <workItem from="1779105906129" duration="6576000" />
+       <workItem from="1779283990034" duration="665000" />
+       <workItem from="1780119845934" duration="19000" />
+-      <workItem from="1780119965126" duration="4896000" />
++      <workItem from="1780119965126" duration="5307000" />
+     </task>
+     <servers />
+   </component>
+@@ -116,4 +112,15 @@
+   <component name="UnknownFeatures">
+     <option featureType="com.intellij.fileTypeFactory" implementationName="next.config.ts" />
+   </component>
++  <component name="Vcs.Log.Tabs.Properties">
++    <option name="TAB_STATES">
++      <map>
++        <entry key="MAIN">
++          <value>
++            <State />
++          </value>
++        </entry>
++      </map>
++    </option>
++  </component>
+ </project>
+\ No newline at end of file

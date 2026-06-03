@@ -6,8 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="19dc2223-17a2-469e-a267-02939385f555" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/auth/ui/login/LoginForm.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/shared/ui/input/Input.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/profile/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/app/(main)/(pages)/(private)/profile/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/features/auth-buttons/ui/AuthButtons.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/auth-buttons/ui/AuthButtons.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/features/profile-actions/ui/ProfileActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/features/profile-actions/ui/ProfileActions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/widgets/header/ui/Header.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="399" />
+    <option name="cachedIndexableFilesCount" value="403" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -46,7 +48,7 @@
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "codeWithMe.voiceChat.enabledByDefault": "false",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "88db5d3f",
+    "git-widget-placeholder": "refactor/fsd__and__adaptive",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.preferred.runtime.type.id": "node",
     "junie.onboarding.icon.badge.shown": "true",
@@ -107,6 +109,7 @@
       <workItem from="1779283990034" duration="665000" />
       <workItem from="1780119845934" duration="19000" />
       <workItem from="1780119965126" duration="4896000" />
+      <workItem from="1780467937179" duration="5660000" />
     </task>
     <servers />
   </component>

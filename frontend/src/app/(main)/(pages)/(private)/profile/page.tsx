@@ -29,32 +29,32 @@ function ProfilePage() {
   if (!user) return null;
 
   return (
-    <main className='flex w-full flex-col gap-4 bg-white p-4'>
-      <section className='bg-card flex flex-col p-6 shadow-sm'>
-        <h1 className='mb-4 text-2xl font-bold'>Profile</h1>
+    // <main className='flex w-full flex-col gap-4 bg-white p-4'>
+    <section className='bg-card flex flex-col p-6 shadow-sm'>
+      <h1 className='mb-4 text-2xl font-bold'>Profile</h1>
 
-        <ProfileAvatar
-          authorName={user.name}
-          avatarUrl={user.avatarUrl}
-          width={50}
-          height={50}
-        />
-        <div className='mb-6 space-y-2'>
-          <p>
-            <strong>Username:</strong> {user.name}
-          </p>
-          <p>
-            <strong>Email:</strong> {user.email}
-          </p>
-        </div>
+      <ProfileAvatar
+        authorName={user.name}
+        avatarUrl={user.avatarUrl}
+        width={50}
+        height={50}
+      />
+      <div className='mb-6 space-y-2'>
+        <p>
+          <strong>Username:</strong> {user.name}
+        </p>
+        <p>
+          <strong>Email:</strong> {user.email}
+        </p>
+      </div>
 
-        <Button onClick={() => logoutMutate({})} disabled={isPending}>
-          {isPending ? 'Logging out...' : 'Logout'}
-        </Button>
+      <Button onClick={() => logoutMutate({})} disabled={isPending}>
+        {isPending ? 'Logging out...' : 'Logout'}
+      </Button>
 
-        {error && <ErrorMessage error={error.message} className='mt-4' />}
-      </section>
-    </main>
+      {error && <ErrorMessage error={error.message} className='mt-4' />}
+    </section>
+    // </main>
   );
 }
 

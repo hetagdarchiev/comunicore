@@ -4,9 +4,13 @@ import clsx from 'clsx';
 import { AppRouter } from '@/shared/config/app-router';
 import { Button } from '@/shared/ui/button';
 
-export function AuthButtons({ className = '' }: { className?: string }) {
+interface Props {
+  className?: string;
+}
+
+export function AuthButtons({ className }: Props) {
   return (
-    <div className={clsx('flex gap-x-2.5 lg:justify-end', className)}>
+    <div className={clsx('flex gap-x-2.5', className)}>
       <Button
         href={AppRouter.registration}
         className='bg-orange-f4 hover:bg-orange-c5 flex items-center gap-x-3'
