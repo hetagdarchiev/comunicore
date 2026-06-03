@@ -1,1 +1,0 @@
-export { AccordionsList } from './AccordionsList';

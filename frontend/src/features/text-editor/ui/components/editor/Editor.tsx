@@ -4,11 +4,11 @@ import { RefObject, useCallback } from 'react';
 import { SubmitHandler, UseFormReturn } from 'react-hook-form';
 import clsx from 'clsx';
 
-import { MdEditor } from '../../..//model/lib/mdEditor/MdEditor';
 import { useEditorDraft } from '../../../model/hooks/useEditorDraft';
 import { useEditorKeyBoard } from '../../../model/hooks/useEditorKeyBoard';
 import { useMedia } from '../../../model/hooks/useMedia';
 import { renderHtml } from '../../../model/lib/markdown';
+import { MdEditor } from '../../../model/lib/mdEditor/MdEditor';
 import { MarkDownSchema } from '../../../model/schema/markdown.schema';
 
 interface Props {
@@ -38,7 +38,7 @@ export function Editor({ form, markdownFieldRef }: Props) {
   const { clearDraft } = useEditorDraft(form);
   const { onKeyDown } = useEditorKeyBoard(form);
 
-  const { ref, ...mdRedister } = register('markdown');
+  const { ref, ...mdRegister } = register('markdown');
 
   const onSubmit: SubmitHandler<MarkDownSchema> = useCallback(
     async (data) => {
@@ -73,7 +73,7 @@ export function Editor({ form, markdownFieldRef }: Props) {
           'h-full resize-none rounded-lg p-4 duration-200',
           isDragging && 'outline-5 outline-gray-300',
         )}
-        {...mdRedister}
+        {...mdRegister}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

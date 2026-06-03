@@ -8,10 +8,3 @@ client.setConfig({
   baseUrl: apiBaseUrl,
   credentials: 'include',
 });
-
-client.interceptors.response.use((response) => {
-  if (response.status === 401) {
-    console.warn('Сессия истекла или отсутствует');
-  }
-  return response;
-});

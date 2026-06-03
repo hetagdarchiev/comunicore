@@ -1,9 +1,7 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'export',
-  reactStrictMode: false,
-  trailingSlash: true,
+  reactStrictMode: true,
 };
 
 export default nextConfig;

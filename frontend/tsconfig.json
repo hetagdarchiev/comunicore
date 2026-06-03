@@ -10,6 +10,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
@@ -20,12 +21,9 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@/assets/*": ["./src/shared/assets/*"],
-      "@/entities/*": ["./src/entities/*"],
-      "@/features/*": ["./src/features/*"],
-      "@/shared/*": ["./src/shared/*"],
-      "@/widgets/*": ["./src/widgets/*"]
+      "$/*": ["./*"],
     }
+    
   },
   "include": [
     "next-env.d.ts",

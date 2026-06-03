@@ -3,7 +3,7 @@ import {
   Handler,
   ReturnNewValues,
   ToolHandlerConfig,
-} from '../../types/mdEditor/mdEditor.types';
+} from '../../types/mdEditor.types';
 
 export class MdEditor {
   static runTool(ctx: Ctx, config: ToolHandlerConfig) {

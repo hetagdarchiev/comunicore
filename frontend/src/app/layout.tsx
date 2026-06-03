@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 
-import Providers from './providers';
+import Providers from './providers/providers';
 
 import 'highlight.js/styles/atom-one-dark.css';
 import './styles/globals.css';
@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${robotoSans.variable} overflow-hidden`}>
+      <body className={`${robotoSans.variable} overflow-x-hidden`}>
         <Providers>{children}</Providers>
       </body>
     </html>
