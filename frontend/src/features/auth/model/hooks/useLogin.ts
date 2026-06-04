@@ -25,7 +25,7 @@ export const useLogin = () => {
     },
     onSuccess: (userData) => {
       setStatus('authenticated');
-      const prevPage = localStorage.getItem(PREV_PAGE) || AppRouter.main;
+      const prevPage = localStorage.getItem(PREV_PAGE) || AppRouter.profile;
 
       queryClient.setQueryData(userMeOptions().queryKey, userData);
       router.push(prevPage);

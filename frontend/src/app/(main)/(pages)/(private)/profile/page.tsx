@@ -12,8 +12,8 @@ import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen'
 import editIcon from '@/shared/assets/icons/edit.svg';
 import logoutIcon from '@/shared/assets/icons/exit.svg';
 import { AppRouter } from '@/shared/config/app-router';
+import { ProfileAvatar } from '@/shared/ui';
 import { Button } from '@/shared/ui/Button';
-import {ProfileAvatar} from "@/shared/ui";
 
 export default function Profile() {
   const router = useRouter();
