@@ -8,6 +8,8 @@
 }
 
 @theme {
+  --color-red-fd: #FD1616;
+  --color-red-aa: #AA1010;
   --color-blue-77: #77a6f7;
   --color-blue-d3: #d3e3fc;
   --color-blue-16: #1682fd;

@@ -43,5 +43,16 @@ next-env.d.ts
 
 # Webstorm IDE folder
 .idea
+./.idea
+../.idea
+.idea/
+./.idea/
+../.idea/
+.ai
+./.ai
+../.ai
+.ai/
+./.ai/
+../.ai/
 
 certificates
