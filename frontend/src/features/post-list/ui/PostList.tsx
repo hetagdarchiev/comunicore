@@ -19,7 +19,7 @@ export function PostList() {
 
   const errorWithCode = typeof error !== 'string';
 
-  if (isLoading) return <Loader className='absolute top-[50%] left-[50%]' />;
+  if (isLoading) return <Loader />;
   if (error)
     return (
       <div className='flex h-full w-full items-center justify-center font-bold'>

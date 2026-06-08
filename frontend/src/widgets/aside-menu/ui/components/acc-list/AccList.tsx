@@ -1,11 +1,15 @@
-import clsx from 'clsx';
-
 import { accCategories } from '../../../model/data/acc.data';
 import { AccItem } from '../acc-item/AccItem';
 
-export function AccList({ className = '' }: { className?: string }) {
+import { cn } from '@/shared/lib/classNames';
+
+interface Props {
+  className?: string;
+}
+
+export function AccList({ className }: Props = {}) {
   return (
-    <ul className={clsx('flex flex-1 flex-col gap-y-2.5', className)}>
+    <ul className={cn('flex flex-1 flex-col gap-y-2.5', className)}>
       {accCategories.map((category, index) => (
         <AccItem
           key={category.title.toLowerCase()}

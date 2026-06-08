@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
+
+import { cn } from '@/shared/lib/classNames';
 
 import { AuthButtons } from '@/features/auth-buttons';
 
@@ -23,7 +24,7 @@ export function ProfileItem({ user }: ProfileItemProps) {
       {!!user ? (
         <Link
           href={AppRouter.profile}
-          className={clsx(
+          className={cn(
             'text-gray-80 flex items-center gap-x-3 px-7.5 py-3',
             profileActive && 'bg-blue-77 text-white',
           )}

@@ -71,7 +71,7 @@ export default function Profile() {
                 Рядовой форумчанин
               </p>
             </div>
-            <Button className='gap-x-2.5'>
+            <Button className='gap-x-2.5' href={AppRouter.profileEdit}>
               <Image src={editIcon} alt='edit' />
               Редактировать
             </Button>

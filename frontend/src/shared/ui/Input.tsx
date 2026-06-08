@@ -1,5 +1,6 @@
 import { forwardRef, InputHTMLAttributes } from 'react';
-import clsx from 'clsx';
+
+import { cn } from '../lib/classNames';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   className?: string;
@@ -11,7 +12,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
 
   return (
     <input
-      className={clsx(
+      className={cn(
         'text-gray-80 placeholder:text-gray-80 w-full bg-transparent text-[18px] outline-none',
         isError && 'outline-red-600',
         className,
