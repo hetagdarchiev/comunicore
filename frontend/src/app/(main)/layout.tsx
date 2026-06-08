@@ -2,10 +2,10 @@
 
 import { ReactNode, useRef } from 'react';
 
-import { cn } from '@/shared/lib/classNames';
-
 import { AsideMenu } from '@/widgets/aside-menu';
 import { Header } from '@/widgets/header';
+
+import { cn } from '@/shared/lib/classNames';
 
 export default function HomeLayout({
   children,

@@ -2,8 +2,6 @@
 
 import { RefObject, useRef } from 'react';
 
-import { cn } from '@/shared/lib/classNames';
-
 import { toolsGroup } from '../../../model/tools';
 import {
   MarkdownGetValue,
@@ -12,6 +10,7 @@ import {
 import { EditorMode } from '../../../model/types/mode.types';
 
 import { useModal } from '@/shared/hooks/useModal';
+import { cn } from '@/shared/lib/classNames';
 import { BurgerMenu } from '@/shared/ui';
 
 interface Props {
