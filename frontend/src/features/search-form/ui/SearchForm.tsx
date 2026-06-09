@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { LuSearch } from 'react-icons/lu';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+import { cn } from '@/shared/lib/classNames';
 import { searchSchema, SearchTypes } from '@/shared/lib/schemas/search.schema';
 
 const defaultValues = {
@@ -16,12 +17,15 @@ export function SearchForm(props: { className?: string }) {
     mode: 'onChange',
     defaultValues,
   });
-  const { className = '' } = props;
+  const { className } = props;
 
   return (
     <form
       role='search'
-      className={`flex w-full items-center gap-x-3 rounded-sm border border-black px-3 py-2 focus-within:outline-1 ${className}`}
+      className={cn(
+        'flex w-full items-center gap-x-3 rounded-sm border border-black px-3 py-2 focus-within:outline-1',
+        className,
+      )}
     >
       <LuSearch
         width={18}

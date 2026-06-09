@@ -19,6 +19,7 @@ export const AppRouter = {
   award: '/award',
   notification: '/notifications',
   profile: '/profile',
+  profileEdit: '/profile/edit',
   faq: '/faq',
   favorites: '/favorites',
   registration: '/registration',

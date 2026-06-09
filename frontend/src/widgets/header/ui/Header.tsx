@@ -3,7 +3,8 @@
 import { RefObject, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import clsx from 'clsx';
+
+import { cn } from '@/shared/lib/classNames';
 
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
@@ -57,7 +58,7 @@ export function Header(props: HeaderProps) {
   return (
     <header className='bg-white py-5'>
       <div
-        className={clsx(
+        className={cn(
           'mx-auto flex max-w-360 items-center justify-between gap-x-5 gap-y-4 px-5',
         )}
       >
@@ -93,7 +94,7 @@ export function Header(props: HeaderProps) {
           controls='aside-menu'
           disabled={isLoading}
           aria-disabled={isLoading}
-          className={clsx(
+          className={cn(
             'h-7.5 w-10 justify-self-end **:duration-200 lg:hidden',
             isLoading && 'pointer-events-none opacity-40',
             isOpen &&

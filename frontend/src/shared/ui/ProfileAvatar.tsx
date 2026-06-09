@@ -1,5 +1,6 @@
 import Image from 'next/image';
-import clsx from 'clsx';
+
+import { cn } from '../lib/classNames';
 
 const defaultAvatar = '/avatar.png';
 
@@ -20,7 +21,7 @@ export function ProfileAvatar(props: ProfileAvatarProps) {
       src={avatarUrl || defaultAvatar}
       alt={authorName}
       {...attrs}
-      className={clsx('rounded-full object-cover', className)}
+      className={cn('rounded-full object-cover', className)}
     />
   );
 }

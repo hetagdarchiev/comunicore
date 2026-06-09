@@ -1,10 +1,11 @@
 'use client';
 
 import { ReactNode, useRef } from 'react';
-import clsx from 'clsx';
 
 import { AsideMenu } from '@/widgets/aside-menu';
 import { Header } from '@/widgets/header';
+
+import { cn } from '@/shared/lib/classNames';
 
 export default function HomeLayout({
   children,
@@ -19,7 +20,7 @@ export default function HomeLayout({
     <>
       <Header menuRef={menuRef} burgerRef={burgerRef} />
       <div
-        className={clsx(
+        className={cn(
           'relative mx-auto flex h-8/10 w-full max-w-360 flex-1 gap-x-5 overflow-x-hidden lg:px-5',
         )}
       >

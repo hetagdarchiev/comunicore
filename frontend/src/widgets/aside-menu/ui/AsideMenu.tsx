@@ -1,7 +1,8 @@
 'use client';
 
 import { RefObject } from 'react';
-import clsx from 'clsx';
+
+import { cn } from '@/shared/lib/classNames';
 
 import { AccList } from './components/acc-list/AccList';
 import { CategoriesList } from './components/categories-list/CategoriesList';
@@ -20,7 +21,7 @@ export function AsideMenu({ menuRef }: AsideMenuProps) {
       id='aside-menu'
       inert={!isOpen}
       ref={menuRef}
-      className={clsx(
+      className={cn(
         // initial
         'absolute right-0',
         'z-10 flex h-full w-screen flex-col gap-y-2.5 bg-white py-2.5 duration-200',

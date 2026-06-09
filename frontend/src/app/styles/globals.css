@@ -8,6 +8,8 @@
 }
 
 @theme {
+  --color-red-fd: #fd1616;
+  --color-red-aa: #aa1010;
   --color-blue-77: #77a6f7;
   --color-blue-d3: #d3e3fc;
   --color-blue-16: #1682fd;
@@ -25,14 +27,6 @@
   :root {
     --background: #fff;
     --foreground: #171717;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      /* --background: #0a0a0a; */
-
-      /* --foreground: #ededed; */
-    }
   }
 
   body {
@@ -93,5 +87,27 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+}
+
+@utility skeleton-group {
+  /* Запускаем пульсацию для всей группы */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+  user-select: none;
+
+  /* Находим все вложенные элементы (кнопки, инпуты, спаны, картинки) */
+  & * {
+    background-color: var(--color-gray-ea) !important;
+    color: transparent !important;
+    border-color: transparent !important;
+    border-radius: inherit; /* наследуем скругления, если они есть */
+    box-shadow: none !important;
+  }
+
+  /* Отдельно убираем видимость иконок и картинок, чтобы они не просвечивали */
+  & img,
+  & svg {
+    opacity: 0 !important;
   }
 }

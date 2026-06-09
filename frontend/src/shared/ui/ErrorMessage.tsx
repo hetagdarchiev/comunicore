@@ -1,13 +1,18 @@
+import { cn } from '../lib/classNames';
+
 type Props = {
   error: string;
   className?: string;
 };
 
 export function ErrorMessage(props: Props) {
-  const { error, className = '' } = props;
+  const { error, className } = props;
   return (
     <span
-      className={`animate-in fade-in slide-in-from-top-1 text-xs text-red-500 duration-200 ${className}`}
+      className={cn(
+        'animate-in fade-in slide-in-from-top-1 text-xs text-red-500 duration-200',
+        className,
+      )}
     >
       {error}
     </span>

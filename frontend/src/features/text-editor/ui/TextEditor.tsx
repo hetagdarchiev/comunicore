@@ -3,7 +3,8 @@
 import { useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import clsx from 'clsx';
+
+import { cn } from '@/shared/lib/classNames';
 
 import {
   MarkDownSchema,
@@ -62,11 +63,11 @@ export function TextEditor() {
           />
         </div>
         <div className='relative flex flex-1 flex-col overflow-hidden rounded-lg bg-white'>
-          <div className={clsx('h-full', mode === 'edit' ? 'block' : 'hidden')}>
+          <div className={cn('h-full', mode === 'edit' ? 'block' : 'hidden')}>
             <Editor form={form} markdownFieldRef={markdownFieldRef} />
           </div>
           <div
-            className={clsx(
+            className={cn(
               'grid h-full grid-rows-[minmax(1rem,10rem)] overflow-y-auto p-4',
               EDITOR_MODE[mode],
             )}
