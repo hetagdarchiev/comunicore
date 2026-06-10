@@ -3,7 +3,8 @@ import Link from 'next/link';
 
 import { cn } from '../lib/classNames';
 
-type ButtonColor = 'blue' | 'red' | 'green' | 'ghost';
+type ButtonColor = 'purple' | 'ghost';
+type ButtonSize = 'sm' | 'md' | 'lg';
 
 type ButtonProps = Partial<
   AnchorHTMLAttributes<HTMLAnchorElement> &
@@ -13,23 +14,36 @@ type ButtonProps = Partial<
   href?: string;
   className?: string;
   color?: ButtonColor;
+  size?: ButtonSize;
 };
 
 const colorStyles: Record<ButtonColor, string> = {
-  blue: 'bg-blue-16 hover:bg-blue-20',
-  red: 'bg-red-fd hover:bg-red-aa',
-  green: 'bg-green-500 hover:bg-green-600',
-  ghost:
-    'bg-transparent hover:bg-gray-100 text-gray-800 border border-gray-300',
+  purple:
+    'bg-purple-67 border border-purple-67 hover:bg-transparent hover:text-purple-67',
+  ghost: 'bg-transparent border border-gray-9e/10 hover:border-gray-9e',
+};
+
+const sizeStyles: Record<ButtonSize, string> = {
+  sm: 'px-[20px] py-[10px] text-[12px]',
+  md: 'px-[20px] py-[14px] text-[16px]',
+  lg: 'px-[50px] py-[20px] text-[18px]',
 };
 
 export function Button(props: ButtonProps) {
-  const { children, href, className, color = 'blue', ...restProps } = props;
+  const {
+    children,
+    href,
+    className,
+    color = 'purple',
+    size = 'md',
+    ...restProps
+  } = props;
 
   const commonClassName = cn(
     'inline-flex items-center justify-center w-fit cursor-pointer',
-    'rounded-md px-5 py-3 duration-200 text-center font-bold text-white',
+    'rounded-[5px] duration-200 text-center font-bold text-white',
     colorStyles[color],
+    sizeStyles[size],
     className,
   );
 

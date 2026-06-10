@@ -3,7 +3,6 @@ import { Roboto } from 'next/font/google';
 
 import Providers from './providers/providers';
 
-import 'highlight.js/styles/atom-one-dark.css';
 import './styles/globals.css';
 
 const robotoSans = Roboto({

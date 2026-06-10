@@ -1,7 +1,5 @@
-import { LuUserPlus } from 'react-icons/lu';
-import clsx from 'clsx';
-
 import { AppRouter } from '@/shared/config/app-router';
+import { cn } from '@/shared/lib/classNames';
 import { Button } from '@/shared/ui';
 
 interface Props {
@@ -10,22 +8,18 @@ interface Props {
 
 export function AuthButtons({ className }: Props) {
   return (
-    <div className={clsx('flex gap-x-2.5', className)}>
+    <div className={cn('flex gap-x-3', className)}>
       <Button
-        href={AppRouter.registration}
-        className='bg-orange-f4 hover:bg-orange-c5 flex items-center gap-x-3'
+        href={AppRouter.login}
+        color='ghost'
+        size='sm'
+        className='bg-dark-1b'
       >
-        <span className='inline-flex h-5 w-5'>
-          <LuUserPlus
-            aria-hidden={true}
-            width={20}
-            height={20}
-            className='inline min-h-5 min-w-5'
-          />
-        </span>
+        Войти
+      </Button>
+      <Button href={AppRouter.registration} size='sm'>
         Регистрация
       </Button>
-      <Button href={AppRouter.login}>Войти</Button>
     </div>
   );
 }

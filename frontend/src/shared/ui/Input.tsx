@@ -13,8 +13,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
     <input
       className={cn(
-        'text-gray-80 placeholder:text-gray-80 w-full bg-transparent text-[18px] outline-none',
-        isError && 'outline-red-600',
+        'text-gray-9e placeholder:text-gray-9e bg-dark-1b rounded-[10px] px-4 py-2.5 text-[16px] outline-none',
+        isError && 'outline-red-ff',
         className,
       )}
       ref={ref}

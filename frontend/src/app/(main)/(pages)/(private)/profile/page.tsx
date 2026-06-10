@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { MdEdit } from 'react-icons/md';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
@@ -9,8 +10,6 @@ import { PostCard } from '@/entities/post';
 import { useLogoutMutation } from '@/entities/session';
 
 import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
-import editIcon from '@/shared/assets/icons/edit.svg';
-import logoutIcon from '@/shared/assets/icons/exit.svg';
 import { AppRouter } from '@/shared/config/app-router';
 import { ProfileAvatar } from '@/shared/ui';
 import { Button } from '@/shared/ui/Button';
@@ -42,10 +41,7 @@ export default function Profile() {
               authorName={name}
               avatarUrl={avatarUrl || undefined}
             />
-            <Button className='gap-x-2.5'>
-              <Image src={editIcon} alt='edit' />
-              Изменить
-            </Button>
+            <Button className='gap-x-2.5'>Изменить</Button>
           </div>
           <div className='flex flex-col gap-y-5'>
             <h2 className='text-4xl font-bold'>{name}</h2>
@@ -71,12 +67,15 @@ export default function Profile() {
                 Рядовой форумчанин
               </p>
             </div>
-            <Button className='gap-x-2.5' href={AppRouter.profileEdit}>
-              <Image src={editIcon} alt='edit' />
+            <Button
+              className='gap-x-2.5'
+              href={AppRouter.profileEdit}
+              size='lg'
+            >
+              <MdEdit size={24} />
               Редактировать
             </Button>
-            <Button onClick={logout} color='red' className='gap-x-2.5'>
-              <Image src={logoutIcon} alt='logout' />
+            <Button onClick={logout} className='gap-x-2.5'>
               Выйти
             </Button>
           </div>

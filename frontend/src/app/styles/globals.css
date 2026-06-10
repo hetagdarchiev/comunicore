@@ -25,6 +25,8 @@
 
   --gradient-color-purple-1: rgba(117, 0, 255, 0.15) rgba(117, 0, 255, 0.05);
   --gradient-color-purple-2: rgba(134, 50, 244, 0.35) rgba(117, 0, 255, 0.25);
+
+  --font-main: 'Montserrat';
 }
 
 /* Базовые стили */
@@ -38,12 +40,10 @@
   }
 
   body {
-    font-family: var(--font-roboto-sans), Roboto, sans-serif;
-    color: var(--color-foreground);
-    background-color: var(--color-background);
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
+    font-family: var(--font-main), Roboto, sans-serif;
+    color: var(--color-light);
+    background-color: var(--color-dark-0e);
+    line-height: 20px;
   }
 
   *,

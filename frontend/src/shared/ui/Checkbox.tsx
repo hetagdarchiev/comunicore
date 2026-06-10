@@ -1,16 +1,16 @@
-import { forwardRef, InputHTMLAttributes } from 'react';
+import { forwardRef, InputHTMLAttributes, PropsWithChildren } from 'react';
 import { FieldError } from 'react-hook-form';
 import { LuCheck } from 'react-icons/lu';
 
-interface ICheckboxProps extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+interface ICheckboxProps
+  extends InputHTMLAttributes<HTMLInputElement>, PropsWithChildren {
   id: string;
   error?: FieldError | undefined;
 }
 
 export const Checkbox = forwardRef<HTMLInputElement, ICheckboxProps>(
   (props, ref) => {
-    const { label, id, error, ...rest } = props;
+    const { children, id, error, ...rest } = props;
 
     return (
       <div>
@@ -18,19 +18,23 @@ export const Checkbox = forwardRef<HTMLInputElement, ICheckboxProps>(
           className='flex cursor-pointer items-center gap-x-2.5'
           htmlFor={id}
         >
-          <div className='relative flex h-5 w-5 items-center justify-center'>
+          <div className='relative flex h-4.5 w-4.5 items-center justify-center'>
             <input
-              className='peer border-gray-80 h-5 w-5 cursor-pointer appearance-none rounded-sm border duration-200 checked:border-[#77A6F7] checked:bg-[#1682FD]'
+              className='peer border-gray-9e checked:border-purple-67 h-4.5 w-4.5 cursor-pointer appearance-none rounded-sm border-2 duration-200 focus:ring-0 focus:outline-none'
               id={id}
               type='checkbox'
               ref={ref}
               {...rest}
             />
             <div className='pointer-events-none absolute hidden peer-checked:block'>
-              <LuCheck aria-hidden={true} size={20} className='text-white' />
+              <LuCheck
+                aria-hidden={true}
+                size={20}
+                className='text-purple-67'
+              />
             </div>
           </div>
-          <p className='text-gray-80 select-none'>{label}</p>
+          <p className='text-light select-none'>{children}</p>
         </label>
         {error && (
           <span className='animate-in fade-in slide-in-from-top-1 text-xs text-red-500 duration-200'>

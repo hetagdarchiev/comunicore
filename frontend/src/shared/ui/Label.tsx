@@ -21,9 +21,9 @@ export function Label(props: LabelProps) {
     <>
       <label
         className={cn(
-          'bg-light-fc focus-within:ring-gray-80/30 flex h-full w-full items-center gap-x-2.5 rounded-sm px-5 py-3 transition-all duration-200 focus-within:ring-2',
+          'inline-flex cursor-pointer items-center text-[18px] font-bold text-white',
           isHidden && 'visually-hidden',
-          error?.message && 'border-red-500',
+          error?.message && 'text-red-ff',
           className,
         )}
         htmlFor={htmlFor}
