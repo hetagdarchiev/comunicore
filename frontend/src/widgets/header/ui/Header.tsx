@@ -23,7 +23,7 @@ import {
 import { useModal } from '@/shared/hooks/useModal';
 import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import { cn } from '@/shared/lib/classNames';
-import { BurgerMenu } from '@/shared/ui';
+import { BurgerMenu, Container } from '@/shared/ui';
 
 interface HeaderProps {
   menuRef: RefObject<HTMLElement | null>;
@@ -56,53 +56,55 @@ export function Header(props: HeaderProps) {
   }, [responsiveIsOpen, isOpen, setIsOpen, setModalOpen]);
 
   return (
-    <header className={cn('flex items-center justify-between px-27.5 py-2.5')}>
-      <h1 className='visually-hidden'>Communicore</h1>
-      <Link href={AppRouter.main} className='flex w-fit'>
-        <Image
-          src={logo}
-          alt='Logo'
-          width={240}
-          height={44}
-          loading='eager'
-          fetchPriority='high'
-          className='min-w-18'
+    <header className='py-2.5'>
+      <Container className='flex items-center justify-between'>
+        <h1 className='visually-hidden'>Communicore</h1>
+        <Link href={AppRouter.main} className='flex w-fit'>
+          <Image
+            src={logo}
+            alt='Logo'
+            width={240}
+            height={44}
+            loading='eager'
+            fetchPriority='high'
+            className='min-w-18'
+          />
+        </Link>
+
+        <nav className='[&_a:hover]:text-purple-67 flex gap-x-5 text-[18px] font-medium [&_a]:transition-colors'>
+          <Link href={AppRouter.main}>Форум</Link>
+          <Link href={AppRouter.main}>Участники</Link>
+          <Link href={AppRouter.main}>Блог</Link>
+          <Link href={AppRouter.main}>Правила</Link>
+        </nav>
+
+        <div className='flex items-center gap-x-6.25'>
+          <button>
+            <LuSearch size={30} />
+          </button>
+          {isAuthenticated ? (
+            <ProfileActions className='hidden lg:flex' />
+          ) : (
+            <AuthButtons className='hidden lg:flex' />
+          )}
+        </div>
+        <BurgerMenu
+          isOpen={isOpen}
+          setIsOpen={isLoading ? () => {} : setResponsiveIsOpen}
+          ref={burgerRef}
+          controls='aside-menu'
+          disabled={isLoading}
+          aria-disabled={isLoading}
+          className={cn(
+            'h-7.5 w-10 justify-self-end **:duration-200 lg:hidden',
+            isLoading && 'pointer-events-none opacity-40',
+            isOpen &&
+              '**:relative **:first:top-1 **:first:rotate-45 **:nth-2:bottom-1 **:nth-2:rotate-135 **:nth-[n+3]:hidden',
+            '**:bg-blue-77 **:h-1.25 **:last:relative **:last:-right-5 **:last:w-2/4',
+            'before:absolute before:inset-0 before:size-12.5 before:content-[""]',
+          )}
         />
-      </Link>
-
-      <nav className='[&_a:hover]:text-purple-67 flex gap-x-5 text-[18px] font-medium [&_a]:transition-colors'>
-        <Link href={AppRouter.main}>Форум</Link>
-        <Link href={AppRouter.main}>Участники</Link>
-        <Link href={AppRouter.main}>Блог</Link>
-        <Link href={AppRouter.main}>Правила</Link>
-      </nav>
-
-      <div className='flex items-center gap-x-6.25'>
-        <button>
-          <LuSearch size={30} />
-        </button>
-        {isAuthenticated ? (
-          <ProfileActions className='hidden lg:flex' />
-        ) : (
-          <AuthButtons className='hidden lg:flex' />
-        )}
-      </div>
-      <BurgerMenu
-        isOpen={isOpen}
-        setIsOpen={isLoading ? () => {} : setResponsiveIsOpen}
-        ref={burgerRef}
-        controls='aside-menu'
-        disabled={isLoading}
-        aria-disabled={isLoading}
-        className={cn(
-          'h-7.5 w-10 justify-self-end **:duration-200 lg:hidden',
-          isLoading && 'pointer-events-none opacity-40',
-          isOpen &&
-            '**:relative **:first:top-1 **:first:rotate-45 **:nth-2:bottom-1 **:nth-2:rotate-135 **:nth-[n+3]:hidden',
-          '**:bg-blue-77 **:h-1.25 **:last:relative **:last:-right-5 **:last:w-2/4',
-          'before:absolute before:inset-0 before:size-12.5 before:content-[""]',
-        )}
-      />
+      </Container>
     </header>
   );
 }

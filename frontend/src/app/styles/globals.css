@@ -44,6 +44,9 @@
     color: var(--color-light);
     background-color: var(--color-dark-0e);
     line-height: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
   }
 
   *,

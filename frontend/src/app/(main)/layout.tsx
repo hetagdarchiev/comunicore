@@ -2,6 +2,7 @@
 
 import { ReactNode, useRef } from 'react';
 
+import { Footer } from '@/widgets/footer';
 import { Header } from '@/widgets/header';
 
 export default function HomeLayout({
@@ -16,7 +17,8 @@ export default function HomeLayout({
   return (
     <>
       <Header menuRef={menuRef} burgerRef={burgerRef} />
-      <main>{children}</main>
+      <main className='flex-1'>{children}</main>
+      <Footer />
     </>
   );
 }
