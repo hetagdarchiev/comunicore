@@ -12,6 +12,7 @@ export const Skeleton = ({ isLoading, children }: SkeletonProps) => {
 
   return (
     <div
+      data-name='skeleton'
       className={cn(
         '**:bg-gray-ea [&_*]:color-transparent [&_*]:box-shadow-none pointer-events-none animate-pulse select-none **:border-transparent [&_img]:opacity-0 [&_svg]:opacity-0',
       )}

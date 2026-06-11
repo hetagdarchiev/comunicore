@@ -1,10 +1,9 @@
 'use client';
 
 import { RefObject, useEffect } from 'react';
+import { LuSearch } from 'react-icons/lu';
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { cn } from '@/shared/lib/classNames';
 
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
@@ -23,7 +22,8 @@ import {
 } from '@/shared/hooks/useMenu.selectors';
 import { useModal } from '@/shared/hooks/useModal';
 import { useWindowResize } from '@/shared/hooks/useWindowResize';
-import { BurgerMenu, Skeleton } from '@/shared/ui';
+import { cn } from '@/shared/lib/classNames';
+import { BurgerMenu, Container } from '@/shared/ui';
 
 interface HeaderProps {
   menuRef: RefObject<HTMLElement | null>;
@@ -56,37 +56,38 @@ export function Header(props: HeaderProps) {
   }, [responsiveIsOpen, isOpen, setIsOpen, setModalOpen]);
 
   return (
-    <header className='bg-white py-5'>
-      <div
-        className={cn(
-          'mx-auto flex max-w-360 items-center justify-between gap-x-5 gap-y-4 px-5',
-        )}
-      >
+    <header className='relative py-2.5 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-light)_15%,transparent),transparent)] after:content-[""]'>
+      <Container className='flex items-center justify-between'>
         <h1 className='visually-hidden'>Communicore</h1>
         <Link href={AppRouter.main} className='flex w-fit'>
           <Image
             src={logo}
             alt='Logo'
-            width={228}
-            height={40}
+            width={240}
+            height={44}
             loading='eager'
             fetchPriority='high'
             className='min-w-18'
           />
         </Link>
 
-        {isLoading ? (
-          <div className='hidden gap-x-2.5 lg:flex'>
-            <Skeleton isLoading={isLoading}>
-              <div className='h-10 w-40' />
-            </Skeleton>
-          </div>
-        ) : isAuthenticated ? (
-          <ProfileActions className='hidden lg:flex' />
-        ) : (
-          <AuthButtons className='hidden lg:flex' />
-        )}
+        <nav className='[&_a:hover]:text-purple-67 flex gap-x-5 text-[18px] font-medium [&_a]:transition-colors'>
+          <Link href={AppRouter.main}>Форум</Link>
+          <Link href={AppRouter.main}>Участники</Link>
+          <Link href={AppRouter.main}>Блог</Link>
+          <Link href={AppRouter.main}>Правила</Link>
+        </nav>
 
+        <div className='flex items-center gap-x-6.25'>
+          <button>
+            <LuSearch size={30} />
+          </button>
+          {isAuthenticated ? (
+            <ProfileActions className='hidden lg:flex' />
+          ) : (
+            <AuthButtons className='hidden lg:flex' />
+          )}
+        </div>
         <BurgerMenu
           isOpen={isOpen}
           setIsOpen={isLoading ? () => {} : setResponsiveIsOpen}
@@ -103,7 +104,7 @@ export function Header(props: HeaderProps) {
             'before:absolute before:inset-0 before:size-12.5 before:content-[""]',
           )}
         />
-      </div>
+      </Container>
     </header>
   );
 }

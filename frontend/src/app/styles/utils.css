@@ -9,3 +9,27 @@
   border: 0 !important;
   clip-path: inset(100%) !important;
 }
+
+/* Анимация скелетона */
+
+@utility skeleton-group {
+  /* Запускаем пульсацию для всей группы */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  pointer-events: none;
+  user-select: none;
+
+  /* Находим все вложенные элементы (кнопки, инпуты, спаны, картинки) */
+  & * {
+    background-color: var(--color-gray-ea) !important;
+    color: transparent !important;
+    border-color: transparent !important;
+    border-radius: inherit; /* наследуем скругления, если они есть */
+    box-shadow: none !important;
+  }
+
+  /* Отдельно убираем видимость иконок и картинок, чтобы они не просвечивали */
+  & img,
+  & svg {
+    opacity: 0 !important;
+  }
+}

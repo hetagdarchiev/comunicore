@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -13,7 +12,6 @@ import {
   userMeQueryKey,
   userUpdateMutation,
 } from '@/shared/api/generated/@tanstack/react-query.gen';
-import editIcon from '@/shared/assets/icons/edit.svg';
 import { AppRouter } from '@/shared/config/app-router';
 import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
 import { passwordSchema } from '@/shared/lib/schemas/password.schema';
@@ -114,10 +112,7 @@ export default function ProfileEdit() {
             authorName={user.name}
             avatarUrl={user.avatarUrl || undefined}
           />
-          <Button className='gap-x-2.5'>
-            <Image src={editIcon} alt='edit' />
-            Изменить
-          </Button>
+          <Button className='gap-x-2.5'>Изменить</Button>
         </div>
 
         <form
@@ -172,18 +167,10 @@ export default function ProfileEdit() {
           </Label>
 
           <div className='mt-1 flex flex-wrap gap-2.5'>
-            <Button
-              type='submit'
-              color='green'
-              disabled={isPending}
-              className='gap-x-2.5'
-            >
-              <Image src={editIcon} alt='save' />
+            <Button type='submit' disabled={isPending} className='gap-x-2.5'>
               {isPending ? 'Сохранение...' : 'Сохранить'}
             </Button>
-            <Button href={AppRouter.profile} color='red'>
-              Отмена
-            </Button>
+            <Button href={AppRouter.profile}>Отмена</Button>
           </div>
 
           {error && (

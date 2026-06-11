@@ -1,6 +1,7 @@
 export { BurgerMenu } from './BurgerMenu';
 export { Button } from './Button';
 export { Checkbox } from './Checkbox';
+export { Container } from './Container';
 export { ErrorMessage } from './ErrorMessage';
 export { Input } from './Input';
 export { Label } from './Label';

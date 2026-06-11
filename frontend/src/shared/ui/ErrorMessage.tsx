@@ -10,7 +10,7 @@ export function ErrorMessage(props: Props) {
   return (
     <span
       className={cn(
-        'animate-in fade-in slide-in-from-top-1 text-xs text-red-500 duration-200',
+        'animate-in fade-in slide-in-from-top-1 text-red-ff text-xs duration-200',
         className,
       )}
     >

@@ -63,7 +63,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
       <div className='from-blue-16/0 to-blue-16/12 pointer-events-none absolute inset-x-0 top-0 h-8 bg-linear-to-b opacity-0 transition group-hover:opacity-100' />
       <div className='relative'>
         <div className='text-xs leading-relaxed text-slate-600'>{label}</div>
-        <div className='text-blue-20 mt-1.5 font-mono text-base font-semibold tracking-tight tabular-nums'>
+        <div className='text-blue-20 mt-1.5 text-base font-semibold tracking-tight tabular-nums'>
           {value}
         </div>
       </div>
@@ -92,14 +92,13 @@ function ThreadHighlightCard({
           </span>
           <span className='text-xs text-slate-500'>
             ответов:{' '}
-            <span className='font-mono font-semibold text-slate-800'>
+            <span className='font-semibold text-slate-800'>
               {repliesInWindow}
             </span>
           </span>
         </div>
         <p className='mt-2 text-sm leading-relaxed text-slate-900'>
-          <span className='text-blue-16 font-mono text-xs'>#{threadId}</span>{' '}
-          {title}
+          <span className='text-blue-16 text-xs'>#{threadId}</span> {title}
         </p>
       </div>
     </div>
@@ -184,7 +183,7 @@ function MetricsBoard({ data }: { data: AnalyticsMetricsResponse }) {
               {data.topTag.tag}
             </span>
             <span className='text-sm text-slate-600'>
-              <span className='font-mono font-semibold text-slate-900'>
+              <span className='font-semibold text-slate-900'>
                 {data.topTag.usageCount}
               </span>{' '}
               раз
@@ -246,7 +245,7 @@ function MetricsBoard({ data }: { data: AnalyticsMetricsResponse }) {
                           }}
                         />
                       </div>
-                      <span className='w-12 shrink-0 text-right font-mono text-sm text-slate-700 tabular-nums'>
+                      <span className='w-12 shrink-0 text-right text-sm text-slate-700 tabular-nums'>
                         {row.sharePercent.toFixed(1)}%
                       </span>
                     </div>
@@ -290,7 +289,7 @@ function MetricsBoard({ data }: { data: AnalyticsMetricsResponse }) {
                         {row.tag}
                       </span>
                     </td>
-                    <td className='px-3 py-2 font-mono text-slate-800 tabular-nums'>
+                    <td className='px-3 py-2 text-slate-800 tabular-nums'>
                       {row.threadCount}
                     </td>
                   </tr>
@@ -319,7 +318,7 @@ function MetricsBoard({ data }: { data: AnalyticsMetricsResponse }) {
                   className={`hover:bg-blue-d3/25 transition ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}`}
                 >
                   <td className='px-3 py-2 text-slate-800'>{row.day}</td>
-                  <td className='text-blue-20 px-3 py-2 font-mono font-semibold tabular-nums'>
+                  <td className='text-blue-20 px-3 py-2 font-semibold tabular-nums'>
                     {row.postsCount}
                   </td>
                 </tr>
@@ -362,14 +361,12 @@ function TableUserCounts({
               className={`hover:bg-blue-d3/25 transition ${i % 2 === 0 ? 'bg-white' : 'bg-slate-50/60'}`}
             >
               <td className='px-3 py-2 align-top text-slate-800'>
-                <span className='text-blue-16 font-mono text-xs'>
-                  #{row.userId}
-                </span>{' '}
+                <span className='text-blue-16 text-xs'>#{row.userId}</span>{' '}
                 <span className='leading-snug font-medium wrap-break-word'>
                   {row.name}
                 </span>
               </td>
-              <td className='w-24 px-3 py-2 text-right font-mono text-slate-900 tabular-nums'>
+              <td className='w-24 px-3 py-2 text-right text-slate-900 tabular-nums'>
                 {row.count}
               </td>
             </tr>
@@ -488,7 +485,7 @@ export default function DataPage() {
                 <p className='text-[11px] font-semibold tracking-wide text-slate-400'>
                   API
                 </p>
-                <p className='mt-0.5 font-mono text-xs leading-snug break-all text-slate-700'>
+                <p className='mt-0.5 text-xs leading-snug break-all text-slate-700'>
                   {hint.replace(/^API:\s*/, '')}
                 </p>
               </div>
