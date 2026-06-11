@@ -41,7 +41,7 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className='bg-dark-0e'>
+    <footer className='bg-dark-0e relative after:absolute after:top-0 after:right-0 after:left-0 after:h-px after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-light)_15%,transparent),transparent)] after:content-[""]'>
       <Container>
         <div className='grid grid-cols-1 justify-between gap-10 py-12.5 sm:grid-cols-2 xl:grid-cols-[auto_auto_auto_auto]'>
           <section>

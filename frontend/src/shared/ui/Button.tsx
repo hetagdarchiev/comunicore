@@ -24,7 +24,7 @@ const colorStyles: Record<ButtonColor, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-[20px] py-[10px] text-[12px]',
+  sm: 'px-[20px] py-[10px] text-[14px]',
   md: 'px-[20px] py-[14px] text-[16px]',
   lg: 'px-[50px] py-[20px] text-[18px]',
 };

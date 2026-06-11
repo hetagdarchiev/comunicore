@@ -56,7 +56,7 @@ export function Header(props: HeaderProps) {
   }, [responsiveIsOpen, isOpen, setIsOpen, setModalOpen]);
 
   return (
-    <header className='py-2.5'>
+    <header className='relative py-2.5 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-light)_15%,transparent),transparent)] after:content-[""]'>
       <Container className='flex items-center justify-between'>
         <h1 className='visually-hidden'>Communicore</h1>
         <Link href={AppRouter.main} className='flex w-fit'>
