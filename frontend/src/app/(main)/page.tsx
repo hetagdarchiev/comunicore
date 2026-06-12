@@ -341,7 +341,7 @@ export default function Home() {
                       className='bg-dark-1b/50 hover:bg-dark-1b flex flex-col gap-3 border-b border-white/5 px-5 py-4 transition-colors last:border-b-0 sm:h-[70px] sm:flex-row sm:items-center sm:gap-4 sm:py-0'
                     >
                       {/* Заголовок треда */}
-                      <p className='min-w-0 flex-1 truncate text-[16px] font-medium'>
+                      <p className='min-w-0 flex-1 truncate text-base font-medium'>
                         {title}
                       </p>
 
@@ -355,9 +355,8 @@ export default function Home() {
                         {category}
                       </span>
 
-                      {/* Мета: автор + время */}
                       <div className='flex shrink-0 items-center gap-2'>
-                        {/* TODO: image — аватар автора из API */}
+                        {/* TODO: аватар автора из API */}
                         <ProfileAvatar
                           authorName={author}
                           width={28}
@@ -392,7 +391,7 @@ export default function Home() {
 
           {/* Боковая панель */}
           <aside
-            className='w-full shrink-0 xl:w-[405px]'
+            className='w-full shrink-0 xl:w-101.25'
             aria-label='Статистика форума'
           >
             {/* Статистика форума */}
@@ -402,7 +401,6 @@ export default function Home() {
                 {forumStats.map(({ id, label, value, Icon }) => (
                   <li key={id} className='flex items-center justify-between'>
                     <div className='text-gray-9e flex items-center gap-3'>
-                      {/* TODO: icon — иконка метрики */}
                       <Icon size={14} aria-hidden='true' />
                       <span className='text-[16px]'>{label}</span>
                     </div>
@@ -415,17 +413,15 @@ export default function Home() {
             {/* Новые пользователи */}
             <div className='bg-dark-1b/60 border-gray-9e/40 border-t p-5'>
               <h3 className='mb-5 text-[18px] font-bold'>Новые пользователи</h3>
+              {/* TODO: аватар нового пользователя из API */}
               <div className='flex gap-2.5'>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className='size-[30px]'>
-                    {/* TODO: image — аватары новых пользователей из API */}
-                    <ProfileAvatar
-                      authorName={`user-${i}`}
-                      width={30}
-                      height={30}
-                      className='size-[30px]'
-                    />
-                  </div>
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <ProfileAvatar
+                    key={index}
+                    authorName={`user-${index}`}
+                    width={30}
+                    height={30}
+                  />
                 ))}
               </div>
             </div>
@@ -439,7 +435,7 @@ export default function Home() {
                 {activeUsers.map(({ id, name, score }) => (
                   <li key={id} className='flex items-center justify-between'>
                     <div className='flex items-center gap-3'>
-                      {/* TODO: image — аватар активного пользователя из API */}
+                      {/* TODO: аватар активного пользователя из API */}
                       <ProfileAvatar
                         authorName={name}
                         width={30}
@@ -531,7 +527,6 @@ export default function Home() {
                   href={AppRouter.main}
                   className='bg-dark-1b hover:bg-dark-1b/80 group flex h-full flex-col overflow-hidden rounded-[20px] transition-colors'
                 >
-                  {/* TODO: image — обложка поста блога */}
                   <div className='bg-dark-1b/50 text-gray-9e relative h-37.5 sm:h-50'>
                     <Image
                       src={imageUrl}

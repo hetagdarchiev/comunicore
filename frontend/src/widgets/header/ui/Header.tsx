@@ -71,7 +71,7 @@ export function Header(props: HeaderProps) {
           />
         </Link>
 
-        <nav className='[&_a:hover]:text-purple-67 flex gap-x-5 text-[18px] font-medium [&_a]:transition-colors'>
+        <nav className='[&_a:hover]:text-purple-67 hidden gap-x-5 text-[18px] font-medium lg:flex [&_a]:transition-colors'>
           <Link href={AppRouter.main}>Форум</Link>
           <Link href={AppRouter.main}>Участники</Link>
           <Link href={AppRouter.main}>Блог</Link>
@@ -100,7 +100,7 @@ export function Header(props: HeaderProps) {
             isLoading && 'pointer-events-none opacity-40',
             isOpen &&
               '**:relative **:first:top-1 **:first:rotate-45 **:nth-2:bottom-1 **:nth-2:rotate-135 **:nth-[n+3]:hidden',
-            '**:bg-blue-77 **:h-1.25 **:last:relative **:last:-right-5 **:last:w-2/4',
+            '**:bg-purple-67 **:h-1.25 **:last:relative **:last:-right-5 **:last:w-2/4',
             'before:absolute before:inset-0 before:size-12.5 before:content-[""]',
           )}
         />
