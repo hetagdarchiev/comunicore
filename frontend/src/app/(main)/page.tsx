@@ -248,7 +248,7 @@ export default function Home() {
       </section>
 
       <section aria-labelledby='sections-heading'>
-        <div className='flex items-center justify-between pt-4 pb-8'>
+        <div className='flex flex-wrap items-center justify-between gap-5 pt-4 pb-8'>
           <h2 id='sections-heading' className='text-xl font-bold lg:text-2xl'>
             Популярные разделы
           </h2>
@@ -307,7 +307,7 @@ export default function Home() {
         <div className='flex flex-col gap-6 xl:flex-row xl:items-start'>
           {/* Список обсуждений */}
           <div className='min-w-0 flex-1'>
-            <div className='mb-8 flex items-center justify-between'>
+            <div className='mb-8 flex flex-wrap items-center justify-between gap-5'>
               <h2
                 id='discussions-heading'
                 className='text-xl font-bold lg:text-2xl'
@@ -338,49 +338,50 @@ export default function Home() {
                   <li key={id}>
                     <Link
                       href={AppRouter.questions}
-                      className='bg-dark-1b/50 hover:bg-dark-1b flex flex-col gap-3 border-b border-white/5 px-5 py-4 transition-colors last:border-b-0 sm:h-[70px] sm:flex-row sm:items-center sm:gap-4 sm:py-0'
+                      className='bg-dark-1b/50 hover:bg-dark-1b flex flex-col gap-y-4 border-b border-white/50 px-5 py-4 transition-colors last:border-b-0 lg:h-17.5 lg:flex-row lg:items-center lg:gap-x-4 lg:py-0'
                     >
-                      {/* Заголовок треда */}
-                      <p className='min-w-0 flex-1 truncate text-base font-medium'>
-                        {title}
-                      </p>
-
                       {/* Бейдж категории */}
                       <span
                         className={cn(
-                          'w-fit rounded-md px-2.5 py-1 text-sm font-semibold',
+                          'w-fit rounded-lg px-2.5 py-1 text-sm font-semibold lg:order-2',
                           categoryClass,
                         )}
                       >
                         {category}
                       </span>
 
-                      <div className='flex shrink-0 items-center gap-2'>
-                        {/* TODO: аватар автора из API */}
-                        <ProfileAvatar
-                          authorName={author}
-                          width={28}
-                          height={28}
-                          className='size-7.5'
-                        />
-                        <span className='text-gray-9e hidden text-sm sm:inline'>
-                          {author}
-                        </span>
-                      </div>
-                      <span className='text-gray-9e hidden w-28 shrink-0 text-right text-sm sm:block'>
-                        {time}
-                      </span>
+                      {/* Заголовок треда */}
+                      <p className='min-w-0 flex-1 text-[20px] font-medium lg:order-1 lg:truncate'>
+                        {title}
+                      </p>
 
-                      {/* Счётчики */}
-                      <div className='flex shrink-0 items-center gap-4'>
-                        <span className='text-gray-9e flex items-center gap-1 text-sm'>
-                          <LuMessageSquare size={16} aria-hidden='true' />
-                          {comments}
+                      <div className='flex flex-wrap items-center gap-x-5 gap-y-2 lg:contents'>
+                        <div className='flex items-center gap-2 lg:order-3'>
+                          {/* TODO: аватар автора из API */}
+                          <ProfileAvatar
+                            authorName={author}
+                            width={24}
+                            height={24}
+                            className='size-6'
+                          />
+                          <span className='text-gray-9e text-sm'>{author}</span>
+                        </div>
+
+                        <span className='text-gray-9e text-sm lg:order-3 lg:w-28 lg:text-right'>
+                          {time}
                         </span>
-                        <span className='text-gray-9e flex items-center gap-1 text-sm'>
-                          <LuEye size={16} aria-hidden='true' />
-                          {views}
-                        </span>
+
+                        {/* Счётчики */}
+                        <div className='flex items-center gap-4 lg:order-3'>
+                          <span className='text-gray-9e flex items-center gap-1.5 text-sm'>
+                            <LuMessageSquare size={16} aria-hidden='true' />
+                            {comments}
+                          </span>
+                          <span className='text-gray-9e flex items-center gap-1.5 text-sm'>
+                            <LuEye size={16} aria-hidden='true' />
+                            {views}
+                          </span>
+                        </div>
                       </div>
                     </Link>
                   </li>
@@ -491,11 +492,11 @@ export default function Home() {
       >
         <h2
           id='stats-heading'
-          className='text-center text-2xl font-bold lg:text-4xl'
+          className='text-center text-[20px] font-bold lg:text-4xl'
         >
           Наше сообщество в цифрах
         </h2>
-        <ul className='grid grid-cols-2 gap-6 lg:grid-cols-4'>
+        <ul className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
           {communityStats.map(({ value, label }) => (
             <li key={label} className='flex flex-col items-center gap-3'>
               <span className='text-purple-86 text-4xl font-bold lg:text-5xl'>

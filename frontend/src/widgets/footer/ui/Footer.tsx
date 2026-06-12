@@ -102,7 +102,7 @@ export function Footer() {
               Получай уведомления о вакансиях обновлениях и событиях форума.
             </p>
 
-            <form className='mt-7.5 flex flex-col gap-3 sm:flex-row'>
+            <form className='mt-7.5 flex flex-col gap-3 md:flex-row'>
               <Label htmlFor='footer-email' className='visually-hidden'>
                 Email
               </Label>
@@ -112,14 +112,17 @@ export function Footer() {
                 name='email'
                 placeholder='Введите Email'
               />
-              <Button type='submit' className='rounded-[10px] px-2'>
+              <Button
+                type='submit'
+                className='w-full rounded-[10px] px-2 md:w-auto'
+              >
                 Подписаться
               </Button>
             </form>
           </section>
         </div>
 
-        <div className='text-gray-9e flex flex-col gap-4 py-5 text-[16px] lg:flex-row lg:items-center lg:justify-between'>
+        <div className='text-gray-9e flex flex-col gap-6 py-5 text-[16px] lg:flex-row lg:items-center lg:justify-between'>
           <p>© 2024 Comunicore. Все права защищены.</p>
 
           <ul className='flex flex-col gap-3 sm:flex-row sm:gap-10'>

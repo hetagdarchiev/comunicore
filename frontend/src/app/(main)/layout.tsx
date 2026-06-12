@@ -2,9 +2,8 @@
 
 import { ReactNode, useRef } from 'react';
 
-import { BurgerMenu } from '@/widgets/header/ui/burger-menu';
 import { Footer } from '@/widgets/footer';
-import { Header } from '@/widgets/header';
+import { BurgerMenu, Header } from '@/widgets/header';
 
 export default function HomeLayout({
   children,

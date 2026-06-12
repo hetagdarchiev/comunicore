@@ -7,6 +7,8 @@ import Link from 'next/link';
 
 import { navLinks } from '../model/navLinks';
 
+import { Burger } from './burger/Burger';
+
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
 
@@ -25,7 +27,7 @@ import {
 import { useModal } from '@/shared/hooks/useModal';
 import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import { cn } from '@/shared/lib/classNames';
-import { BurgerMenu, Container } from '@/shared/ui';
+import { Container } from '@/shared/ui';
 
 interface HeaderProps {
   menuRef: RefObject<HTMLElement | null>;
@@ -58,7 +60,7 @@ export function Header(props: HeaderProps) {
   }, [responsiveIsOpen, isOpen, setIsOpen, setModalOpen]);
 
   return (
-    <header className='bg-dark-0e relative z-50 py-2.5 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-light)_15%,transparent),transparent)] after:content-[""]'>
+    <header className='bg-dark-0e sticky top-0 z-50 w-full py-2.5 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-light)_15%,transparent),transparent)] after:content-[""]'>
       <Container className='flex items-center justify-between'>
         <h1 className='visually-hidden'>Communicore</h1>
         <Link href={AppRouter.main} className='flex w-fit'>
@@ -90,23 +92,19 @@ export function Header(props: HeaderProps) {
           ) : (
             <AuthButtons className='hidden lg:flex' />
           )}
+          <Burger
+            isOpen={isOpen}
+            setIsOpen={isLoading ? () => {} : setResponsiveIsOpen}
+            ref={burgerRef}
+            controls='aside-menu'
+            disabled={isLoading}
+            aria-disabled={isLoading}
+            className={cn(
+              'justify-self-end lg:hidden',
+              isLoading && 'pointer-events-none opacity-40',
+            )}
+          />
         </div>
-        <BurgerMenu
-          isOpen={isOpen}
-          setIsOpen={isLoading ? () => {} : setResponsiveIsOpen}
-          ref={burgerRef}
-          controls='aside-menu'
-          disabled={isLoading}
-          aria-disabled={isLoading}
-          className={cn(
-            'h-7.5 w-10 justify-self-end **:duration-200 lg:hidden',
-            isLoading && 'pointer-events-none opacity-40',
-            isOpen &&
-              '**:relative **:first:top-1 **:first:rotate-45 **:nth-2:bottom-1 **:nth-2:rotate-135 **:nth-[n+3]:hidden',
-            '**:bg-purple-67 **:h-1.25 **:last:relative **:last:-right-5 **:last:w-2/4',
-            'before:absolute before:inset-0 before:size-12.5 before:content-[""]',
-          )}
-        />
       </Container>
     </header>
   );
