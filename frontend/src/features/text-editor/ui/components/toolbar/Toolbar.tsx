@@ -11,7 +11,6 @@ import { EditorMode } from '../../../model/types/mode.types';
 
 import { useModal } from '@/shared/hooks/useModal';
 import { cn } from '@/shared/lib/classNames';
-import { BurgerMenu } from '@/shared/ui';
 
 interface Props {
   mode: EditorMode;
@@ -26,7 +25,7 @@ export function Toolbar(props: Props) {
   const { mode, getValues, setValue, markdownFieldRef } = props;
   const burgerMenuRef = useRef<HTMLButtonElement>(null);
   const toolBarRef = useRef<HTMLUListElement>(null);
-  const { modalOpen, setModalOpen } = useModal(toolBarRef, burgerMenuRef, {
+  const { modalOpen } = useModal(toolBarRef, burgerMenuRef, {
     autoClose: false,
   });
 
@@ -37,13 +36,6 @@ export function Toolbar(props: Props) {
         mode === 'preview' && 'hidden',
       )}
     >
-      <BurgerMenu
-        controls={TOOL_BAR_ID}
-        isOpen={modalOpen}
-        ref={burgerMenuRef}
-        setIsOpen={setModalOpen}
-        className='lg:hidden'
-      />
       <ul
         id={TOOL_BAR_ID}
         ref={toolBarRef}
