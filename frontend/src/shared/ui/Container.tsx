@@ -8,6 +8,9 @@ export function Container(props: ContainerProps) {
   const { className, ...restProps } = props;
 
   return (
-    <div className={cn('px-5 sm:px-8 lg:px-27.5', className)} {...restProps} />
+    <div
+      className={cn('px-5 sm:px-8 lg:px-12 xl:px-27.5', className)}
+      {...restProps}
+    />
   );
 }
