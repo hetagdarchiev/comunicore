@@ -18,9 +18,9 @@ export const Checkbox = forwardRef<HTMLInputElement, ICheckboxProps>(
           className='flex cursor-pointer items-center gap-x-2.5'
           htmlFor={id}
         >
-          <div className='relative flex h-4.5 w-4.5 items-center justify-center'>
+          <div className='relative flex size-3 items-center justify-center'>
             <input
-              className='peer border-gray-9e checked:border-purple-67 h-4.5 w-4.5 cursor-pointer appearance-none rounded-sm border-2 duration-200 focus:ring-0 focus:outline-none'
+              className='peer border-gray-9e checked:border-purple-67 size-3 cursor-pointer appearance-none rounded-xs border duration-200 focus:ring-0 focus:outline-none'
               id={id}
               type='checkbox'
               ref={ref}
@@ -29,7 +29,7 @@ export const Checkbox = forwardRef<HTMLInputElement, ICheckboxProps>(
             <div className='pointer-events-none absolute hidden peer-checked:block'>
               <LuCheck
                 aria-hidden={true}
-                size={20}
+                size={10}
                 className='text-purple-67'
               />
             </div>

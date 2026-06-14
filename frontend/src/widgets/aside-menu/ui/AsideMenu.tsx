@@ -2,13 +2,12 @@
 
 import { RefObject } from 'react';
 
-import { cn } from '@/shared/lib/classNames';
-
 import { AccList } from './components/acc-list/AccList';
 import { CategoriesList } from './components/categories-list/CategoriesList';
 import { SocialMedia } from './components/social-media/SocialMedia';
 
 import { useMenuIsOpen } from '@/shared/hooks/useMenu.selectors';
+import { cn } from '@/shared/lib/classNames';
 
 interface AsideMenuProps {
   menuRef: RefObject<HTMLElement | null>;

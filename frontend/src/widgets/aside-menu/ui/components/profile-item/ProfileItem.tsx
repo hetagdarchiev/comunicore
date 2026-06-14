@@ -3,12 +3,11 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-import { cn } from '@/shared/lib/classNames';
-
 import { AuthButtons } from '@/features/auth-buttons';
 
 import { UserCreateResponse } from '@/shared/api/generated';
 import { AppRouter } from '@/shared/config/app-router';
+import { cn } from '@/shared/lib/classNames';
 import { ProfileAvatar } from '@/shared/ui';
 
 interface ProfileItemProps {

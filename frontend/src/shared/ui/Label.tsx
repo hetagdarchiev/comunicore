@@ -21,7 +21,7 @@ export function Label(props: LabelProps) {
     <>
       <label
         className={cn(
-          'inline-flex cursor-pointer items-center text-[18px] font-bold text-white',
+          'text-gray-9e inline-flex cursor-pointer flex-col gap-y-1.25 text-lg font-normal',
           isHidden && 'visually-hidden',
           error?.message && 'text-red-ff',
           className,

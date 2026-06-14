@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { MdEdit } from 'react-icons/md';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 
@@ -85,14 +84,16 @@ export default function Profile() {
           <ul className='flex flex-col gap-y-5'>
             <li>
               <PostCard
-                id={id}
-                authorId={id}
-                authorName={name}
-                authorAvatarUrl={avatarUrl}
-                createdAt={'Fri May 15 2026 21:48:40 GMT+0500'}
-                title={'Делаю проект на Vue. Дайте совет'}
-                content={'Lorem ipsum...'}
-                postsCount={2}
+                post={{
+                  id,
+                  answers: 142,
+                  authorName: name,
+                  avatarUrl,
+                  createdAt: 'Fri May 15 2026 21:48:40 GMT+0500',
+                  chapter: 'Design',
+                  title: 'Делаю проект на Vue. Дайте совет',
+                  views: 42314,
+                }}
               />
             </li>
           </ul>

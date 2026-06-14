@@ -13,15 +13,16 @@
 /* Анимация скелетона */
 
 @utility skeleton-group {
-  /* Запускаем пульсацию для всей группы */
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   pointer-events: none;
   user-select: none;
 
+  /* Запускаем пульсацию для всей группы */
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
   /* Находим все вложенные элементы (кнопки, инпуты, спаны, картинки) */
   & * {
-    background-color: var(--color-gray-ea) !important;
     color: transparent !important;
+    background-color: var(--color-gray-ea) !important;
     border-color: transparent !important;
     border-radius: inherit; /* наследуем скругления, если они есть */
     box-shadow: none !important;

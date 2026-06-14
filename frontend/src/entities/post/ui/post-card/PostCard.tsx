@@ -1,41 +1,43 @@
-import { PostCommentsLink } from './components/post-comments-link/PostCommentsLink';
-import { PostContent } from './components/post-content/PostContent';
-import { PostHeader } from './components/post-header/PostHeader';
-import { PostShareButton } from './components/post-share-button/PostShareButton';
-import { PostTags } from './components/post-tags/PostTags';
-import { PostViews } from './components/post-views/PostViews';
+import { Post } from '../../model/types/post.types';
 
-import { ThreadListItem } from '@/shared/api/generated';
+import { cn } from '@/shared/lib/classNames';
+import { formatedViews } from '@/shared/lib/helpers/formatedViews';
+import { formatTimeAgo } from '@/shared/lib/helpers/formatTimeAgo';
+import { ProfileAvatar, Tag } from '@/shared/ui';
+
+interface PostCardProps {
+  post: Post;
+  tableGrid?: string;
+}
 
 export const PostCard = ({
-  authorId,
-  authorName,
-  authorAvatarUrl,
-  createdAt,
-  title,
-  content,
-  id,
-}: ThreadListItem) => (
-  <article className='border-gray-ea bg-post-card min-w-75 rounded-md border px-7.5 py-5 shadow-[2px_1px_5px_0px_#00000026]'>
-    <PostHeader
-      authorId={authorId}
-      authorName={authorName}
-      avatarUrl={authorAvatarUrl}
-      createdAt={createdAt}
-    />
-
-    <PostContent id={id} title={title}>
-      {content}
-    </PostContent>
-
-    <div className='flex items-start justify-between gap-3 max-sm:flex-col sm:items-center'>
-      <PostTags tags={/* tags ?? */ ['frontend', 'backand', 'test']} />
-
-      <div className='text-gray-80 flex items-center gap-4'>
-        <PostViews count={/*stats?.views || */ 0} />
-        <PostCommentsLink count={/*stats?.comments || */ 0} postId={id} />
-        <PostShareButton count={/*stats?.shares || */ 0} />
+  tableGrid,
+  post: { avatarUrl, authorName, answers, chapter, title, views, createdAt },
+}: PostCardProps) => (
+  <article className={cn(tableGrid)}>
+    <header className='flex items-center gap-x-5'>
+      <ProfileAvatar
+        authorName={authorName}
+        avatarUrl={avatarUrl}
+        width={50}
+        height={50}
+        className='size-12.5'
+      />
+      <div className='grid gap-y-2.25'>
+        <h2 className='text-lg leading-5.5'>{title}</h2>
+        <div className='text-gray-9e flex items-center gap-x-1.5'>
+          <p>{authorName}</p>
+          <span className='bg-gray-9e size-0.75 rounded-full' />
+          <time dateTime={createdAt} suppressHydrationWarning>
+            {formatTimeAgo(createdAt)}
+          </time>
+        </div>
       </div>
-    </div>
+    </header>
+    <Tag size='lg' color='green'>
+      {chapter}
+    </Tag>
+    <span className='text-lg'>{answers}</span>
+    <span>{formatedViews(views)}</span>
   </article>
 );
