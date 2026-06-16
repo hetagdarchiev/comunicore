@@ -31,7 +31,7 @@ export function ThreadsHeader() {
   };
   return (
     <header className='grid gap-y-5 md:gap-y-7.5'>
-      <div className='flex flex-row items-center justify-between'>
+      <div className='flex flex-col justify-between gap-y-3 xl:flex-row xl:items-center xl:gap-y-0'>
         <div className='grid max-w-130.5 gap-y-2 md:gap-y-3.25'>
           <h1 className='text-4xl md:text-5xl'>Все треды</h1>
           <p className='text-gray-9e text-sm md:text-base'>
@@ -42,7 +42,7 @@ export function ThreadsHeader() {
         <Button
           size='lg'
           color='purple'
-          className='hidden whitespace-nowrap xl:flex'
+          className='w-full max-w-120 whitespace-nowrap xl:w-fit'
         >
           Создать новый тред
         </Button>

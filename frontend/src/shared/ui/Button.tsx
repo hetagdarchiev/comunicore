@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { cn } from '../lib/classNames';
 
 type ButtonColor = 'purple' | 'ghost' | 'bordered' | 'transparent';
-type ButtonSize = 'min-sm' | 'sm' | 'md' | 'lg' | 'xl';
+type ButtonSize = 'min-sm' | 'sm' | 'md' | 'lg' | 'xl' | 'square';
 
 type ButtonProps = Partial<
   AnchorHTMLAttributes<HTMLAnchorElement> &
@@ -28,6 +28,7 @@ const colorStyles: Record<ButtonColor, string> = {
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
+  square: 'size-10 text-2xl font-normal',
   'min-sm':
     'px-[6px] py-[8px] text-sm md:px-[10px] md:py-[12px] md:text-[18px] font-light',
   sm: 'px-[20px] py-[10px] text-[14px]',

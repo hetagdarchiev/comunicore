@@ -19,6 +19,7 @@ import {
   type ThreadsSortTypes,
 } from '../model/schemas/sort.enum';
 
+import { cn } from '@/shared/lib/classNames';
 import {
   Button,
   Checkbox,
@@ -69,10 +70,14 @@ export function ThreadsFiltration() {
   return (
     <form
       id='threads-filtration'
-      className='bg-dark-1b/50 border-gray-9e/10 grid gap-y-5 rounded-[1.25rem] border px-3.75 py-5'
+      className={cn(
+        'bg-dark-1b/50 border-gray-9e/10 grid gap-y-2 rounded-[1.25rem] border px-2.5 py-3.5',
+        'md:grid-cols-2 md:gap-5 md:px-3.75 md:py-5',
+        'xl:grid-cols-1',
+      )}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <h2 className='text-lg font-bold'>Фильтры</h2>
+      <h2 className='text-lg font-bold md:col-span-2 xl:col-auto'>Фильтры</h2>
       <Label htmlFor='sort-by-activity' title='Сортировка'>
         <span>Сортировка</span>
         <Controller
@@ -127,11 +132,16 @@ export function ThreadsFiltration() {
           )}
         />
       </Label>
-      <Label className='flex-row items-center gap-x-3'>
+      <Label className='flex-row items-center gap-x-3 md:col-span-2 xl:col-auto'>
         <Checkbox {...register('withoutAnswers')} id='sort-checkbox' />
         <span>Только без ответов</span>
       </Label>
-      <Button color='transparent' type='submit' size='xl'>
+      <Button
+        color='transparent'
+        type='submit'
+        size='xl'
+        className='md:col-span-2 xl:col-auto'
+      >
         Применить
       </Button>
     </form>

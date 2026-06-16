@@ -1,12 +1,13 @@
 'use client';
 
+import { useMemo } from 'react';
 import { BsArrowRight } from 'react-icons/bs';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { mockTags } from '../model/data/mock-tags';
 
 import { cn } from '@/shared/lib/classNames';
-import { Tag } from '@/shared/ui';
+import { Button, Tag } from '@/shared/ui';
 
 const TAG_QUERY_KEY = 'tags';
 
@@ -15,24 +16,22 @@ export function FilterByTag() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const currentParams = new URLSearchParams(searchParams.toString());
-
-  const findTagsInUrl = (): string[] => {
-    const tagsToken = currentParams.get(TAG_QUERY_KEY);
+  const activeTags = useMemo(() => {
+    const tagsToken = searchParams.get(TAG_QUERY_KEY);
     return tagsToken ? tagsToken.split(',') : [];
-  };
+  }, [searchParams]);
 
   const addTagToQueryUrl = (name: string) => {
-    let activeTags = findTagsInUrl();
+    const currentParams = new URLSearchParams(searchParams.toString());
+    let updatedTags = [...activeTags];
 
-    if (activeTags.includes(name)) {
-      activeTags = activeTags.filter((tag) => tag !== name);
+    if (updatedTags.includes(name)) {
+      updatedTags = updatedTags.filter((tag) => tag !== name);
     } else {
-      activeTags.push(name);
+      updatedTags.push(name);
     }
-
-    if (activeTags.length > 0) {
-      currentParams.set(TAG_QUERY_KEY, activeTags.join(','));
+    if (updatedTags.length > 0) {
+      currentParams.set(TAG_QUERY_KEY, updatedTags.join(','));
     } else {
       currentParams.delete(TAG_QUERY_KEY);
     }
@@ -40,38 +39,80 @@ export function FilterByTag() {
   };
 
   return (
-    <div className='bg-dark-1b/50 border-gray-9e/10 space-y-6.75 rounded-[1.25rem] border px-3.75 py-5'>
-      <h2 className='text-lg font-bold'>Популярные теги</h2>
-      <ul className='grid grid-cols-1 gap-y-2.75'>
+    <div
+      className={cn(
+        'bg-dark-1b/50 border-gray-9e/10 contents rounded-[1.25rem] border px-3.75 py-5',
+        'xl:grid xl:gap-y-6.75',
+      )}
+    >
+      <div
+        className={cn(
+          'order-1 flex flex-col gap-y-2',
+          'sm:flex-row sm:justify-between sm:gap-x-5 sm:gap-y-0',
+          'xl:contents',
+        )}
+      >
+        <h2 className='text-lg font-bold'>Популярные теги</h2>
+        <Button size='sm' className='inline-flex w-full sm:w-fit xl:hidden'>
+          Смотреть все теги
+        </Button>
+      </div>
+      <ul
+        className={cn(
+          'custom-scrollbar flex items-center gap-x-5 overflow-auto',
+          'xl:grid xl:grid-cols-1 xl:gap-x-0 xl:gap-y-2.75',
+        )}
+      >
         {mockTags.map(({ name, quantity }, index) => {
-          const activeTag = findTagsInUrl().includes(name);
+          const activeTag = activeTags.includes(name);
           return (
             <li key={name + index} className='text-gray-9e'>
               <button
                 type='button'
                 className={cn(
-                  'flex w-full items-center justify-between rounded-lg py-2 duration-200',
-                  'hover:bg-purple-67/10 hover:px-2',
-                  'hover:*:border-purple-67 hover:*:text-purple-67',
+                  'relative flex w-full items-center justify-between gap-x-2 rounded-lg py-2 duration-200',
+                  'xl:hover:bg-purple-67/10 xl:hover:px-2',
+                  'xl:hover:*:border-purple-67 xl:hover:*:text-purple-67',
+                  activeTag && '*:text-purple-86 *:duration-100',
                   activeTag &&
-                    'bg-purple-67/10 *:border-purple-67 *:text-purple-67 px-2',
+                    'xl:bg-purple-67/10 xl:*:border-purple-67 xl:px-2',
+                  'xl:static',
                 )}
                 onClick={() => addTagToQueryUrl(name)}
               >
-                <Tag color='dark'>{name}</Tag>
-                <span>{quantity}</span>
+                <Tag
+                  color='dark'
+                  className={cn(
+                    'px-4 py-3 text-lg',
+                    'xl:h-7.5 xl:px-1.5 xl:text-sm',
+                  )}
+                >
+                  {name}
+                </Tag>
+                <span
+                  className={cn(
+                    'border-l-gray-9e/30 border-l pl-2',
+                    'xl:border-0 xl:pl-0',
+                  )}
+                >
+                  {quantity}
+                </span>
               </button>
             </li>
           );
         })}
       </ul>
+
       <button
         type='button'
-        className='text-purple-67 flex items-center gap-x-2.5 px-5 text-lg font-bold'
+        className={cn(
+          'hidden',
+          'xl:text-purple-67 xl:flex xl:items-center xl:gap-x-2.5 xl:px-5 xl:text-lg xl:font-bold xl:whitespace-nowrap',
+        )}
         onClick={() => console.log('Here must be logic which show all tags')}
       >
         <span>Смотреть все теги</span>
-        <BsArrowRight size={24} />
+        <BsArrowRight size={24} className='min-w-6' />
       </button>
     </div>
   );

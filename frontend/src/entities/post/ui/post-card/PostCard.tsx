@@ -15,16 +15,21 @@ export const PostCard = ({
   post: { avatarUrl, authorName, answers, chapter, title, views, createdAt },
 }: PostCardProps) => (
   <article className={cn(tableGrid)}>
-    <header className='flex items-center gap-x-5'>
+    <header className='flex gap-x-5 lg:items-center'>
       <ProfileAvatar
         authorName={authorName}
         avatarUrl={avatarUrl}
         width={50}
         height={50}
-        className='size-12.5'
+        className='mt-2 size-12.5 lg:mt-0'
       />
       <div className='grid gap-y-2.25'>
-        <h2 className='text-lg leading-5.5'>{title}</h2>
+        <h2 className='line-clamp-2 max-w-65 text-lg leading-5.5 2xl:max-w-80'>
+          {title}
+        </h2>
+        <Tag size='lg' color='green' className='md:hidden'>
+          {chapter}
+        </Tag>
         <div className='text-gray-9e flex items-center gap-x-1.5'>
           <p>{authorName}</p>
           <span className='bg-gray-9e size-0.75 rounded-full' />
@@ -32,12 +37,22 @@ export const PostCard = ({
             {formatTimeAgo(createdAt)}
           </time>
         </div>
+        <div className='text-gray-9e flex flex-wrap gap-x-5 gap-y-1 whitespace-nowrap lg:hidden'>
+          <span>{answers} ответов</span>
+          <span>{formatedViews(views)} просмотров</span>
+        </div>
       </div>
     </header>
-    <Tag size='lg' color='green'>
+    <Tag
+      size='lg'
+      color='green'
+      className='hidden md:inline-flex md:justify-self-center xl:px-2'
+    >
       {chapter}
     </Tag>
-    <span className='text-lg'>{answers}</span>
-    <span>{formatedViews(views)}</span>
+    <span className='hidden text-lg lg:inline'>{answers}</span>
+    <span className='hidden whitespace-nowrap lg:inline'>
+      {formatedViews(views)}
+    </span>
   </article>
 );

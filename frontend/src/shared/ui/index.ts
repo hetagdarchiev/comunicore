@@ -6,6 +6,7 @@ export { ErrorMessage } from './ErrorMessage';
 export { Input } from './Input';
 export { Label } from './Label';
 export { Loader } from './Loader';
+export { Pagination } from './Pagination';
 export { ProfileAvatar } from './ProfileAvatar';
 export * from './select';
 export { Skeleton } from './Skeleton';
