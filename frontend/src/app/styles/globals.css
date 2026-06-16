@@ -23,19 +23,17 @@
   --color-magenta-ff: #ff0094;
   --color-magenta-d3: #d30094;
   --color-orange-ff: #ff8100;
-  --color-red-ff: #ff0000;
-
+  --color-red-ff: #f00;
   --gradient-purple-1: linear-gradient(
     to bottom,
-    rgba(117, 0, 255, 0.15),
-    rgba(117, 0, 255, 0.05)
+    rgb(117 0 255 / 15%),
+    rgb(117 0 255 / 5%)
   );
   --gradient-purple-2: linear-gradient(
     to bottom,
-    rgba(134, 50, 244, 0.35),
-    rgba(117, 0, 255, 0.25)
+    rgb(134 50 244 / 35%),
+    rgb(117 0 255 / 25%)
   );
-
   --font-main: 'Montserrat';
 }
 
@@ -145,6 +143,7 @@
   .bg-gradient-purple-1 {
     background: var(--gradient-purple-1);
   }
+
   .bg-gradient-purple-2 {
     background: var(--gradient-purple-2);
   }
