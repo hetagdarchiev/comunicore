@@ -23,9 +23,19 @@
   --color-magenta-ff: #ff0094;
   --color-magenta-d3: #d30094;
   --color-orange-ff: #ff8100;
-  --color-red-ff: #f00;
-  --gradient-color-purple-1: rgb(117 0 255 / 15%) rgb(117 0 255 / 5%);
-  --gradient-color-purple-2: rgb(134 50 244 / 35%) rgb(117 0 255 / 25%);
+  --color-red-ff: #ff0000;
+
+  --gradient-purple-1: linear-gradient(
+    to bottom,
+    rgba(117, 0, 255, 0.15),
+    rgba(117, 0, 255, 0.05)
+  );
+  --gradient-purple-2: linear-gradient(
+    to bottom,
+    rgba(134, 50, 244, 0.35),
+    rgba(117, 0, 255, 0.25)
+  );
+
   --font-main: 'Montserrat';
 }
 
@@ -128,5 +138,14 @@
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background-color: rgb(103 58 183 / 50%);
+  }
+}
+
+@layer components {
+  .bg-gradient-purple-1 {
+    background: var(--gradient-purple-1);
+  }
+  .bg-gradient-purple-2 {
+    background: var(--gradient-purple-2);
   }
 }
