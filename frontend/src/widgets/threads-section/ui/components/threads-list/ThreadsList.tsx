@@ -31,9 +31,13 @@ export function ThreadsList() {
           {threadsList.map((thread) => (
             <li
               key={thread.id}
-              className='not-last:border-b-gray-9e/10 px-2.5 py-5 not-last:border-b'
+              className={cn(
+                'group relative px-2.5 py-5 transition',
+                'not-last:border-b-gray-9e/10 not-last:border-b',
+                'focus-within:ring-offset focus-within:ring focus-within:ring-white',
+              )}
             >
-              <PostCard tableGrid={tableGridClassName} post={thread} />
+              <PostCard className={tableGridClassName} post={thread} />
             </li>
           ))}
         </ul>

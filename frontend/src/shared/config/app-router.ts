@@ -6,6 +6,7 @@ export const AppRouter = {
   main: '/',
   verification: '/verification',
   questions: '/questions',
+  threads: '/threads',
   tags: {
     root: '/tags',
     get template() {

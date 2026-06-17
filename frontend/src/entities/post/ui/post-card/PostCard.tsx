@@ -1,20 +1,33 @@
+import { HTMLAttributes } from 'react';
+import Link from 'next/link';
+
 import { Post } from '../../model/types/post.types';
 
+import { AppRouter } from '@/shared/config/app-router';
 import { cn } from '@/shared/lib/classNames';
 import { formatedViews } from '@/shared/lib/helpers/formatedViews';
 import { formatTimeAgo } from '@/shared/lib/helpers/formatTimeAgo';
 import { ProfileAvatar, Tag } from '@/shared/ui';
 
-interface PostCardProps {
+interface PostCardProps extends HTMLAttributes<HTMLElement> {
   post: Post;
-  tableGrid?: string;
 }
 
 export const PostCard = ({
-  tableGrid,
-  post: { avatarUrl, authorName, answers, chapter, title, views, createdAt },
+  className,
+  post: {
+    avatarUrl,
+    id,
+    authorName,
+    answers,
+    chapter,
+    title,
+    views,
+    createdAt,
+  },
+  ...restAttrs
 }: PostCardProps) => (
-  <article className={cn(tableGrid)}>
+  <article className={cn(className)} {...restAttrs}>
     <header className='flex gap-x-5 lg:items-center'>
       <ProfileAvatar
         authorName={authorName}
@@ -24,8 +37,13 @@ export const PostCard = ({
         className='mt-2 size-12.5 lg:mt-0'
       />
       <div className='grid gap-y-2.25'>
-        <h2 className='line-clamp-2 max-w-65 text-lg leading-5.5 2xl:max-w-80'>
-          {title}
+        <h2 className='line-clamp-2 max-w-65 text-start text-lg leading-5.5 2xl:max-w-80'>
+          <Link
+            href={AppRouter.post.getRoute(String(id))}
+            className='after:absolute after:inset-0 focus:outline-none'
+          >
+            {title}
+          </Link>
         </h2>
         <Tag size='lg' color='green' className='md:hidden'>
           {chapter}

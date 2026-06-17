@@ -22,7 +22,7 @@ const colorStyles: Record<ButtonColor, string> = {
     'bg-purple-67 border border-purple-67 hover:bg-transparent hover:text-purple-67',
   ghost: 'bg-transparent border border-gray-9e/10 hover:border-gray-9e',
   bordered:
-    'bg-dark-1b border border-gray-9e/10 hover:bg-transparent hover:border-gray-9e/30',
+    'bg-dark-1b border border-gray-9e/10 hover:bg-transparent hover:border-gray-9e/30 disabled:opacity-30 disabled:pointer-events-none',
   transparent:
     'bg-transparent border border-gray-9e/10 hover:bg-dark-1b hover:border-gray-9e/30',
 };

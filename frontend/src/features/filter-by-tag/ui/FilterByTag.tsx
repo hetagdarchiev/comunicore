@@ -1,13 +1,14 @@
 'use client';
 
 import { useMemo } from 'react';
-import { BsArrowRight } from 'react-icons/bs';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { mockTags } from '../model/data/mock-tags';
 
+import { ViewAllButton } from './components/ViewAllButton';
+
 import { cn } from '@/shared/lib/classNames';
-import { Button, Tag } from '@/shared/ui';
+import { Tag } from '@/shared/ui';
 
 const TAG_QUERY_KEY = 'tags';
 
@@ -41,21 +42,20 @@ export function FilterByTag() {
   return (
     <div
       className={cn(
-        'bg-dark-1b/50 border-gray-9e/10 contents rounded-[1.25rem] border px-3.75 py-5',
-        'xl:grid xl:gap-y-6.75',
+        'xl:bg-dark-1b/50 xl:border-gray-9e/10 xl:grid xl:gap-y-6.75 xl:rounded-[1.25rem] xl:border xl:px-3.75 xl:py-5',
       )}
     >
       <div
         className={cn(
-          'order-1 flex flex-col gap-y-2',
+          'order-1 flex flex-col sm:gap-y-2',
           'sm:flex-row sm:justify-between sm:gap-x-5 sm:gap-y-0',
           'xl:contents',
         )}
       >
-        <h2 className='text-lg font-bold'>Популярные теги</h2>
-        <Button size='sm' className='inline-flex w-full sm:w-fit xl:hidden'>
-          Смотреть все теги
-        </Button>
+        <h2 className='sr-only text-lg font-bold sm:not-sr-only'>
+          Популярные теги
+        </h2>
+        <ViewAllButton className='xl:hidden' />
       </div>
       <ul
         className={cn(
@@ -69,6 +69,7 @@ export function FilterByTag() {
             <li key={name + index} className='text-gray-9e'>
               <button
                 type='button'
+                aria-pressed={activeTag}
                 className={cn(
                   'relative flex w-full items-center justify-between gap-x-2 rounded-lg py-2 duration-200',
                   'xl:hover:bg-purple-67/10 xl:hover:px-2',
@@ -83,37 +84,20 @@ export function FilterByTag() {
                 <Tag
                   color='dark'
                   className={cn(
-                    'px-4 py-3 text-lg',
+                    'flex gap-x-3 px-4 py-3 text-lg',
                     'xl:h-7.5 xl:px-1.5 xl:text-sm',
                   )}
                 >
                   {name}
+                  <span className='xl:hidden'>{quantity}</span>
                 </Tag>
-                <span
-                  className={cn(
-                    'border-l-gray-9e/30 border-l pl-2',
-                    'xl:border-0 xl:pl-0',
-                  )}
-                >
-                  {quantity}
-                </span>
+                <span className='hidden xl:inline'>{quantity}</span>
               </button>
             </li>
           );
         })}
       </ul>
-
-      <button
-        type='button'
-        className={cn(
-          'hidden',
-          'xl:text-purple-67 xl:flex xl:items-center xl:gap-x-2.5 xl:px-5 xl:text-lg xl:font-bold xl:whitespace-nowrap',
-        )}
-        onClick={() => console.log('Here must be logic which show all tags')}
-      >
-        <span>Смотреть все теги</span>
-        <BsArrowRight size={24} className='min-w-6' />
-      </button>
+      <ViewAllButton className='hidden xl:flex' />
     </div>
   );
 }

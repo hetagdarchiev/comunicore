@@ -15,8 +15,8 @@ export const getPaginationRange = (currentPage: number, totalPages: number) => {
 
   if (currentPage < 3) {
     range.push(1, 2, 3, '...', totalPages);
-  } else if (currentPage >= totalPages - 1) {
-    range.push(totalPages - 2, totalPages - 1, totalPages);
+  } else if (currentPage >= totalPages - 2) {
+    range.push(1, '...', totalPages - 2, totalPages - 1, totalPages);
   } else {
     range.push(
       currentPage - 1,
@@ -61,18 +61,17 @@ export function Pagination({ totalPages }: PaginationProps) {
 
   return (
     <div className='flex items-center justify-center gap-x-2 py-6 select-none'>
-      {currentPage > 1 && (
-        <Button
-          type='button'
-          onClick={() => handlePageChange(currentPage - 1)}
-          aria-label='Prev page'
-          size='square'
-          color='bordered'
-          title='Previos page'
-        >
-          <LuChevronLeft size={20} className='min-w-5' role='img' aria-hidden />
-        </Button>
-      )}
+      <Button
+        type='button'
+        onClick={() => handlePageChange(currentPage - 1)}
+        aria-label='Prev page'
+        size='square'
+        color='bordered'
+        title='Previos page'
+        disabled={currentPage <= 1}
+      >
+        <LuChevronLeft size={20} className='min-w-5' role='img' aria-hidden />
+      </Button>
       {paginationRange.map((page, index) => {
         if (page === '...') {
           return (
@@ -102,23 +101,17 @@ export function Pagination({ totalPages }: PaginationProps) {
         );
       })}
 
-      {currentPage < totalPages && (
-        <Button
-          type='button'
-          onClick={() => handlePageChange(currentPage + 1)}
-          aria-label='Next page'
-          size='square'
-          color='bordered'
-          title='Next page'
-        >
-          <LuChevronRight
-            size={20}
-            className='min-w-5'
-            role='img'
-            aria-hidden
-          />
-        </Button>
-      )}
+      <Button
+        type='button'
+        onClick={() => handlePageChange(currentPage + 1)}
+        aria-label='Next page'
+        size='square'
+        color='bordered'
+        title='Next page'
+        disabled={currentPage >= totalPages}
+      >
+        <LuChevronRight size={20} className='min-w-5' role='img' aria-hidden />
+      </Button>
     </div>
   );
 }
