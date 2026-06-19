@@ -1,5 +1,7 @@
 import { RefObject, useEffect, useState } from 'react';
 
+const UNIQUE_STOP_CLOSE_SELECTORE = '[data-select-content]';
+
 type ModalElement = RefObject<HTMLElement | null>;
 
 interface ModalOptions {
@@ -21,13 +23,14 @@ export const useModal = (
 
     const closeModal = (event: MouseEvent) => {
       if (!modalOpen) return;
-      const target = event.target as Node;
+      const target = event.target as HTMLElement;
       const currentModal = modal.current;
       const currentBurger = burger?.current;
 
       if (currentModal?.contains(target)) return;
 
       if (currentBurger?.contains(target)) return;
+      if (target.closest(UNIQUE_STOP_CLOSE_SELECTORE)) return;
 
       setModalOpen(false);
     };

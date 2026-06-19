@@ -43,7 +43,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
   const modalRef = useRef<HTMLFormElement | null>(null);
   const buttonRef = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
 
-  const { modalOpen, setModalOpen } = useModal(modalRef);
+  const { modalOpen, setModalOpen } = useModal(modalRef, buttonRef);
 
   const { handleSubmit, register, control } = useForm<ThreadsFiltrationTypes>({
     resolver: zodResolver(threadsFiltrationSchema),
@@ -129,7 +129,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
                   <SelectValue placeholder='Выберите сортировку' />
                 </SelectTrigger>
 
-                <SelectContent>
+                <SelectContent data-select-content>
                   {sortOptions.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}
@@ -155,7 +155,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
                   <SelectValue placeholder='Выберите сортировку' />
                 </SelectTrigger>
 
-                <SelectContent>
+                <SelectContent data-select-content>
                   {sortPeriodOptions.map((opt) => (
                     <SelectItem key={opt.value} value={opt.value}>
                       {opt.label}
