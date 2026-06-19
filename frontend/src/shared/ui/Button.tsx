@@ -1,4 +1,10 @@
-import { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react';
+import {
+  AnchorHTMLAttributes,
+  ButtonHTMLAttributes,
+  forwardRef,
+  ReactNode,
+  Ref,
+} from 'react';
 import Link from 'next/link';
 
 import { cn } from '../lib/classNames';
@@ -37,7 +43,10 @@ const sizeStyles: Record<ButtonSize, string> = {
   xl: 'w-full py-[20px] text-[18px]',
 };
 
-export function Button(props: ButtonProps) {
+export const Button = forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  ButtonProps
+>((props, ref) => {
   const {
     children,
     href,
@@ -59,6 +68,7 @@ export function Button(props: ButtonProps) {
     return (
       <Link
         href={href}
+        ref={ref as Ref<HTMLAnchorElement>}
         className={commonClassName}
         {...(restProps satisfies AnchorHTMLAttributes<HTMLAnchorElement>)}
       >
@@ -70,10 +80,13 @@ export function Button(props: ButtonProps) {
   return (
     <button
       type='button'
+      ref={ref as Ref<HTMLButtonElement>}
       className={commonClassName}
       {...(restProps satisfies ButtonHTMLAttributes<HTMLButtonElement>)}
     >
       {children}
     </button>
   );
-}
+});
+
+Button.displayName = 'Button';

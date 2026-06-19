@@ -4,12 +4,11 @@ import {
   ButtonHTMLAttributes,
   HTMLAttributes,
   LiHTMLAttributes,
-  useEffect,
   useRef,
-  useState,
 } from 'react';
 import { LuCheck, LuChevronDown } from 'react-icons/lu';
 
+import { useModal } from '../../../hooks/useModal';
 import { cn } from '../../../lib/classNames';
 import { SelectContext } from '../model/context/select-context';
 import { useSelect } from '../model/hooks/useSelect';
@@ -25,30 +24,17 @@ export const Select = <T extends string | number>({
   className = '',
   ...restAttrs
 }: SelectContainerProps<T>) => {
-  const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef<HTMLDivElement>(null);
+  const { modalOpen, setModalOpen } = useModal(selectRef);
 
   const selectedOption = options.find((opt) => opt.value === value);
   const selectedValueLabel = selectedOption ? selectedOption.label : '';
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        selectRef.current &&
-        !selectRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
   return (
     <SelectContext.Provider
       value={{
-        isOpen,
-        setIsOpen,
+        isOpen: modalOpen,
+        setIsOpen: setModalOpen,
         value,
         onChange: (val) => onChange(val as T),
         selectedValueLabel,
@@ -123,6 +109,7 @@ export const SelectContent = ({
 
   return (
     <ul
+      inert={!isOpen ? true : undefined}
       className={cn(
         'border-gray-9e/10 absolute z-50 mt-2 max-h-60 w-full list-none overflow-auto rounded-[0.625rem] border bg-[#16161a] p-1 shadow-xl',
         className,
@@ -144,6 +131,14 @@ export const SelectItem = <T extends string | number>({
   const { value: currentValue, onChange, setIsOpen } = useSelect();
   const isSelected = currentValue === itemValue;
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onChange(itemValue);
+      setIsOpen(false);
+    }
+  };
+
   return (
     <li
       className={cn(
@@ -153,6 +148,8 @@ export const SelectItem = <T extends string | number>({
       )}
       role='option'
       aria-selected={isSelected}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
       onClick={() => {
         onChange(itemValue);
         setIsOpen(false);
