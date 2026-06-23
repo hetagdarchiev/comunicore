@@ -19,14 +19,17 @@ export function ThreadsSection() {
           '2xl:grid-cols-[1fr_23.125rem]',
         )}
       >
-        <ThreadsList />
         <div
-          className={cn('flex flex-col-reverse gap-y-4', 'xl:grid xl:gap-y-5')}
+          className={cn(
+            'order-1 flex flex-col-reverse gap-y-4',
+            'xl:order-2 xl:grid xl:gap-y-5',
+          )}
         >
           <ThreadsFiltration />
           <FilterByTag />
           <NotFoundResp className='hidden xl:flex' />
         </div>
+        <ThreadsList />
       </div>
     </section>
   );

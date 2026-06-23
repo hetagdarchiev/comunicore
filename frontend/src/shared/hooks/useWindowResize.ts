@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 
-export const useWindowResize = (isOpen: boolean) => {
+export const useWindowResize = (isOpen: boolean, windowSize: number = 1024) => {
   const [responsiveIsOpen, setResponsiveIsOpen] = useState(isOpen);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+    const media = window.matchMedia(`(min-width: ${windowSize}px)`);
+
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      if (e.matches) {
         setResponsiveIsOpen(true);
       } else {
         setResponsiveIsOpen(isOpen);
       }
     };
 
-    handleResize();
+    handleMediaChange(media);
 
-    window.addEventListener('resize', handleResize);
+    media.addEventListener('change', handleMediaChange);
 
-    return () => window.removeEventListener('resize', handleResize);
-  }, [isOpen]);
+    return () => media.removeEventListener('change', handleMediaChange);
+  }, [isOpen, windowSize]);
 
   return {
     responsiveIsOpen,

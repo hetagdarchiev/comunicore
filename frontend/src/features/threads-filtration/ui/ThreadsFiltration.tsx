@@ -22,6 +22,7 @@ import {
 } from '../model/schemas/sort.enum';
 
 import { useModal } from '@/shared/hooks/useModal';
+import { useWindowResize } from '@/shared/hooks/useWindowResize';
 import { cn } from '@/shared/lib/classNames';
 import {
   Button,
@@ -44,6 +45,8 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
   const buttonRef = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
 
   const { modalOpen, setModalOpen } = useModal(modalRef, buttonRef);
+  const { responsiveIsOpen } = useWindowResize(modalOpen, 1280);
+  const isFormInert = !responsiveIsOpen && !modalOpen ? true : undefined;
 
   const { handleSubmit, register, control } = useForm<ThreadsFiltrationTypes>({
     resolver: zodResolver(threadsFiltrationSchema),
@@ -96,7 +99,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
       <form
         id='threads-filtration'
         ref={modalRef}
-        inert={!modalOpen ? true : undefined}
+        inert={isFormInert}
         className={cn(
           'bg-dark-1b border-gray-9e/10 absolute top-15 z-10 flex w-full flex-col gap-5 rounded-[1.25rem] border px-2.5 py-3.5',
           'sm:w-100',
@@ -105,7 +108,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
             ? 'pointer-events-auto translate-y-0 scale-100 opacity-100'
             : 'pointer-events-none -translate-y-2 scale-95 opacity-0',
           'md:px-3.75 md:py-5',
-          'xl:bg-dark-1b/50 xl:static xl:top-0 xl:w-full',
+          'xl:bg-dark-1b/50 xl:pointer-events-auto xl:static xl:top-0 xl:w-full xl:translate-y-0 xl:scale-100 xl:opacity-100',
           className,
         )}
         onSubmit={handleSubmit(onSubmit)}
@@ -140,7 +143,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
             )}
           />
         </Label>
-        <Label title='Сортировка'>
+        <Label title='Период'>
           <span>Период</span>
           <Controller
             name='period'
@@ -152,7 +155,7 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
                 onChange={field.onChange}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder='Выберите сортировку' />
+                  <SelectValue placeholder='Выберите период' />
                 </SelectTrigger>
 
                 <SelectContent data-select-content>
@@ -166,7 +169,10 @@ export function ThreadsFiltration(props: FormHTMLAttributes<HTMLFormElement>) {
             )}
           />
         </Label>
-        <Label className='flex-row items-center gap-x-3'>
+        <Label
+          className='flex-row items-center gap-x-3 [&:has(input:focus-visible)]:rounded-sm [&:has(input:focus-visible)]:ring-1 [&:has(input:focus-visible)]:ring-white'
+          htmlFor='sort-checkbox'
+        >
           <Checkbox {...register('withoutAnswers')} id='sort-checkbox' />
           <span>Только без ответов</span>
         </Label>

@@ -59,7 +59,7 @@ export function ThreadsHeader() {
                 color={tagActive ? 'purple' : 'bordered'}
                 onClick={() => handleFilterChange(id)}
               >
-                <Icon size={20} role='img' className='min-w-5' />
+                <Icon size={20} aria-hidden className='min-w-5' />
                 <span>{label}</span>
               </Button>
             </li>
@@ -68,7 +68,7 @@ export function ThreadsHeader() {
         <li>
           <Button size='min-sm' color='bordered' className='flex gap-x-1.25'>
             <span>Ещё</span>
-            <LuChevronDown size={20} role='img' className='min-w-5' />
+            <LuChevronDown size={20} aria-hidden className='min-w-5' />
           </Button>
         </li>
       </ul>
