@@ -84,7 +84,7 @@ export function Header(props: HeaderProps) {
         </nav>
 
         <div className='flex items-center gap-x-6.25'>
-          <button>
+          <button title='Search' aria-label='Search button'>
             <LuSearch size={30} />
           </button>
           {isAuthenticated ? (

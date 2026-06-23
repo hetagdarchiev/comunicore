@@ -78,13 +78,13 @@ export function RegistrationForm() {
           {...register('password')}
         />
       </Label>
-      <Checkbox
-        id='use-condition-agreement'
-        error={errors.policy}
-        {...register('policy')}
-      >
-        Соглашаюсь с условиями пользования
-      </Checkbox>
+      <Label htmlFor='use-condition-agreement'>
+        <Checkbox id='use-condition-agreement' {...register('policy')} />
+        <span>Соглашаюсь с условиями пользования</span>
+        {errors.policy?.message && (
+          <ErrorMessage error={errors.policy.message} />
+        )}
+      </Label>
 
       <Button type='submit' disabled={isPending} className='w-full'>
         {isPending ? 'Загрузка...' : 'Зарегистрироваться'}

@@ -1,9 +1,12 @@
 export { Button } from './Button';
 export { Checkbox } from './Checkbox';
-export { Container } from './Container';
+export { Container, containerClassName } from './Container';
 export { ErrorMessage } from './ErrorMessage';
 export { Input } from './Input';
 export { Label } from './Label';
 export { Loader } from './Loader';
+export { Pagination } from './Pagination';
 export { ProfileAvatar } from './ProfileAvatar';
+export * from './select';
 export { Skeleton } from './Skeleton';
+export { Tag } from './Tag';

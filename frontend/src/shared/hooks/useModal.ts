@@ -1,5 +1,7 @@
 import { RefObject, useEffect, useState } from 'react';
 
+const UNIQUE_STOP_CLOSE_SELECTORE = '[data-select-content]';
+
 type ModalElement = RefObject<HTMLElement | null>;
 
 interface ModalOptions {
@@ -16,31 +18,27 @@ export const useModal = (
   const { autoClose = true, initialState = false, closeByEsc = true } = options;
   const [modalOpen, setModalOpen] = useState(initialState);
 
-  // close modal by outside click
   useEffect(() => {
-    if (!autoClose || !modalOpen) return;
+    if (!autoClose) return;
 
     const closeModal = (event: MouseEvent) => {
-      const target = event.target as Node;
+      if (!modalOpen) return;
+      const target = event.target as HTMLElement;
       const currentModal = modal.current;
       const currentBurger = burger?.current;
 
-      const clickedOutsideModal =
-        currentModal && !currentModal.contains(target);
-      const clickedOutsideBurger =
-        !currentBurger || !currentBurger.contains(target);
+      if (currentModal?.contains(target)) return;
 
-      if (clickedOutsideModal && clickedOutsideBurger) {
-        setModalOpen(false);
-      }
+      if (currentBurger?.contains(target)) return;
+      if (target.closest(UNIQUE_STOP_CLOSE_SELECTORE)) return;
+
+      setModalOpen(false);
     };
 
-    document.addEventListener('mousedown', closeModal);
-
-    return () => document.removeEventListener('mousedown', closeModal);
+    document.addEventListener('click', closeModal);
+    return () => document.removeEventListener('click', closeModal);
   }, [modalOpen, modal, burger, autoClose]);
 
-  // close modal by Esc
   useEffect(() => {
     if (!closeByEsc || !modalOpen) return;
 

@@ -1,41 +1,76 @@
-import { PostCommentsLink } from './components/post-comments-link/PostCommentsLink';
-import { PostContent } from './components/post-content/PostContent';
-import { PostHeader } from './components/post-header/PostHeader';
-import { PostShareButton } from './components/post-share-button/PostShareButton';
-import { PostTags } from './components/post-tags/PostTags';
-import { PostViews } from './components/post-views/PostViews';
+import { HTMLAttributes } from 'react';
+import Link from 'next/link';
 
-import { ThreadListItem } from '@/shared/api/generated';
+import { Post } from '../../model/types/post.types';
+
+import { AppRouter } from '@/shared/config/app-router';
+import { cn } from '@/shared/lib/classNames';
+import { formatedViews } from '@/shared/lib/helpers/formatedViews';
+import { formatTimeAgo } from '@/shared/lib/helpers/formatTimeAgo';
+import { ProfileAvatar, Tag } from '@/shared/ui';
+
+interface PostCardProps extends HTMLAttributes<HTMLElement> {
+  post: Post;
+}
 
 export const PostCard = ({
-  authorId,
-  authorName,
-  authorAvatarUrl,
-  createdAt,
-  title,
-  content,
-  id,
-}: ThreadListItem) => (
-  <article className='border-gray-ea bg-post-card min-w-75 rounded-md border px-7.5 py-5 shadow-[2px_1px_5px_0px_#00000026]'>
-    <PostHeader
-      authorId={authorId}
-      authorName={authorName}
-      avatarUrl={authorAvatarUrl}
-      createdAt={createdAt}
-    />
-
-    <PostContent id={id} title={title}>
-      {content}
-    </PostContent>
-
-    <div className='flex items-start justify-between gap-3 max-sm:flex-col sm:items-center'>
-      <PostTags tags={/* tags ?? */ ['frontend', 'backand', 'test']} />
-
-      <div className='text-gray-80 flex items-center gap-4'>
-        <PostViews count={/*stats?.views || */ 0} />
-        <PostCommentsLink count={/*stats?.comments || */ 0} postId={id} />
-        <PostShareButton count={/*stats?.shares || */ 0} />
+  className,
+  post: {
+    avatarUrl,
+    id,
+    authorName,
+    answers,
+    chapter,
+    title,
+    views,
+    createdAt,
+  },
+  ...restAttrs
+}: PostCardProps) => (
+  <article className={cn(className)} {...restAttrs}>
+    <header className='flex gap-x-5 lg:items-center'>
+      <ProfileAvatar
+        authorName={authorName}
+        avatarUrl={avatarUrl}
+        width={50}
+        height={50}
+        className='mt-2 size-12.5 lg:mt-0'
+      />
+      <div className='grid gap-y-2.25'>
+        <h2 className='line-clamp-2 max-w-65 text-start text-lg leading-5.5 2xl:max-w-80'>
+          <Link
+            href={AppRouter.post.getRoute(String(id))}
+            className='after:absolute after:inset-0 focus:outline-none'
+          >
+            {title}
+          </Link>
+        </h2>
+        <Tag size='lg' color='green' className='md:hidden'>
+          {chapter}
+        </Tag>
+        <div className='text-gray-9e flex items-center gap-x-1.5'>
+          <p>{authorName}</p>
+          <span className='bg-gray-9e size-0.75 rounded-full' />
+          <time dateTime={createdAt} suppressHydrationWarning>
+            {formatTimeAgo(createdAt)}
+          </time>
+        </div>
+        <div className='text-gray-9e flex flex-wrap gap-x-5 gap-y-1 whitespace-nowrap lg:hidden'>
+          <span>{answers} ответов</span>
+          <span>{formatedViews(views)} просмотров</span>
+        </div>
       </div>
-    </div>
+    </header>
+    <Tag
+      size='lg'
+      color='green'
+      className='hidden md:inline-flex md:justify-self-center xl:px-2'
+    >
+      {chapter}
+    </Tag>
+    <span className='hidden text-lg lg:inline'>{answers}</span>
+    <span className='hidden whitespace-nowrap lg:inline'>
+      {formatedViews(views)}
+    </span>
   </article>
 );

@@ -4,8 +4,6 @@ import { useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { cn } from '@/shared/lib/classNames';
-
 import {
   MarkDownSchema,
   markdownSchema,
@@ -17,6 +15,7 @@ import { ModeSwitcher } from './components/mode-switcher/ModeSwitcher';
 import { Preview } from './components/preview/Preview';
 import { Toolbar } from './components/toolbar/Toolbar';
 
+import { cn } from '@/shared/lib/classNames';
 import { Button } from '@/shared/ui';
 
 const defaultValues = {
