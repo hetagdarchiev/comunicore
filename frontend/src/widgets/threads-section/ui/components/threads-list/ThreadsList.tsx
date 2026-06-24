@@ -3,7 +3,7 @@ import { threadsList } from '../../../model/data/mock-posts';
 import { PostCard } from '@/entities/post';
 
 import { cn } from '@/shared/lib/classNames';
-import { Pagination, Skeleton } from '@/shared/ui';
+import { Pagination } from '@/shared/ui';
 
 const tableGridClassName = cn(
   'flex flex-col *:not-first:text-center',

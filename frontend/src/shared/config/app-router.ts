@@ -5,6 +5,7 @@ export const idTemplate = ':id';
 export const AppRouter = {
   main: '/',
   verification: '/verification',
+  settings: '/settings',
   questions: '/questions',
   threads: '/threads',
   tags: {

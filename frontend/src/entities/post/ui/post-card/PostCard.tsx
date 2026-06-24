@@ -5,7 +5,7 @@ import { Post } from '../../model/types/post.types';
 
 import { AppRouter } from '@/shared/config/app-router';
 import { cn } from '@/shared/lib/classNames';
-import { formatedViews } from '@/shared/lib/helpers/formatedViews';
+import { formatInt } from '@/shared/lib/helpers/formatInt';
 import { formatTimeAgo } from '@/shared/lib/helpers/formatTimeAgo';
 import { ProfileAvatar, Tag } from '@/shared/ui';
 
@@ -57,7 +57,7 @@ export const PostCard = ({
         </div>
         <div className='text-gray-9e flex flex-wrap gap-x-5 gap-y-1 whitespace-nowrap lg:hidden'>
           <span>{answers} ответов</span>
-          <span>{formatedViews(views)} просмотров</span>
+          <span>{formatInt(views)} просмотров</span>
         </div>
       </div>
     </header>
@@ -70,7 +70,7 @@ export const PostCard = ({
     </Tag>
     <span className='hidden text-lg lg:inline'>{answers}</span>
     <span className='hidden whitespace-nowrap lg:inline'>
-      {formatedViews(views)}
+      {formatInt(views)}
     </span>
   </article>
 );
