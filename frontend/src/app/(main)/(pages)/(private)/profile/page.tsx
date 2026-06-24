@@ -18,6 +18,7 @@ const mockUser: User = {
   threadsQuantity: 24,
   likes: 1200,
   bookMarks: 7,
+  recivedLikes: 1200032,
   createdAt: '2025-04-22T08:45:00.000Z',
 };
 
@@ -30,6 +31,7 @@ export default function Profile() {
         likes={mockUser.likes}
         rank={mockUser.rank}
         threadsQuantity={mockUser.threadsQuantity}
+        recivedLikes={mockUser.recivedLikes}
       />
     </Container>
   );

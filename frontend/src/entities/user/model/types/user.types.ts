@@ -11,6 +11,7 @@ export interface User {
   rank: number;
   threadsQuantity: number;
   likes: number;
+  recivedLikes: number;
   bookMarks: number;
   createdAt: string;
 }
