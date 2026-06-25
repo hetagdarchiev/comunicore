@@ -40,7 +40,7 @@ const sizeStyles: Record<ButtonSize, string> = {
   sm: 'px-[20px] py-[10px] text-[14px]',
   md: 'px-[20px] py-[14px] text-[16px]',
   lg: 'px-[15px] py-[15px] text-[18px]',
-  xl: 'w-full py-[20px] text-[18px]',
+  xl: 'w-full p-[20px] text-[18px] rounded-[10px]',
 };
 
 export const Button = forwardRef<

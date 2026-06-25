@@ -10,3 +10,4 @@ export { ProfileAvatar } from './ProfileAvatar';
 export * from './select';
 export { Skeleton } from './Skeleton';
 export { Tag } from './Tag';
+export { Tile } from './Tile';

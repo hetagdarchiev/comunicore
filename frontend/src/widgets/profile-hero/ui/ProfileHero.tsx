@@ -84,7 +84,7 @@ export function ProfileHero(props: User) {
               )}
             >
               <Button
-                href={AppRouter.profileEdit}
+                href={AppRouter.profile.edit}
                 color='purple'
                 className='whitespace-nowrap'
               >

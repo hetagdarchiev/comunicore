@@ -56,7 +56,7 @@ export function ProfileActions({ className }: Props) {
           </li>
         ))}
         <li className='size-6.25'>
-          <Link href={AppRouter.profile} title={user ? user.name : 'user'}>
+          <Link href={AppRouter.profile.root} title={user ? user.name : 'user'}>
             <ProfileAvatar
               width={25}
               height={25}

@@ -20,8 +20,21 @@ export const AppRouter = {
   support: '/support',
   award: '/award',
   notification: '/notifications',
-  profile: '/profile',
-  profileEdit: '/profile/edit',
+  profile: {
+    root: '/profile',
+    get edit() {
+      return `${this.root}/edit`;
+    },
+    get threads() {
+      return `${this.root}/threads`;
+    },
+    get messages() {
+      return `${this.root}/messages`;
+    },
+    get bookmarks() {
+      return `${this.root}/bookmarks`;
+    },
+  },
   faq: '/faq',
   favorites: '/favorites',
   registration: '/registration',

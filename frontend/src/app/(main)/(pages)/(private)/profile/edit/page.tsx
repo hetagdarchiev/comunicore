@@ -70,7 +70,7 @@ export default function ProfileEdit() {
     ...userUpdateMutation(),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: userMeQueryKey() });
-      router.push(AppRouter.profile);
+      router.push(AppRouter.profile.root);
     },
   });
 
@@ -170,7 +170,7 @@ export default function ProfileEdit() {
             <Button type='submit' disabled={isPending} className='gap-x-2.5'>
               {isPending ? 'Сохранение...' : 'Сохранить'}
             </Button>
-            <Button href={AppRouter.profile}>Отмена</Button>
+            <Button href={AppRouter.profile.root}>Отмена</Button>
           </div>
 
           {error && (
