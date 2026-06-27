@@ -1,16 +1,18 @@
-import { ProfileAchivements } from '../profile-achievements/ProfileAchivements';
-import { ProfileChapterList } from '../profile-chapter-list/ProfileChapterList';
-import { DashboardUserInfo } from '../user-info/DashboardUserInfo';
+import { ProfileChapterList } from './components/profile-chapter-list/ProfileChapterList';
 
-import { User } from '@/entities/user';
+import {
+  ProfileAchivements,
+  ProfileUserInfo,
+  type User,
+} from '@/entities/user';
 
-export function ProfileSidebar(user: User) {
+export function ProfileSidebar(props: { user: User }) {
   const { createdAt, lastActivity, role, location, webSite, achievements } =
-    user;
+    props.user;
   return (
     <div className='flex flex-col gap-3.75'>
       <ProfileChapterList />
-      <DashboardUserInfo
+      <ProfileUserInfo
         role={role}
         createdAt={createdAt}
         lastActivity={lastActivity}

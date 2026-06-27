@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-import { UserAchievement } from '@/entities/user';
+import { UserAchievement } from '../../model/types/user.types';
 
 import { isApiUrl } from '@/shared/guards/isApiUrl.guard';
 import { Tile } from '@/shared/ui';
@@ -19,7 +19,13 @@ export function ProfileAchivements(props: { achievements: UserAchievement[] }) {
       <ul className='flex flex-wrap gap-x-7.5 gap-y-4'>
         {validAchievements.map(({ imageUrl, name, id }) => (
           <li key={id} className='relative size-25'>
-            <Image src={imageUrl} alt={name} fill priority={false} />
+            <Image
+              src={imageUrl}
+              alt={name}
+              sizes='100'
+              fill
+              priority={false}
+            />
           </li>
         ))}
       </ul>

@@ -10,7 +10,7 @@ import { isApiUrl } from '@/shared/guards/isApiUrl.guard';
 import { cn } from '@/shared/lib/classNames';
 import { Button, ProfileAvatar } from '@/shared/ui';
 
-export function ProfileHero(props: User) {
+export function ProfileHero(props: { user: User }) {
   const {
     avatarUrl,
     createdAt,
@@ -19,7 +19,7 @@ export function ProfileHero(props: User) {
     profileBanerUrl,
     role,
     userTag,
-  } = props;
+  } = props.user;
   const banerUrl = isApiUrl(profileBanerUrl)
     ? profileBanerUrl
     : '/profile-baner.jpg';

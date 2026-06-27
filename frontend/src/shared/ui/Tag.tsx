@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from 'react';
+import { type HTMLAttributes, PropsWithChildren } from 'react';
 
 import { cn } from '../lib/classNames';
 
@@ -13,8 +13,8 @@ type TagColor =
 
 type TagSize = 'sm' | 'md' | 'lg' | 'xl';
 
-export interface TagProps extends HTMLAttributes<HTMLSpanElement> {
-  children?: ReactNode;
+export interface TagProps
+  extends HTMLAttributes<HTMLSpanElement>, PropsWithChildren {
   color?: TagColor;
   size?: TagSize;
 }
@@ -29,6 +29,8 @@ const colorStyles: Record<TagColor, string> = {
   dark: 'text-gray-9e bg-dark-1b/50 border border-gray-9e/10 font-normal',
 };
 
+const ALL_COLORS = Object.keys(colorStyles) as TagColor[];
+
 const sizeStyles: Record<TagSize, string> = {
   sm: 'px-[20px] py-[10px] text-[14px]' /* mozno meniat */,
   md: 'px-1.5 h-7.5 text-sm',
@@ -36,19 +38,26 @@ const sizeStyles: Record<TagSize, string> = {
   xl: 'px-[50px] py-[20px] text-[18px]' /* mozno meniat */,
 };
 
+const getColorByText = (text: string): TagColor => {
+  let hash = 0;
+  for (let i = 0; i < text.length; i++) {
+    hash = text.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % ALL_COLORS.length;
+  return ALL_COLORS[index];
+};
+
 export function Tag(props: TagProps) {
-  const {
-    children,
-    className,
-    color = 'purple',
-    size = 'md',
-    ...restProps
-  } = props;
+  const { children, className, color, size = 'md', ...restProps } = props;
+
+  const textContent = typeof children === 'string' ? children : '';
+
+  const finalColor = color || getColorByText(textContent);
 
   const commonClassName = cn(
     'inline-flex items-center justify-center w-fit',
     'rounded-[5px] text-center font-semibold',
-    colorStyles[color],
+    colorStyles[finalColor],
     sizeStyles[size],
     className,
   );

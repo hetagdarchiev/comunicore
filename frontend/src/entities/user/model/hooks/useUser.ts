@@ -3,9 +3,9 @@
 import { useAuthMeQuery } from './useAuthMeQuery';
 
 export const useUser = (options?: { enabled?: boolean }) => {
-  const query = useAuthMeQuery(options);
+  const { data, ...query } = useAuthMeQuery(options);
 
-  const user = query.data ?? null;
+  const user = data ?? null;
 
   return {
     user,

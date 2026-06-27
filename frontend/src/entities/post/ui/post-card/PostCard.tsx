@@ -45,7 +45,7 @@ export const PostCard = ({
             {title}
           </Link>
         </h2>
-        <Tag size='lg' color='green' className='md:hidden'>
+        <Tag size='lg' className='md:hidden'>
           {chapter}
         </Tag>
         <div className='text-gray-9e flex items-center gap-x-1.5'>
@@ -63,7 +63,6 @@ export const PostCard = ({
     </header>
     <Tag
       size='lg'
-      color='green'
       className='hidden md:inline-flex md:justify-self-center xl:px-2'
     >
       {chapter}

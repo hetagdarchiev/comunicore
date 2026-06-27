@@ -1,17 +1,22 @@
 import { format } from 'date-fns';
 
-import { User } from '@/entities/user';
+import { User } from '../../model/types/user.types';
 
 import { cn } from '@/shared/lib/classNames';
 import { Tile } from '@/shared/ui';
 
-type DashboardUserInfoProps = Pick<
+type ProfileUserInfoProps = Pick<
   User,
   'role' | 'createdAt' | 'lastActivity' | 'webSite' | 'location'
 >;
 
-export function DashboardUserInfo(props: DashboardUserInfoProps) {
-  const { createdAt, lastActivity, role, location, webSite } = props;
+export function ProfileUserInfo({
+  createdAt,
+  lastActivity,
+  role,
+  location,
+  webSite,
+}: ProfileUserInfoProps) {
   const locationExist = !!(location?.city && location.country);
   return (
     <Tile
