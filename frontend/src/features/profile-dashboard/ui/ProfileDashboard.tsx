@@ -1,6 +1,7 @@
 import { useDashboardItems } from '../model/hooks/useDashboardItems';
 
 import { DashboardCard } from './components/dashboard-card/DashboardCard';
+import { DashboardSkeleton } from './components/dashboard-skeleton/DashboardSkeleton';
 
 import { User } from '@/entities/user';
 
@@ -10,11 +11,7 @@ export function ProfileDashboard(_: { userId: User['id'] }) {
   const { dashboardItems, isLoading, error, status } = useDashboardItems();
 
   if (isLoading || !dashboardItems) {
-    return (
-      <div className='flex items-center justify-center'>
-        <p>Loading...</p>
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   if (error) {

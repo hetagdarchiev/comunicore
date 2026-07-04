@@ -27,6 +27,7 @@ export function ProfileAvatar(props: ProfileAvatarProps) {
     <Image
       src={validAvatarUrl}
       alt={`Аватар ${authorName}`}
+      priority
       {...attrs}
       fill={fill}
       {...(!fill && { width, height })}

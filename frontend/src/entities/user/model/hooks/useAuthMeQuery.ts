@@ -10,11 +10,7 @@ export const useAuthMeQuery = (options?: { enabled?: boolean }) => {
   const { queryKey } = userMeOptions();
   const queries = useQuery({
     queryKey,
-    queryFn: async () => {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      return mockUser;
-    },
+    queryFn: async () => mockUser,
     enabled: options?.enabled,
     retry: 0,
   });

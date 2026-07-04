@@ -1,14 +1,15 @@
 'use client';
 
 import { ProfileHero } from '@/widgets/profile-hero';
-import { ProfileSidebar } from '@/widgets/profile-sidebar';
+import { ProfileChapterList, ProfileSidebar } from '@/widgets/profile-sidebar';
 import { ProfileStats } from '@/widgets/profile-stats';
 
 import { ProfileDashboard } from '@/features/profile-dashboard';
 
 import { useUser } from '@/entities/user';
 
-import { Container } from '@/shared/ui';
+import { cn } from '@/shared/lib/classNames';
+import { Container, Loader } from '@/shared/ui';
 
 export default function Profile() {
   const { user, error, isLoading } = useUser();
@@ -16,7 +17,7 @@ export default function Profile() {
   if (isLoading || !user) {
     return (
       <Container className='flex items-center justify-center py-24'>
-        <div>Загрузка профиля...</div>
+        <Loader size='sm' />
       </Container>
     );
   }
@@ -39,8 +40,14 @@ export default function Profile() {
         threadsQuantity={user.threadsQuantity}
         recivedLikes={user.recivedLikes}
       />
-      <section className='grid grid-cols-[minmax(0,34rem)_1fr] gap-x-2.5'>
+      <section
+        className={cn(
+          'grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-y-5',
+          'xl:grid-cols-[auto_1fr] xl:gap-x-2.5',
+        )}
+      >
         <ProfileSidebar user={user} />
+        <ProfileChapterList className='xl:hidden' />
 
         <ProfileDashboard userId={user.id} />
       </section>

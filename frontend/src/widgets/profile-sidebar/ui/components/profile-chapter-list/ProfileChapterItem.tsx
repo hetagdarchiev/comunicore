@@ -21,28 +21,30 @@ export const ProfileChapterItem = memo(
     const pathname = usePathname();
     const isActive = pathname === href;
     return (
-      <li>
+      <li className='w-full'>
         <Button
           href={href}
           size='xl'
           aria-current={isActive ? 'page' : undefined}
           color='transparent'
           className={cn(
-            'text-gray-9e flex justify-start gap-x-2.5',
+            'text-gray-9e flex items-center justify-center gap-y-1.25 rounded-none border-0 whitespace-nowrap',
             isActive && 'bg-purple-67/20 text-pink-d5 pointer-events-none',
+            'max-xl:flex-col max-xl:p-2.5 max-xl:text-sm',
+            'xl:justify-start xl:gap-x-2.5',
           )}
         >
           <div
             className='relative inline-flex items-center justify-center'
             aria-hidden
           >
-            <Icon width={15} height={17} />
+            <Icon width={15} height={17} className='min-w-3.75 lg:min-w-5' />
 
             {hasNotifications && (
               <span className='bg-red-ff absolute -top-px right-0.5 size-1.25 rounded-full' />
             )}
           </div>
-          <span>{label}</span>
+          <span className='text-[0.625rem] lg:text-lg'>{label}</span>
           {hasNotifications && (
             <span className='sr-only'> — есть новые уведомления</span>
           )}

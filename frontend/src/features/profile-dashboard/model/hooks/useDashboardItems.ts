@@ -5,7 +5,7 @@ import { MockDashboardTypes } from '../types/mock-dashbooard.types';
 
 export const useDashboardItems = () => {
   const { data, ...queries } = useQuery<MockDashboardTypes>({
-    queryKey: ['user/dashboard'],
+    queryKey: ['user', 'dashboard'],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
