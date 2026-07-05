@@ -14,9 +14,9 @@ export function ProfileHeroHeader(props: ProfileHeaderProps) {
     <div className='flex flex-col gap-y-2.5'>
       <header
         className={cn(
-          'grid grid-cols-1 gap-y-2.5',
-          'max-lg:justify-items-center',
-          'lg:flex lg:flex-row lg:items-center lg:gap-x-3',
+          'flex flex-col gap-y-2.5',
+          'max-lg:items-center',
+          'lg:flex-row lg:items-center lg:gap-x-3 lg:gap-y-0',
         )}
       >
         <h1

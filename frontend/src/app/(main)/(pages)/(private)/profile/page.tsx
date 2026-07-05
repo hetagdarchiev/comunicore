@@ -16,7 +16,7 @@ export default function Profile() {
 
   if (isLoading || !user) {
     return (
-      <Container className='flex items-center justify-center py-24'>
+      <Container className='flex h-screen items-center justify-center py-24'>
         <Loader size='sm' />
       </Container>
     );

@@ -31,7 +31,7 @@ export function ProfileAvatar(props: ProfileAvatarProps) {
       {...attrs}
       fill={fill}
       {...(!fill && { width, height })}
-      className={cn('rounded-full object-cover', className)}
+      className={cn('h-auto w-auto rounded-full object-cover', className)}
     />
   );
 }

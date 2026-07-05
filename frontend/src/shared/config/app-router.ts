@@ -35,6 +35,12 @@ export const AppRouter = {
       return `${this.root}/bookmarks`;
     },
   },
+  achivements: {
+    root: 'achivements',
+    getRoute(id: string) {
+      return `${this.root}/${id}`;
+    },
+  },
   faq: '/faq',
   favorites: '/favorites',
   registration: '/registration',

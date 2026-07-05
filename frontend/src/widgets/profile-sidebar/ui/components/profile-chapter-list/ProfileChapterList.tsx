@@ -15,11 +15,11 @@ export function ProfileChapterList(props: HTMLAttributes<HTMLDivElement>) {
   return (
     <Tile
       className={cn(
-        'no-scrollbar overflow-hidden rounded-[0.625rem] max-xl:bg-transparent max-xl:p-0',
+        'overflow-hidden rounded-[0.625rem] max-xl:bg-transparent max-xl:p-0',
         props.className,
       )}
     >
-      <ul className='flex xl:flex-col xl:gap-y-2.5'>
+      <ul className='max-sm:grid max-sm:grid-cols-2 max-sm:grid-rows-2 sm:flex xl:flex-col xl:gap-y-2.5'>
         {profileChapters.map((item) => {
           const isNotificationTab = item.href === AppRouter.notification;
 

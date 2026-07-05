@@ -30,9 +30,10 @@ const mockActiveThreads: DashboardItemTypes[] = [
 const mockLastComments: DashboardItemTypes[] = [
   {
     id: 'dniv-cmdsc-vkdns',
-    title: 'Trad: Посоветуйте книги по расперделению времени',
-    description:
-      'Message: Например "Атомные привычки". Читаю сейчас вроде как мне очень нра...',
+    title: 'Посоветуйте книги по расперделению времени',
+    messageId: 'mcdns-vdns-cdsk',
+    message:
+      'Например "Атомные привычки". Читаю сейчас вроде как мне очень нра...',
     chapter: 'Продуктивность',
     answers: 19,
     views: 877,
@@ -40,8 +41,9 @@ const mockLastComments: DashboardItemTypes[] = [
   },
   {
     id: 'dhiv-chdsk-vkans',
-    title: 'Trad: Какой лучший дестрибутив для Linux?',
-    description: 'Message: Думаю лучший дестрибутив это Ubunty или Arch Linux',
+    title: 'Какой лучший дестрибутив для Linux?',
+    messageId: 'mcdns-qqdns-cdsk',
+    message: 'Думаю лучший дестрибутив это Ubunty или Arch Linux',
     chapter: 'Программирование',
     answers: 23,
     views: 2100,
@@ -49,9 +51,9 @@ const mockLastComments: DashboardItemTypes[] = [
   },
   {
     id: 'ddiv-cmxsk-vkdns',
-    title: 'Trad: В какое время года вы чаще гуляете?',
-    description:
-      'Message: Лучшее время для этого это весна, всё цветёт и пахнет и крас...',
+    title: 'В какое время года вы чаще гуляете?',
+    messageId: 'mcdnscds-vdns-cdsk',
+    message: 'Лучшее время для этого это весна, всё цветёт и пахнет и крас...',
     chapter: 'Общие обсуждения',
     answers: 23,
     views: 32034,

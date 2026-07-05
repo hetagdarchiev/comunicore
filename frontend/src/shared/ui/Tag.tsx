@@ -1,4 +1,4 @@
-import { type HTMLAttributes, PropsWithChildren } from 'react';
+import { type HTMLAttributes, PropsWithChildren, useMemo } from 'react';
 
 import { cn } from '../lib/classNames';
 
@@ -20,16 +20,20 @@ export interface TagProps
 }
 
 const colorStyles: Record<TagColor, string> = {
+  green: 'border bg-green-39/20 border-gray-9e/10 text-green-00',
   purple: 'border bg-purple-67/20 border-gray-9e/10 text-pink-d5',
   'dark-purple': 'border bg-purple-86/20 border-gray-9e/10 text-purple-86',
-  blue: 'border bg-blue-3e/20 border-gray-9e/10 text-blue-92',
   cyan: 'border bg-green-39/20 border-gray-9e/10 text-green-81',
-  green: 'border bg-green-39/20 border-gray-9e/10 text-green-00',
+  blue: 'border bg-blue-3e/20 border-gray-9e/10 text-blue-92',
   orange: 'border bg-orange-ff/20 border-gray-9e/10 text-orange-ff',
   dark: 'text-gray-9e bg-dark-1b/50 border border-gray-9e/10 font-normal',
 };
 
-const ALL_COLORS = Object.keys(colorStyles) as TagColor[];
+const bannedColors: TagColor[] = ['dark'];
+
+const ALL_COLORS = (Object.keys(colorStyles) as TagColor[]).filter(
+  (color) => !bannedColors.includes(color),
+);
 
 const sizeStyles: Record<TagSize, string> = {
   sm: 'px-[20px] py-[10px] text-[14px]' /* mozno meniat */,
@@ -52,7 +56,10 @@ export function Tag(props: TagProps) {
 
   const textContent = typeof children === 'string' ? children : '';
 
-  const finalColor = color || getColorByText(textContent);
+  const finalColor = useMemo(() => {
+    if (color) return color;
+    return textContent ? getColorByText(textContent) : 'purple';
+  }, [color, textContent]);
 
   const commonClassName = cn(
     'inline-flex items-center justify-center w-fit',

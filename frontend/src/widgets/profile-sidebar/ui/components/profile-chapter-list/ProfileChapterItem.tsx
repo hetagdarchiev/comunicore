@@ -21,17 +21,18 @@ export const ProfileChapterItem = memo(
     const pathname = usePathname();
     const isActive = pathname === href;
     return (
-      <li className='w-full'>
+      <li className='w-full max-sm:last:col-span-2'>
         <Button
           href={href}
           size='xl'
           aria-current={isActive ? 'page' : undefined}
           color='transparent'
           className={cn(
-            'text-gray-9e flex items-center justify-center gap-y-1.25 rounded-none border-0 whitespace-nowrap',
+            'text-gray-9e flex items-center justify-center gap-y-1.25 whitespace-nowrap',
+            'sm:rounded-none',
             isActive && 'bg-purple-67/20 text-pink-d5 pointer-events-none',
-            'max-xl:flex-col max-xl:p-2.5 max-xl:text-sm',
-            'xl:justify-start xl:gap-x-2.5',
+            'max-xl:flex-col max-xl:border-0 max-xl:p-2.5 max-xl:text-sm',
+            'xl:justify-start xl:gap-x-2.5 xl:rounded-[0.625rem]',
           )}
         >
           <div
