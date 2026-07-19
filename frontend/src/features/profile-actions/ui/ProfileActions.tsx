@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { NavigationItem } from '../model/types/navigation-item.types';
 
 import { selectIsAuthenticated, useAuthStore } from '@/entities/session';
-import { useAuthMeQuery } from '@/entities/user';
+import { useUser } from '@/entities/user';
 
 import { AppRouter } from '@/shared/config/app-router';
 import { ProfileAvatar } from '@/shared/ui';
@@ -37,7 +37,9 @@ interface Props {
 
 export function ProfileActions({ className }: Props) {
   const isAuth = useAuthStore(selectIsAuthenticated);
-  const { data: user } = useAuthMeQuery({ enabled: isAuth });
+  const { user } = useUser({ enabled: isAuth });
+
+  const userData = user?.user;
 
   return (
     <nav className={clsx(className)}>
@@ -56,13 +58,16 @@ export function ProfileActions({ className }: Props) {
           </li>
         ))}
         <li className='size-6.25'>
-          <Link href={AppRouter.profile.root} title={user ? user.name : 'user'}>
+          <Link
+            href={AppRouter.profile.root}
+            title={userData ? userData.name : 'user'}
+          >
             <ProfileAvatar
               width={25}
               height={25}
               unoptimized
-              authorName={user ? user.name : 'user'}
-              avatarUrl={user?.avatarUrl}
+              authorName={userData ? userData.name : 'user'}
+              avatarUrl={userData?.avatarUrl}
             />
           </Link>
         </li>

@@ -107,6 +107,7 @@ export function AnalyticsBatchTracker() {
         });
       } catch {
         // Оптимальная аналитика: игнорируйте сбои в работе сети.
+        console.log('Failed to send analytics batch', payload);
       } finally {
         startAtRef.current = now;
         activeDurationMsRef.current = 0;

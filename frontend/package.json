@@ -55,6 +55,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",
+    "msw": "^2.15.0",
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "stylelint": "^17.3.0",
@@ -62,5 +63,10 @@
     "stylelint-config-standard": "^40.0.0",
     "stylelint-order": "^7.0.1",
     "typescript": "^5"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

@@ -9,6 +9,7 @@ import { ProfileDashboard } from '@/features/profile-dashboard';
 import { useUser } from '@/entities/user';
 
 import { cn } from '@/shared/lib/classNames';
+import { getErrorMessage } from '@/shared/lib/helpers/getErrorMessage';
 import { Container, Loader } from '@/shared/ui';
 
 export default function Profile() {
@@ -21,24 +22,25 @@ export default function Profile() {
       </Container>
     );
   }
-
   if (error) {
     return (
       <Container className='flex items-center justify-center py-24'>
-        <div>{error.message}</div>
+        <div>{getErrorMessage(error)}</div>
       </Container>
     );
   }
 
+  const userData = user.user;
+
   return (
     <Container className='flex flex-col gap-y-12.5 py-12.5'>
-      <ProfileHero user={user} />
+      <ProfileHero user={userData} />
       <ProfileStats
-        bookMarks={user.bookMarks}
-        likes={user.likes}
-        rank={user.rank}
-        threadsQuantity={user.threadsQuantity}
-        recivedLikes={user.recivedLikes}
+        bookMarks={userData.bookMarks}
+        likes={userData.likes}
+        rank={userData.rank}
+        threadsQuantity={userData.threadsQuantity}
+        recivedLikes={userData.recivedLikes}
       />
       <section
         className={cn(
@@ -46,10 +48,10 @@ export default function Profile() {
           'xl:grid-cols-[auto_1fr] xl:gap-x-2.5',
         )}
       >
-        <ProfileSidebar user={user} />
+        <ProfileSidebar user={userData} />
         <ProfileChapterList className='xl:hidden' />
 
-        <ProfileDashboard userId={user.id} />
+        <ProfileDashboard userId={userData?.id} />
       </section>
     </Container>
   );
