@@ -5,6 +5,7 @@ export const idTemplate = ':id';
 export const AppRouter = {
   main: '/',
   verification: '/verification',
+  settings: '/settings',
   questions: '/questions',
   threads: '/threads',
   tags: {
@@ -19,8 +20,27 @@ export const AppRouter = {
   support: '/support',
   award: '/award',
   notification: '/notifications',
-  profile: '/profile',
-  profileEdit: '/profile/edit',
+  profile: {
+    root: '/profile',
+    get edit() {
+      return `${this.root}/edit`;
+    },
+    get threads() {
+      return `${this.root}/threads`;
+    },
+    get messages() {
+      return `${this.root}/messages`;
+    },
+    get bookmarks() {
+      return `${this.root}/bookmarks`;
+    },
+  },
+  achivements: {
+    root: 'achivements',
+    getRoute(id: string) {
+      return `${this.root}/${id}`;
+    },
+  },
   faq: '/faq',
   favorites: '/favorites',
   registration: '/registration',

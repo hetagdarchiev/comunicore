@@ -21,9 +21,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "$/*": ["./*"],
+      "$/*": ["./*"]
     }
-    
   },
   "include": [
     "next-env.d.ts",
@@ -31,7 +30,10 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
-, "tailwind.config.js", "openapi-ts.config.js"  ],
+    "**/*.mts",
+    "tailwind.config.js",
+    "openapi-ts.config.js",
+    "src/features/profile-dashboard/ui/ProfileDashboard.tsx"
+  ],
   "exclude": ["node_modules"]
 }

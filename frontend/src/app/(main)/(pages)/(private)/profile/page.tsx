@@ -1,104 +1,56 @@
 'use client';
 
-import { useEffect } from 'react';
-import { MdEdit } from 'react-icons/md';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
+import { ProfileHero } from '@/widgets/profile-hero';
+import { ProfileChapterList, ProfileSidebar } from '@/widgets/profile-sidebar';
+import { ProfileStats } from '@/widgets/profile-stats';
 
-import { PostCard } from '@/entities/post';
-import { useLogoutMutation } from '@/entities/session';
+import { ProfileDashboard } from '@/features/profile-dashboard';
 
-import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
-import { AppRouter } from '@/shared/config/app-router';
-import { ProfileAvatar } from '@/shared/ui';
-import { Button } from '@/shared/ui/Button';
+import { useUser } from '@/entities/user';
+
+import { cn } from '@/shared/lib/classNames';
+import { Container, Loader } from '@/shared/ui';
 
 export default function Profile() {
-  const router = useRouter();
-  const { data: user, isLoading } = useQuery(userMeOptions());
-  const { mutate: logout } = useLogoutMutation();
+  const { user, error, isLoading } = useUser();
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push(AppRouter.login);
-    }
-  }, [user, isLoading, router]);
+  if (isLoading || !user) {
+    return (
+      <Container className='flex h-screen items-center justify-center py-24'>
+        <Loader size='sm' />
+      </Container>
+    );
+  }
 
-  if (isLoading) return <p>Loading profile...</p>;
-  if (!user) return null;
-
-  const { id, name, email, avatarUrl } = user;
+  if (error) {
+    return (
+      <Container className='flex items-center justify-center py-24'>
+        <div>{error.message}</div>
+      </Container>
+    );
+  }
 
   return (
-    <main className='flex-1 bg-white px-2.5 py-2.5'>
-      <div className='flex flex-col gap-y-7.5'>
-        <div className='flex gap-x-2.5'>
-          <div className='flex flex-col items-center gap-y-2.5 px-7.5 py-4.25'>
-            <ProfileAvatar
-              width={100}
-              height={100}
-              authorName={name}
-              avatarUrl={avatarUrl || undefined}
-            />
-            <Button className='gap-x-2.5'>Изменить</Button>
-          </div>
-          <div className='flex flex-col gap-y-5'>
-            <h2 className='text-4xl font-bold'>{name}</h2>
-            <div className='flex flex-col gap-y-2.5'>
-              <p className='flex gap-x-2'>
-                <span className='font-bold'>User ID:</span>
-                {id}
-              </p>
-              <p className='flex gap-x-2'>
-                <span className='font-bold'>ФИО:</span>
-                {name}
-              </p>
-              <p className='flex gap-x-2'>
-                <span className='font-bold'>Почта:</span>
-                {email}
-              </p>
-              <p className='flex gap-x-2'>
-                <span className='font-bold'>Зарегистрирован::</span>
-                25.05.2025
-              </p>
-              <p className='flex gap-x-2'>
-                <span className='font-bold'>Ранг:</span>
-                Рядовой форумчанин
-              </p>
-            </div>
-            <Button
-              className='gap-x-2.5'
-              href={AppRouter.profileEdit}
-              size='lg'
-            >
-              <MdEdit size={24} />
-              Редактировать
-            </Button>
-            <Button onClick={logout} className='gap-x-2.5'>
-              Выйти
-            </Button>
-          </div>
-        </div>
-        <div className='flex flex-col gap-y-5'>
-          <h3 className='text-[32px] font-bold'>Мои посты</h3>
-          <ul className='flex flex-col gap-y-5'>
-            <li>
-              <PostCard
-                post={{
-                  id,
-                  answers: 142,
-                  authorName: name,
-                  avatarUrl,
-                  createdAt: 'Fri May 15 2026 21:48:40 GMT+0500',
-                  chapter: 'Design',
-                  title: 'Делаю проект на Vue. Дайте совет',
-                  views: 42314,
-                }}
-              />
-            </li>
-          </ul>
-        </div>
-      </div>
-    </main>
+    <Container className='flex flex-col gap-y-12.5 py-12.5'>
+      <ProfileHero user={user} />
+      <ProfileStats
+        bookMarks={user.bookMarks}
+        likes={user.likes}
+        rank={user.rank}
+        threadsQuantity={user.threadsQuantity}
+        recivedLikes={user.recivedLikes}
+      />
+      <section
+        className={cn(
+          'grid grid-cols-1 grid-rows-[auto_1fr_auto] gap-y-5',
+          'xl:grid-cols-[auto_1fr] xl:gap-x-2.5',
+        )}
+      >
+        <ProfileSidebar user={user} />
+        <ProfileChapterList className='xl:hidden' />
+
+        <ProfileDashboard userId={user.id} />
+      </section>
+    </Container>
   );
 }

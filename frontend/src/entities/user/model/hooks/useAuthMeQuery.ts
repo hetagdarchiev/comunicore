@@ -2,13 +2,15 @@
 
 import { useQuery } from '@tanstack/react-query';
 
+import { mockUser } from '../data/mock-user';
+
 import { userMeOptions } from '@/shared/api/generated/@tanstack/react-query.gen';
 
 export const useAuthMeQuery = (options?: { enabled?: boolean }) => {
-  const { queryKey, queryFn } = userMeOptions();
+  const { queryKey } = userMeOptions();
   const queries = useQuery({
     queryKey,
-    queryFn,
+    queryFn: async () => mockUser,
     enabled: options?.enabled,
     retry: 0,
   });

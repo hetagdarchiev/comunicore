@@ -1,4 +1,4 @@
-export const formatedViews = (views: number): string => {
+export const formatInt = (views: number): string => {
   if (views >= 1000000) {
     return (views / 1000000).toFixed(1) + 'м';
   }

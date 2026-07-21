@@ -12,6 +12,7 @@
   --color-purple-86: #8632f4;
   --color-purple-9d: #9d00ff;
   --color-pink-d5: #d59bff;
+  --color-pink-86: #8632f4;
   --color-green-00: #00ff58;
   --color-green-39: #396a4a;
   --color-green-b9: #b9ff00;
@@ -92,6 +93,15 @@
   select,
   button {
     font: inherit;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   ::-webkit-scrollbar {

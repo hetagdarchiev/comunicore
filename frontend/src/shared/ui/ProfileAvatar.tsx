@@ -1,17 +1,13 @@
-import Image from 'next/image';
+import Image, { ImageProps } from 'next/image';
 
+import { isApiUrl } from '../guards/isApiUrl.guard';
 import { cn } from '../lib/classNames';
 
 const defaultAvatar = '/avatar.png';
 
-interface ProfileAvatarProps {
-  avatarUrl?: string;
+interface ProfileAvatarProps extends Omit<ImageProps, 'src' | 'alt'> {
+  avatarUrl?: string | null;
   authorName: string;
-  className?: string;
-  fill?: boolean;
-  unoptimized?: boolean;
-  width?: number;
-  height?: number;
 }
 
 export function ProfileAvatar(props: ProfileAvatarProps) {
@@ -24,14 +20,18 @@ export function ProfileAvatar(props: ProfileAvatarProps) {
     height = 250,
     ...attrs
   } = props;
+
+  const validAvatarUrl = isApiUrl(avatarUrl) ? avatarUrl : defaultAvatar;
+
   return (
     <Image
-      src={avatarUrl || defaultAvatar}
-      alt={authorName}
+      src={validAvatarUrl}
+      alt={`Аватар ${authorName}`}
+      priority
       {...attrs}
       fill={fill}
       {...(!fill && { width, height })}
-      className={cn('rounded-full object-cover', className)}
+      className={cn('h-auto w-auto rounded-full object-cover', className)}
     />
   );
 }
