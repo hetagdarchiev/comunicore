@@ -5,10 +5,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 import InterceptorProvider from './interceptor/interceptor';
+import MswProvider from './MswProvider';
 
 import { AnalyticsBatchTracker } from '@/shared/analytics/ui/AnalyticsBatchTracker';
-
-import '@/shared/api/setup';
 
 export default function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
@@ -17,18 +16,23 @@ export default function Providers({ children }: { children: ReactNode }) {
         defaultOptions: {
           queries: {
             staleTime: 60 * 1000,
+            refetchOnWindowFocus: false,
           },
         },
       }),
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <InterceptorProvider>
-        <AnalyticsBatchTracker />
-        {children}
-      </InterceptorProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <MswProvider>
+      <QueryClientProvider client={queryClient}>
+        <InterceptorProvider>
+          <AnalyticsBatchTracker
+            enabled={process.env.NEXT_PUBLIC_API_MODE !== 'mock'}
+          />
+          {children}
+        </InterceptorProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </MswProvider>
   );
 }

@@ -12,11 +12,7 @@ import { Burger } from './burger/Burger';
 import { AuthButtons } from '@/features/auth-buttons';
 import { ProfileActions } from '@/features/profile-actions';
 
-import {
-  selectIsAuthenticated,
-  selectStatus,
-  useAuthStore,
-} from '@/entities/session';
+import { selectStatus, useAuthStore } from '@/entities/session';
 
 import logo from '@/shared/assets/images/logo.svg';
 import { AppRouter } from '@/shared/config/app-router';
@@ -36,7 +32,6 @@ interface HeaderProps {
 
 export function Header(props: HeaderProps) {
   const { menuRef, burgerRef } = props;
-  const isAuthenticated = useAuthStore(selectIsAuthenticated);
   const status = useAuthStore(selectStatus);
 
   const isLoading = status === 'loading';
@@ -87,7 +82,7 @@ export function Header(props: HeaderProps) {
           <button title='Search' aria-label='Search button'>
             <LuSearch size={30} />
           </button>
-          {isAuthenticated ? (
+          {status === 'authenticated' ? (
             <ProfileActions className='hidden lg:flex' />
           ) : (
             <AuthButtons className='hidden lg:flex' />

@@ -33,10 +33,10 @@ export function LoginForm() {
     reValidateMode: 'onSubmit',
   });
 
-  const { mutate: authMutate, isPending, error: serverError } = useLogin();
+  const { mutate: loginMutate, isPending, error: serverError } = useLogin();
 
   const onSubmit: SubmitHandler<LoginFormTypes> = (data) => {
-    authMutate(
+    loginMutate(
       { body: data },
       {
         onSuccess: () => {
@@ -87,7 +87,9 @@ export function LoginForm() {
           Забыл пароль
         </Link>
 
-        {serverError && <ErrorMessage error={getErrorMessage(serverError)} />}
+        {serverError && (
+          <ErrorMessage error={getErrorMessage(serverError.message)} />
+        )}
       </div>
     </form>
   );
