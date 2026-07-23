@@ -26,7 +26,9 @@ export default function Providers({ children }: { children: ReactNode }) {
     <MswProvider>
       <QueryClientProvider client={queryClient}>
         <InterceptorProvider>
-          <AnalyticsBatchTracker />
+          <AnalyticsBatchTracker
+            enabled={process.env.NEXT_PUBLIC_API_MODE !== 'mock'}
+          />
           {children}
         </InterceptorProvider>
         <ReactQueryDevtools initialIsOpen={false} />

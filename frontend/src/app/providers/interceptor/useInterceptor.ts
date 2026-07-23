@@ -10,15 +10,18 @@ let isInitialized = false;
 export default function useInterceptor() {
   if (!isInitialized) {
     isInitialized = true;
-    console.log('🔥 Интерцептор Hey-API инициализирован');
+    console.log(
+      '%c [ Интерцептор Hey-API инициализирован ]',
+      'color: lightgreen; font-weight: bold;',
+    );
 
     client.interceptors.response.use((response) => {
       console.log(
-        '🔥 Интерцептор Hey-API поймал ответ:',
+        '%c [ Интерцептор Hey-API поймал ответ ]:',
+        'color: lightgreen; font-weight: bold;',
         response.url,
         response.status,
       );
-
       const { logout, setStatus } = useAuthStore.getState().actions;
       const currentStatus = useAuthStore.getState().status;
 
@@ -30,7 +33,11 @@ export default function useInterceptor() {
       if (response.status === 401) {
         if (currentStatus !== 'anonymous') {
           logout();
-          console.log('401 Ошибка: Пользователь разлогинен');
+          console.log(
+            '%c [401 Ошибка]:',
+            'color: lightpink;',
+            'Пользователь разлогинен',
+          );
         }
       }
 

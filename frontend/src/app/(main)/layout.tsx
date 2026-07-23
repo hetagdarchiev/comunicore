@@ -20,8 +20,6 @@ export default function HomeLayout({
 
   const status = useAuthStore(selectStatus);
 
-  console.log(status);
-
   if (status === 'loading') {
     return <Loader size='sm' className='my-auto' />;
   }

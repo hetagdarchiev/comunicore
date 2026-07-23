@@ -41,7 +41,9 @@ const detectMobile = (): boolean => {
   return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
 };
 
-export function AnalyticsBatchTracker() {
+export function AnalyticsBatchTracker(props: { enabled?: boolean }) {
+  const { enabled = true } = props;
+
   const startAtRef = useRef<Date>(new Date());
   const activeDurationMsRef = useRef(0);
   const visibleDurationMsRef = useRef(0);
@@ -49,6 +51,13 @@ export function AnalyticsBatchTracker() {
   const hadReadActivityRef = useRef(false);
 
   useEffect(() => {
+    if (!enabled) {
+      console.log(
+        '%c Analytics batch tracking is disabled. Skipping send.',
+        'color: red; font-size: 12px;',
+      );
+      return;
+    }
     const isDocumentVisible = () => document.visibilityState === 'visible';
     const isDocumentActive = () => isDocumentVisible() && document.hasFocus();
 
@@ -170,7 +179,7 @@ export function AnalyticsBatchTracker() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       void sendBatch();
     };
-  }, []);
+  }, [enabled]);
 
   return null;
 }
